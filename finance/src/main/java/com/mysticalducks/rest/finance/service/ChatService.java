@@ -22,7 +22,7 @@ public class ChatService implements IChatService {
 	}
 	
 	public Optional<Chat> findChat(int id) {
-		return  chatRepository.findById(id);
+		return chatRepository.findById(id);
 		
 	}
 

@@ -23,6 +23,7 @@ public class Transaction {
 	
 	private int amount;
 	
+	@Column(name="ispositive")
 	private boolean isPositive;
 	
 	private String notice;
