@@ -12,6 +12,8 @@ import com.mysticalducks.rest.finance.model.User;
 import com.mysticalducks.rest.finance.service.CategorieService;
 import com.mysticalducks.rest.finance.service.UserService;
 
+import io.swagger.annotations.ApiOperation;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +30,9 @@ public class CategorieController {
 	}
 
 	@GetMapping("/category/{id}")
+	@ApiOperation(value = "Finds categorie by id", 
+			notes = "Provide an id to look up spezific category from the finance database",
+			response = Categorie.class)
 	@ResponseBody
 	public Categorie findCategory(@PathVariable int id){
 		Optional<Categorie> categorie = categorieService.findCategorie(id);
