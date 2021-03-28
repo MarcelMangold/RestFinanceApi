@@ -2,7 +2,6 @@ package com.mysticalducks.rest.finance.repository;
 
 import java.sql.Timestamp;
 
-import org.springframework.beans.factory.annotation.Value;
 
 public interface ITransactionInformations {
 
@@ -13,4 +12,5 @@ public interface ITransactionInformations {
 	String getNotice();
 	ICategorie getCategorie();
 	Timestamp getTimestamp();
+	
 }
