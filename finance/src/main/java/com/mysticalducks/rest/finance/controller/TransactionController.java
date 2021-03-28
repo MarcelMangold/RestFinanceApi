@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mysticalducks.rest.finance.model.Transaction;
+import com.mysticalducks.rest.finance.repository.ITransactionInformations;
 import com.mysticalducks.rest.finance.service.TransactionService;
 
 @Controller
@@ -38,8 +39,8 @@ public class TransactionController {
 	
 	@GetMapping("/transactions")
 	@ResponseBody
-	public List<Transaction> findAllCategoriesByUserId(@RequestParam(name = "user_id") int userId){
-		List<Transaction> transactions = transactionService.findAllTransactionsByUserId(userId);
+	public List<ITransactionInformations> findAllCategoriesByUserId(@RequestParam(name = "user_id") int userId){
+		List<ITransactionInformations> transactions = transactionService.findAllTransactionsByUserId(userId);
 		return transactions;
 	}
 	

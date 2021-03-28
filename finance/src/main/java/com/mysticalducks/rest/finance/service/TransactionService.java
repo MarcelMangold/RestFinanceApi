@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.mysticalducks.rest.finance.model.Chat;
 import com.mysticalducks.rest.finance.model.Transaction;
 import com.mysticalducks.rest.finance.model.User;
+import com.mysticalducks.rest.finance.repository.ITransactionInformations;
 import com.mysticalducks.rest.finance.repository.TransactionRepository;
 
 @Service
@@ -32,17 +33,19 @@ public class TransactionService implements ITransactionService {
 		return transactionRepository.findById(id);
 	}
 
-	public List<Transaction> findAllTransactionsByUserId(int userId) {
+	public List<ITransactionInformations> findAllTransactionsByUserId(int userId) {
 		Optional<User> user = userService.findUser(userId);
 
 		if (user.isPresent()) {
-			List<Transaction> transactions = (List<Transaction>) transactionRepository.findAllCategoriesByUserId(user.get());
+			List<ITransactionInformations> transactions = (List<ITransactionInformations>) transactionRepository.getTransactionInformations(user.get());
 			return transactions;
 		} else {
 			return null;
 		}
 
 	}
+	
+	
 
 	public List<Transaction> findAllTransactionsByChatId(int chatId) {
 		Optional<Chat> chat = chatService.findChat(chatId);

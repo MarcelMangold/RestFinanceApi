@@ -21,7 +21,7 @@ public class Transaction {
 	
 	private String name;
 	
-	private int amount;
+	private double amount;
 	
 	@Column(name="ispositive")
 	private boolean isPositive;
@@ -62,11 +62,11 @@ public class Transaction {
 		this.name = name;
 	}
 
-	public int getAmount() {
+	public double getAmount() {
 		return amount;
 	}
 
-	public void setAmount(int amount) {
+	public void setAmount(double amount) {
 		this.amount = amount;
 	}
 

@@ -30,13 +30,20 @@ public class Categorie {
 	@ApiModelProperty(notes = "The user of the categorie")
 	private User user;
 	
+	
+	@ManyToOne
+	@JoinColumn(name = "iconid", referencedColumnName="id")
+	@ApiModelProperty(notes = "The icon of the categorie")
+	private Icon icon;
+	
 	public Categorie() {}
 	
-	public Categorie(Integer id, String name, User user) {
+	public Categorie(Integer id, String name, User user, Icon icon) {
 		
 		this.id = id;
 		this.name = name;
 		this.user = user;
+		this.icon = icon;
 	}
 	
 	public User getUser() {
@@ -57,6 +64,14 @@ public class Categorie {
 
 	public Integer getId() {
 		return id;
+	}
+	
+	public void setIcon(Icon icon) {
+		this.icon = icon;
+	}
+	
+	public Icon getIcon() {
+		return icon;
 	}
 	
 

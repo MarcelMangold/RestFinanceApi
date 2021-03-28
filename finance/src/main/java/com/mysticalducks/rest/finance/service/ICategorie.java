@@ -6,7 +6,7 @@ import java.util.Optional;
 import com.mysticalducks.rest.finance.model.Transaction;
 import com.mysticalducks.rest.finance.repository.ITransactionInformations;
 
-public interface ITransactionService {
+public interface ICategorie {
 	
 	List<Transaction> findAllTransactions();
 	
