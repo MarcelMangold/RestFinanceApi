@@ -35,7 +35,6 @@ public class TransactionService implements ITransactionService {
 
 	public List<ITransactionInformations> findAllTransactionsByUserId(int userId) {
 		Optional<User> user = userService.findUser(userId);
-
 		if (user.isPresent()) {
 			List<ITransactionInformations> transactions = (List<ITransactionInformations>) transactionRepository.getTransactionInformations(user.get());
 			return transactions;
