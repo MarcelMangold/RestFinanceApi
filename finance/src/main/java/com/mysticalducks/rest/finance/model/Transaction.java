@@ -26,11 +26,11 @@ public class Transaction {
 	@Column(name="ispositive")
 	private boolean isPositive;
 	
-	private String notice;
+	private String note;
 	
 	@ManyToOne
-	@JoinColumn(name = "categorieid", referencedColumnName="id")
-	private Categorie categorie;
+	@JoinColumn(name = "categoryid", referencedColumnName="id")
+	private Category category;
 	
 	@ManyToOne
 	@JoinColumn(name = "userid", referencedColumnName="id")
@@ -44,12 +44,12 @@ public class Transaction {
 	
 	public Transaction() {}
 	
-	public Transaction(String name, int amount, boolean isPositive, String notice, Categorie categorie, User user, Chat chat) {
+	public Transaction(String name, int amount, boolean isPositive, String note, Category category, User user, Chat chat) {
 		this.name = name;
 		this.amount = amount;
 		this.isPositive = isPositive;
-		this.notice = notice;
-		this.categorie = categorie;
+		this.note = note;
+		this.category = category;
 		this.user = user;
 		this.chat = chat;
 	}
@@ -78,20 +78,20 @@ public class Transaction {
 		this.isPositive = isPositive;
 	}
 
-	public String getNotice() {
-		return notice;
+	public String getNote() {
+		return note;
 	}
 
-	public void setNotice(String notice) {
-		this.notice = notice;
+	public void setNote(String note) {
+		this.note = note;
 	}
 
-	public Categorie getCategorie() {
-		return categorie;
+	public Category getCategory() {
+		return category;
 	}
 
-	public void setCategorie(Categorie categorie) {
-		this.categorie = categorie;
+	public void setCategory(Category category) {
+		this.category = category;
 	}
 
 	public User getUser() {

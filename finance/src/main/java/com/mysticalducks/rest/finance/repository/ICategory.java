@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public interface ICategorie {
+public interface ICategory {
 
 	String getId();
 	String getName();

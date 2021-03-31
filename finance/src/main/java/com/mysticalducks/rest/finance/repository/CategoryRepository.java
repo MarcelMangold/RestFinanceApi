@@ -7,15 +7,15 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.mysticalducks.rest.finance.model.Categorie;
+import com.mysticalducks.rest.finance.model.Category;
 import com.mysticalducks.rest.finance.model.User;
 
 
 @Repository
-public interface CategorieRepository  extends CrudRepository<Categorie, Integer>  {
+public interface CategoryRepository  extends CrudRepository<Category, Integer>  {
 	
 	
-	@Query("select c from Categorie c where c.user=:user")
-	List<Categorie> findAllCategoriesByUserId(@Param("user") User user);
+	@Query("select c from Category c where c.user=:user")
+	List<Category> findAllCategoriesByUserId(@Param("user") User user);
 	
 }

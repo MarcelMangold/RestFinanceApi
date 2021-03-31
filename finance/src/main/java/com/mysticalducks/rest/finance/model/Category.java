@@ -13,32 +13,32 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @Entity
-@Table(name = "categorie")
-@ApiModel(description = "Details about the categorie")
-public class Categorie {
+@Table(name = "category")
+@ApiModel(description = "Details about the category")
+public class Category {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@ApiModelProperty(notes = "The unique id of the categorie")
+	@ApiModelProperty(notes = "The unique id of the category")
 	private int id;
 	
-	@ApiModelProperty(notes = "The name fo the categorie")
+	@ApiModelProperty(notes = "The name fo the category")
 	private String name;
 	
 	@ManyToOne
 	@JoinColumn(name = "userid", referencedColumnName="id")
-	@ApiModelProperty(notes = "The user of the categorie")
+	@ApiModelProperty(notes = "The user of the category")
 	private User user;
 	
 	
 	@ManyToOne
 	@JoinColumn(name = "iconid", referencedColumnName="id")
-	@ApiModelProperty(notes = "The icon of the categorie")
+	@ApiModelProperty(notes = "The icon of the category")
 	private Icon icon;
 	
-	public Categorie() {}
+	public Category() {}
 	
-	public Categorie(Integer id, String name, User user, Icon icon) {
+	public Category(Integer id, String name, User user, Icon icon) {
 		
 		this.id = id;
 		this.name = name;

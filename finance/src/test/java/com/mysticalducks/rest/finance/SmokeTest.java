@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.mysticalducks.rest.finance.controller.CategorieController;
+import com.mysticalducks.rest.finance.controller.CategoryController;
 import com.mysticalducks.rest.finance.controller.ChatController;
 import com.mysticalducks.rest.finance.controller.TransactionController;
 import com.mysticalducks.rest.finance.controller.UserController;
@@ -15,7 +15,7 @@ import com.mysticalducks.rest.finance.controller.UserController;
 public class SmokeTest {
 	
 	@Autowired
-	private CategorieController categoryController;
+	private CategoryController categoryController;
 	
 	@Autowired
 	private ChatController chatController;
