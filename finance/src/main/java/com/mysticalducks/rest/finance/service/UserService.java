@@ -22,7 +22,7 @@ public class UserService implements IUserService {
 	}
 	
 	public Optional<User> findUser(int id) {
-		return  userRepository.findById(id);
+		return userRepository.findById(id);
 		
 	}
 

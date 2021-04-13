@@ -1,6 +1,6 @@
 package com.mysticalducks.rest.finance.model;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +10,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "transaction")
@@ -40,11 +44,13 @@ public class Transaction {
 	@JoinColumn(name = "chatid", referencedColumnName="id")
 	private Chat chat;
 	
-	private Timestamp timestamp;
+	@CreationTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date timestamp;
 	
 	public Transaction() {}
 	
-	public Transaction(String name, int amount, boolean isPositive, String note, Category category, User user, Chat chat) {
+	public Transaction(String name, double amount, boolean isPositive, String note, Category category, User user, Chat chat) {
 		this.name = name;
 		this.amount = amount;
 		this.isPositive = isPositive;
@@ -110,11 +116,11 @@ public class Transaction {
 		this.chat = chat;
 	}
 
-	public Timestamp getTimestamp() {
+	public Date getTimestamp() {
 		return timestamp;
 	}
 
-	public void setTimestamp(Timestamp timestamp) {
+	public void setTimestamp(Date timestamp) {
 		this.timestamp = timestamp;
 	}
 

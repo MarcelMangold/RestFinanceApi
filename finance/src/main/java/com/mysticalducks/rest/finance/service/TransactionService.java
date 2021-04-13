@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mysticalducks.rest.finance.model.Category;
 import com.mysticalducks.rest.finance.model.Chat;
 import com.mysticalducks.rest.finance.model.Transaction;
 import com.mysticalducks.rest.finance.model.User;
@@ -23,6 +24,9 @@ public class TransactionService implements ITransactionService {
 	
 	@Autowired
 	private ChatService chatService;
+	
+	@Autowired
+	private CategoryService categoryService;
 
 	public List<Transaction> findAllTransactions() {
 		List<Transaction> transactions = (List<Transaction>) transactionRepository.findAll();
@@ -43,8 +47,6 @@ public class TransactionService implements ITransactionService {
 		}
 
 	}
-	
-	
 
 	public List<Transaction> findAllTransactionsByChatId(int chatId) {
 		Optional<Chat> chat = chatService.findChat(chatId);
@@ -52,6 +54,28 @@ public class TransactionService implements ITransactionService {
 		if (chat.isPresent()) {
 			List<Transaction> transactions = (List<Transaction>) transactionRepository.findAllCategoriesByChatId(chat.get());
 			return transactions;
+		} else {
+			return null;
+		}
+	}
+	
+	public Transaction save(String name, double amount, Boolean isPositive, String note, int categoryId, int userId, int chatId) {
+		Optional<Chat> chat = chatService.findChat(chatId);
+		Optional<User> user = userService.findUser(userId);
+		Optional<Category> category = categoryService.findCategorie(categoryId);
+			
+		if (chat.isPresent()) {
+			if(user.isPresent()) {
+				if(category.isPresent()) {
+					return transactionRepository.save(new Transaction(name, amount, isPositive, note, category.get(), user.get(), chat.get() ));
+					
+				} else {
+					return null;
+				}
+				
+			}else {
+				return null;
+			}
 		} else {
 			return null;
 		}

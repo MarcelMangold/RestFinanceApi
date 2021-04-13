@@ -8,7 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mysticalducks.rest.finance.model.Category;
@@ -42,9 +42,10 @@ public class CategoryController {
 		}
 	}
 	
-	 @PostMapping("/category/{id}")
-	 Category newCategory(@RequestBody Category newCategory) {
-	    return categoryService.save(newCategory);
+	 @PostMapping("/category")
+	 @ResponseBody
+	 Category newCategory(@RequestParam int userId, @RequestParam String name, @RequestParam int iconId) {
+		 return categoryService.save(userId, name, iconId);
 	  }
 	
 	

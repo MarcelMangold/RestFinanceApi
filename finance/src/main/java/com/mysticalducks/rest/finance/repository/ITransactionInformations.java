@@ -1,6 +1,6 @@
 package com.mysticalducks.rest.finance.repository;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 
 
@@ -12,6 +12,6 @@ public interface ITransactionInformations {
 	Boolean getIsPositive();
 	String getNote();
 	ICategory getCategory();
-	Timestamp getTimestamp();
+	Date getTimestamp();
 	
 }

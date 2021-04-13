@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mysticalducks.rest.finance.model.Category;
+import com.mysticalducks.rest.finance.model.Icon;
 import com.mysticalducks.rest.finance.model.User;
 import com.mysticalducks.rest.finance.repository.CategoryRepository;
 
@@ -18,6 +19,9 @@ public class CategoryService implements ICategoryService {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private IconService iconService;
 
 	public List<Category> findAllCategories() {
 		List<Category> categories = (List<Category>) categoryRepository.findAll();
@@ -38,10 +42,22 @@ public class CategoryService implements ICategoryService {
 			return null;
 		}
 	}
-	
-	public Category save(Category newCategorie) {
-		return categoryRepository.save(newCategorie);
-	}
 
+	public Category save(int userId, String name, int iconId) {
+		Optional<User> user = userService.findUser(userId);
+		if (user.isPresent()) {
+			Icon icon = iconService.findIcon(iconId);
+			if (icon != null) {
+				Category category = new Category(name, user.get(), icon);
+				return categoryRepository.save(category);
+			} else {
+				return null; // "no icon found";
+			}
+
+		} else {
+			return null; //"no User found";
+		}
+
+	}
 
 }

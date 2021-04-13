@@ -1,6 +1,7 @@
 package com.mysticalducks.rest.finance.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,19 @@ public class IconService implements IIconService{
 
 	public List<Icon> findAllIcon() {
 		return (List<Icon>) iconRepository.findAll();
+	}
+	
+	public Icon findIcon(int id) {
+		Optional<Icon> icon = iconRepository.findById(id);
+		if(icon.isPresent()) {
+			return icon.get();
+		}
+		return null;
+	}
+	
+	public Icon save(String name) {
+		return iconRepository.save(new Icon(name));
+				
 	}
 
 }

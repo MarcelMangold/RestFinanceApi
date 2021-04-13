@@ -38,9 +38,7 @@ public class Category {
 	
 	public Category() {}
 	
-	public Category(Integer id, String name, User user, Icon icon) {
-		
-		this.id = id;
+	public Category(String name, User user, Icon icon) {
 		this.name = name;
 		this.user = user;
 		this.icon = icon;

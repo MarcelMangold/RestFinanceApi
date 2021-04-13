@@ -19,8 +19,7 @@ public class Icon {
 	
 	public Icon() {}
 
-	public Icon(int id, String name) {
-		this.id = id;
+	public Icon(String name) {
 		this.name = name;
 	}
 
