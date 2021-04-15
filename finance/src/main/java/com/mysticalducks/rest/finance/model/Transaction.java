@@ -123,6 +123,10 @@ public class Transaction {
 	public void setTimestamp(Date timestamp) {
 		this.timestamp = timestamp;
 	}
+	
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public int getId() {
 		return id;

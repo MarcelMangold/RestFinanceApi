@@ -59,5 +59,19 @@ public class CategoryService implements ICategoryService {
 		}
 
 	}
+	
+	public Category replace(int id, Category newCategory) {
+		return categoryRepository.findById(id)
+				.map(category -> {
+					category.setName(newCategory.getName());
+					category.setIcon(newCategory.getIcon());
+					category.setUser(newCategory.getUser());
+					return categoryRepository.save(category);
+				})
+				.orElseGet(() -> {
+					newCategory.setID(id);
+					return categoryRepository.save(newCategory);
+				});
+	}
 
 }

@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -49,6 +51,12 @@ public class TransactionController {
 	@ResponseBody
 	Transaction newTransaction(@RequestParam String name, @RequestParam Double amount, @RequestParam Boolean isPositive, @RequestParam String note, @RequestParam int categoryId, @RequestParam int userId, @RequestParam int chatId) {
 		return transactionService.save(name, amount, isPositive, note, categoryId, userId, chatId);
+	}
+	
+	@PutMapping("/transaction")
+	@ResponseBody
+	Transaction replaceTransaction(@RequestBody Transaction transaction, @RequestParam int transactionId) {
+		return transactionService.replace(transactionId, transaction);
 	}
 	
 //	@GetMapping("/categories")

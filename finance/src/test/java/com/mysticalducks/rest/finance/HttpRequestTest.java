@@ -19,8 +19,8 @@ public class HttpRequestTest {
 
 	@Test
 	public void greetingShouldReturnDefaultMessage() throws Exception {
-		System.out.println("-----------------------------------------------" + "http://localhost:" + 9000 + "/");
-		System.out.println(this.restTemplate.getForObject("http://localhost:" + 9000 + "/", String.class));
+//		System.out.println("-----------------------------------------------" + "http://localhost:" + 9000 + "/");
+//		System.out.println(this.restTemplate.getForObject("http://localhost:" + 9000 + "/", String.class));
 //		assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/",
 //				String.class)).contains("Welcome to FinanceDB Api");
 	}

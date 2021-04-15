@@ -59,6 +59,10 @@ public class Category {
 	public String getName() {
 		return name;
 	}
+	
+	public void setID(Integer id) {
+		this.id = id;
+	}
 
 	public Integer getId() {
 		return id;

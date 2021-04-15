@@ -35,8 +35,6 @@ public class IconController {
 	@PostMapping("/icon/")
 	@ResponseBody
 	public Icon newIcon(@RequestParam String iconName){
-		Icon icon = iconService.save(iconName);
-		System.out.println("-----" + icon.getId());
 		return iconService.save(iconName);
 	}
 
