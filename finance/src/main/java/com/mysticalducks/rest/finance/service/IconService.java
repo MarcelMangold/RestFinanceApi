@@ -29,7 +29,10 @@ public class IconService implements IIconService{
 	
 	public Icon save(String name) {
 		return iconRepository.save(new Icon(name));
-				
+	}
+	
+	public void delete(int id) {
+		iconRepository.deleteById(id);
 	}
 
 }

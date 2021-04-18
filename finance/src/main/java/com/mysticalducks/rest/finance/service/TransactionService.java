@@ -102,5 +102,9 @@ public class TransactionService implements ITransactionService {
 			return transactionRepository.save(newTransaction);
 		});
 	}
+	
+	public void delete(int id) {
+		transactionRepository.deleteById(id);
+	}
 
 }

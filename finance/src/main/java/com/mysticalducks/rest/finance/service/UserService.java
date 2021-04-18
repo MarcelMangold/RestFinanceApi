@@ -23,7 +23,10 @@ public class UserService implements IUserService {
 	
 	public Optional<User> findUser(int id) {
 		return userRepository.findById(id);
-		
+	}
+	
+	public void delete(int id) {
+		userRepository.deleteById(id);
 	}
 
 }

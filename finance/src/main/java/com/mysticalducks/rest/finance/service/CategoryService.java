@@ -73,5 +73,9 @@ public class CategoryService implements ICategoryService {
 					return categoryRepository.save(newCategory);
 				});
 	}
+	
+	public void delete(int id) {
+		categoryRepository.deleteById(id);
+	}
 
 }
