@@ -1,5 +1,9 @@
 package com.mysticalducks.rest.finance.service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoField;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,6 +16,7 @@ import com.mysticalducks.rest.finance.model.Transaction;
 import com.mysticalducks.rest.finance.model.User;
 import com.mysticalducks.rest.finance.repository.ITransactionInformations;
 import com.mysticalducks.rest.finance.repository.TransactionRepository;
+import com.mysticalducks.rest.finance.repository.UserRepository;
 
 @Service
 public class TransactionService implements ITransactionService {
@@ -86,8 +91,7 @@ public class TransactionService implements ITransactionService {
 	}
 
 	public Transaction replace(int id, Transaction newTransaction) {
-		return transactionRepository.findById(id)
-		.map(transaction -> {
+		return transactionRepository.findById(id).map(transaction -> {
 			transaction.setAmount(newTransaction.getAmount());
 			transaction.setCategory(newTransaction.getCategory());
 			transaction.setChat(newTransaction.getChat());
@@ -102,9 +106,64 @@ public class TransactionService implements ITransactionService {
 			return transactionRepository.save(newTransaction);
 		});
 	}
-	
+
 	public void delete(int id) {
 		transactionRepository.deleteById(id);
+	}
+
+	public int totalAmount(int userId, int chatId) {
+		Optional<Chat> chat = chatService.findChat(chatId);
+		Optional<User> user = userService.findUser(userId);
+
+		if (existsUserAndChatExists(chat, user)) {
+			return getTotalAmount(transactionRepository.getTransactionByUserAndChat(user.get(), chat.get()));
+		}
+		return 0;
+	}
+
+	public int totalAmountByDate(int userId, int chatId, Date startDate, Date endDate) {
+		Optional<Chat> chat = chatService.findChat(chatId);
+		Optional<User> user = userService.findUser(userId);
+		
+		if (existsUserAndChatExists(chat, user)) {
+			return getTotalAmount(transactionRepository.getTransactionByUserAndChatAndPeriod(user.get(), chat.get(), startDate, endDate));
+		}
+		return 0;
+	}
+	
+	public int totalAmountByCurrentMonth(int userId, int chatId) {
+		Optional<Chat> chat = chatService.findChat(chatId);
+		Optional<User> user = userService.findUser(userId);
+		
+		ZoneId zoneId = ZoneId.of ( "UTC" );
+		LocalDate today = LocalDate.now ( zoneId );
+		LocalDate firstOfCurrentMonth = today.with ( ChronoField.DAY_OF_MONTH , 1 );
+		
+		if (existsUserAndChatExists(chat, user)) {
+			return getTotalAmount(transactionRepository.getTransactionByUserAndChatAndPeriod(user.get(), chat.get(), Date.from(firstOfCurrentMonth.atStartOfDay(ZoneId.systemDefault()).toInstant()), Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant())));
+		}
+		return 0;
+	}
+
+	private int getTotalAmount(List<Transaction> transactions) {
+		int totalAmount = 0;
+		for (Transaction transaction : transactions) {
+			if (transaction.isPositive()) {
+				totalAmount += transaction.getAmount();
+			} else {
+				totalAmount -= transaction.getAmount();
+			}
+		}
+		return totalAmount;
+	}
+
+	private boolean existsUserAndChatExists(Optional<Chat> chat, Optional<User> user) {
+		if (chat.isPresent()) {
+			if (user.isPresent()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
