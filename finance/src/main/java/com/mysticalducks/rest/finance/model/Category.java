@@ -26,13 +26,13 @@ public class Category {
 	private String name;
 	
 	@ManyToOne
-	@JoinColumn(name = "userid", referencedColumnName="id")
+	@JoinColumn(name = "user_id", referencedColumnName="id")
 	@ApiModelProperty(notes = "The user of the category")
 	private User user;
 	
 	
 	@ManyToOne
-	@JoinColumn(name = "iconid", referencedColumnName="id")
+	@JoinColumn(name = "icon_id", referencedColumnName="id")
 	@ApiModelProperty(notes = "The icon of the category")
 	private Icon icon;
 	

@@ -27,7 +27,7 @@ public interface TransactionRepository extends CrudRepository<Transaction, Integ
 	@Query("select t from Transaction t where t.user=:user and t.chat=:chat")
 	List<Transaction> getTransactionByUserAndChat(@Param("user") User user, @Param("chat") Chat chat);
 	
-	@Query(value = "select t from Transaction t where t.user=:user and t.chat=:chat and timestamp BETWEEN :startDate AND :endDate")
+	@Query(value = "select t from Transaction t where t.user=:user and t.chat=:chat and createdAt BETWEEN :startDate AND :endDate")
 	List<Transaction> getTransactionByUserAndChatAndPeriod(@Param("user") User user, @Param("chat") Chat chat, Date startDate, Date endDate);
 
 }

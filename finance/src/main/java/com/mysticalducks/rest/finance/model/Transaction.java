@@ -27,26 +27,27 @@ public class Transaction {
 	
 	private double amount;
 	
-	@Column(name="ispositive")
+	@Column(name="is_positive")
 	private boolean isPositive;
 	
 	private String note;
 	
 	@ManyToOne
-	@JoinColumn(name = "categoryid", referencedColumnName="id")
+	@JoinColumn(name = "category_id", referencedColumnName="id")
 	private Category category;
 	
 	@ManyToOne
-	@JoinColumn(name = "userid", referencedColumnName="id")
+	@JoinColumn(name = "user_id", referencedColumnName="id")
 	private User user;
 	
 	@ManyToOne
-	@JoinColumn(name = "chatid", referencedColumnName="id")
+	@JoinColumn(name = "chat_id", referencedColumnName="id")
 	private Chat chat;
 	
 	@CreationTimestamp
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date timestamp;
+	@Column(name="created_at")
+	private Date createdAt;
 	
 	public Transaction() {}
 	
@@ -116,12 +117,12 @@ public class Transaction {
 		this.chat = chat;
 	}
 
-	public Date getTimestamp() {
-		return timestamp;
+	public Date getCreatedAt() {
+		return createdAt;
 	}
 
-	public void setTimestamp(Date timestamp) {
-		this.timestamp = timestamp;
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
 	}
 	
 	public void setId(int id) {

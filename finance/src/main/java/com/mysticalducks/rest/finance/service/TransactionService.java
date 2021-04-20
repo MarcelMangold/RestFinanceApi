@@ -98,7 +98,7 @@ public class TransactionService implements ITransactionService {
 			transaction.setName(newTransaction.getName());
 			transaction.setNote(newTransaction.getNote());
 			transaction.setPositive(newTransaction.isPositive());
-			transaction.setTimestamp(newTransaction.getTimestamp());
+			transaction.setCreatedAt(newTransaction.getCreatedAt());
 			transaction.setUser(newTransaction.getUser());
 			return transactionRepository.save(transaction);
 		}).orElseGet(() -> {

@@ -12,6 +12,6 @@ public interface ITransactionInformations {
 	Boolean getIsPositive();
 	String getNote();
 	ICategory getCategory();
-	Date getTimestamp();
+	Date getCreatedAt();
 	
 }
