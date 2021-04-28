@@ -46,6 +46,7 @@ public class CategoryService implements ICategoryService {
 	public Category save(int userId, String name, int iconId) {
 		Optional<User> user = userService.findUser(userId);
 		if (user.isPresent()) {
+			
 			Icon icon = iconService.findIcon(iconId);
 			if (icon != null) {
 				Category category = new Category(name, user.get(), icon);
