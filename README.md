@@ -2,7 +2,7 @@
 
 
 
-##application.properties##
+## application.properties
 ```
 spring.jpa.hibernate.ddl-auto=none
 
