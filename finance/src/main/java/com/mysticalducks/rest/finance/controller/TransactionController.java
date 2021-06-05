@@ -30,12 +30,6 @@ public class TransactionController {
 	@Autowired
 	private TransactionService transactionService;
 
-//	@GetMapping("/transactions")
-//	@ResponseBody
-//	public List<Transaction> findCategories() {
-//		return transactionService.findAllTransactions();
-//	}
-
 	@GetMapping("/transaction/{id}")
 	@ResponseBody
 	public Transaction findCategory(@PathVariable int id){
@@ -72,7 +66,6 @@ public class TransactionController {
 		
 	}
 	
-	
 	@GetMapping("/totalAmount/{userId}") 
 	@ResponseBody
 	@ApiOperation(value = "Return the total amount for user in chat", 
@@ -99,10 +92,4 @@ public class TransactionController {
 	int totalAmountByCurrentMonth(@PathVariable int userId, @RequestParam int chatId){
 		return transactionService.totalAmountByCurrentMonth(userId, chatId);
 	}
-//	@GetMapping("/categories")
-//	@ResponseBody 
-//	public List<Categorie> findAllCategoriesByChatId(@RequestParam(name = "chatId") int chatId){
-//		List<Categorie> categories = categorieService.findAllCategoriesByChatId(chatId);
-//		return categories;
-//	}
 }

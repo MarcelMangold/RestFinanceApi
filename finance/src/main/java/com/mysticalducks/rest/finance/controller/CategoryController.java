@@ -51,10 +51,10 @@ public class CategoryController {
 		 return categoryService.save(userId, name, iconId);
 	  }
 	 
-	 @PutMapping("/category/{id}")
+	 @PutMapping("/category/")
 	 @ResponseBody
-	 Category replaceCategory(@RequestBody Category category, @PathVariable int id) {
-		 return categoryService.replace(id, category);
+	 Category replaceCategory(@RequestBody Category category) {
+		 return categoryService.replace(category);
 	 }
 	 
 	 @DeleteMapping("/category/{id}")

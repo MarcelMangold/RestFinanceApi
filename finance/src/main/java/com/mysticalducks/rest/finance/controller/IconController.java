@@ -1,6 +1,7 @@
 package com.mysticalducks.rest.finance.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -33,10 +35,10 @@ public class IconController {
 	@GetMapping("/icon/{id}")
 	@ResponseBody
 	public ResponseEntity<Icon> findIcon(@PathVariable int id) {
-		Icon icon = iconService.findIcon(id);
+		Optional<Icon> icon = iconService.findIcon(id);
 		
-		if(icon != null) {
-			return ResponseEntity.ok(icon);
+		if(icon.isPresent()) {
+			return ResponseEntity.ok(icon.get());
 		}
 		
 		return new ResponseEntity(new EmptyJsonResponse() , HttpStatus.OK);
@@ -44,7 +46,7 @@ public class IconController {
 
 	@PostMapping("/icon/")
 	@ResponseBody
-	public Icon newIcon(@RequestParam String iconName) {
+	public Icon newIcon(@RequestBody String iconName) {
 		return iconService.save(iconName);
 	}
 

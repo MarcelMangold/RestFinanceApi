@@ -1,4 +1,4 @@
-package com.mysticalducks.rest.finance;
+package com.mysticalducks.rest.finance.Controller;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -16,7 +16,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.mysticalducks.rest.finance.controller.IconController;
@@ -38,7 +37,7 @@ public class IconControllerTest {
 
 	@Test
 	public void getRequest() throws Exception {
-		given(this.iconService.findIcon(1)).willReturn(new Icon("test"));
+		given(this.iconService.findIcon(1).get()).willReturn(new Icon("test"));
 		this.mvc.perform(get("/icon/1").secure(false)).andExpect(status().isOk())
 				.andExpect(content().contentType("application/json")).andExpect(jsonPath("id").value(0))
 				.andExpect(jsonPath("name").value("test"));

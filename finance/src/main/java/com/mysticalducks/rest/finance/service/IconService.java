@@ -19,12 +19,8 @@ public class IconService implements IIconService {
 		return (List<Icon>) iconRepository.findAll();
 	}
 
-	public Icon findIcon(int id) {
-		Optional<Icon> icon = iconRepository.findById(id);
-		if(icon.isPresent())
-			return icon.get();
-		
-		return null;
+	public Optional<Icon> findIcon(int id) {
+		return iconRepository.findById(id);
 	}
 
 	public Icon save(String name) {

@@ -47,9 +47,9 @@ public class CategoryService implements ICategoryService {
 		Optional<User> user = userService.findUser(userId);
 		if (user.isPresent()) {
 			
-			Icon icon = iconService.findIcon(iconId);
-			if (icon != null) {
-				Category category = new Category(name, user.get(), icon);
+			Optional<Icon> icon = iconService.findIcon(iconId);
+			if (icon.isPresent()) {
+				Category category = new Category(name, user.get(), icon.get());
 				return categoryRepository.save(category);
 			} else {
 				return null; // "no icon found";
@@ -61,7 +61,8 @@ public class CategoryService implements ICategoryService {
 
 	}
 	
-	public Category replace(int id, Category newCategory) {
+	public Category replace(Category newCategory) {
+		int id = newCategory.getId();
 		return categoryRepository.findById(id)
 				.map(category -> {
 					category.setName(newCategory.getName());
