@@ -16,7 +16,6 @@ import com.mysticalducks.rest.finance.model.Transaction;
 import com.mysticalducks.rest.finance.model.User;
 import com.mysticalducks.rest.finance.repository.ITransactionInformations;
 import com.mysticalducks.rest.finance.repository.TransactionRepository;
-import com.mysticalducks.rest.finance.repository.UserRepository;
 
 @Service
 public class TransactionService implements ITransactionService {
@@ -25,13 +24,7 @@ public class TransactionService implements ITransactionService {
 	private TransactionRepository transactionRepository;
 
 	@Autowired
-	private UserService userService;
-
-	@Autowired
 	private ChatService chatService;
-
-	@Autowired
-	private CategoryService categoryService;
 
 	public List<Transaction> findAllTransactions() {
 		List<Transaction> transactions = (List<Transaction>) transactionRepository.findAll();
@@ -42,16 +35,9 @@ public class TransactionService implements ITransactionService {
 		return transactionRepository.findById(id);
 	}
 
-	public List<ITransactionInformations> findAllTransactionsByUserId(int userId) {
-		Optional<User> user = userService.findUser(userId);
-		if (user.isPresent()) {
-			List<ITransactionInformations> transactions = (List<ITransactionInformations>) transactionRepository
-					.getTransactionInformations(user.get());
-			return transactions;
-		} else {
-			return null;
-		}
-
+	public List<ITransactionInformations> findAllTransactionsByUserId(User user) {
+			return (List<ITransactionInformations>) transactionRepository
+					.getTransactionInformations(user);
 	}
 
 	public List<Transaction> findAllTransactionsByChatId(int chatId) {
@@ -66,28 +52,10 @@ public class TransactionService implements ITransactionService {
 		}
 	}
 
-	public Transaction save(String name, double amount, Boolean isPositive, String note, int categoryId, int userId,
-			int chatId) {
-		Optional<Chat> chat = chatService.findChat(chatId);
-		Optional<User> user = userService.findUser(userId);
-		Optional<Category> category = categoryService.findCategorie(categoryId);
+	public Transaction save(String name, double amount, Boolean isPositive, String note, Category category, User user,
+			Chat chat) {
+		return transactionRepository.save(new Transaction(name, amount, isPositive, note, category, user, chat));
 
-		if (chat.isPresent()) {
-			if (user.isPresent()) {
-				if (category.isPresent()) {
-					return transactionRepository.save(
-							new Transaction(name, amount, isPositive, note, category.get(), user.get(), chat.get()));
-
-				} else {
-					return null;
-				}
-
-			} else {
-				return null;
-			}
-		} else {
-			return null;
-		}
 	}
 
 	public Transaction replace(int id, Transaction newTransaction) {
@@ -111,38 +79,20 @@ public class TransactionService implements ITransactionService {
 		transactionRepository.deleteById(id);
 	}
 
-	public int totalAmount(int userId, int chatId) {
-		Optional<Chat> chat = chatService.findChat(chatId);
-		Optional<User> user = userService.findUser(userId);
-
-		if (existsUserAndChatExists(chat, user)) {
-			return getTotalAmount(transactionRepository.getTransactionByUserAndChat(user.get(), chat.get()));
-		}
-		return 0;
+	public int totalAmount(User user, Chat chat) {
+		return getTotalAmount(transactionRepository.getTransactionByUserAndChat(user, chat));
 	}
 
-	public int totalAmountByDate(int userId, int chatId, Date startDate, Date endDate) {
-		Optional<Chat> chat = chatService.findChat(chatId);
-		Optional<User> user = userService.findUser(userId);
-		
-		if (existsUserAndChatExists(chat, user)) {
-			return getTotalAmount(transactionRepository.getTransactionByUserAndChatAndPeriod(user.get(), chat.get(), startDate, endDate));
-		}
-		return 0;
+	public int totalAmountByDate(User user, Chat chat, Date startDate, Date endDate) {
+		return getTotalAmount(transactionRepository.getTransactionByUserAndChatAndPeriod(user, chat, startDate, endDate));
 	}
 	
-	public int totalAmountByCurrentMonth(int userId, int chatId) {
-		Optional<Chat> chat = chatService.findChat(chatId);
-		Optional<User> user = userService.findUser(userId);
-		
+	public int totalAmountByCurrentMonth(User user, Chat chat) {
 		ZoneId zoneId = ZoneId.of ( "UTC" );
 		LocalDate today = LocalDate.now ( zoneId );
 		LocalDate firstOfCurrentMonth = today.with ( ChronoField.DAY_OF_MONTH , 1 );
 		
-		if (existsUserAndChatExists(chat, user)) {
-			return getTotalAmount(transactionRepository.getTransactionByUserAndChatAndPeriod(user.get(), chat.get(), Date.from(firstOfCurrentMonth.atStartOfDay(ZoneId.systemDefault()).toInstant()), Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant())));
-		}
-		return 0;
+		return getTotalAmount(transactionRepository.getTransactionByUserAndChatAndPeriod(user, chat, Date.from(firstOfCurrentMonth.atStartOfDay(ZoneId.systemDefault()).toInstant()), Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant())));
 	}
 
 	private int getTotalAmount(List<Transaction> transactions) {
@@ -157,13 +107,5 @@ public class TransactionService implements ITransactionService {
 		return totalAmount;
 	}
 
-	private boolean existsUserAndChatExists(Optional<Chat> chat, Optional<User> user) {
-		if (chat.isPresent()) {
-			if (user.isPresent()) {
-				return true;
-			}
-		}
-		return false;
-	}
 
 }

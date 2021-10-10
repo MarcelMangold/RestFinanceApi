@@ -1,7 +1,6 @@
 package com.mysticalducks.rest.finance.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,8 +20,8 @@ public class UserService implements IUserService {
 		return users;
 	}
 	
-	public Optional<User> findUser(int id) {
-		return userRepository.findById(id);
+	public User findUser(int id) {
+		return userRepository.findById(id).orElse(null);
 	}
 	
 	public void delete(int id) {

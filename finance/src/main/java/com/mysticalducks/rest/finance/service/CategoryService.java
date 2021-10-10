@@ -17,48 +17,32 @@ public class CategoryService implements ICategoryService {
 	@Autowired
 	private CategoryRepository categoryRepository;
 
-	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	public void setMissionService(UserService userService) {
+        this.userService = userService;
+    }
+
 
 	@Autowired
 	private IconService iconService;
 
-	public List<Category> findAllCategories() {
+	public List<Category> findAll() {
 		List<Category> categories = (List<Category>) categoryRepository.findAll();
 		return categories;
 	}
 
-	public Optional<Category> findCategorie(int id) {
-		return categoryRepository.findById(id);
+	public Category findById(int id) {
+		return categoryRepository.findById(id).orElse(null);
 	}
 
-	public List<Category> findAllCategoriesByUserId(int userId) {
-		Optional<User> user = userService.findUser(userId);
-
-		if (user.isPresent()) {
-			List<Category> categories = (List<Category>) categoryRepository.findAllCategoriesByUserId(user.get());
-			return categories;
-		} else {
-			return null;
-		}
+	public List<Category> findAllByUserId(User user) {
+		return (List<Category>) categoryRepository.findAllCategoriesByUserId(user);
 	}
 
-	public Category save(int userId, String name, int iconId) {
-		Optional<User> user = userService.findUser(userId);
-		if (user.isPresent()) {
-			
-			Optional<Icon> icon = iconService.findIcon(iconId);
-			if (icon.isPresent()) {
-				Category category = new Category(name, user.get(), icon.get());
-				return categoryRepository.save(category);
-			} else {
-				return null; // "no icon found";
-			}
-
-		} else {
-			return null; //"no User found";
-		}
-
+	public Category save(User user, String name, Icon icon) {
+		return categoryRepository.save(new Category(name, user, icon));
 	}
 	
 	public Category replace(Category newCategory) {
@@ -76,8 +60,9 @@ public class CategoryService implements ICategoryService {
 				});
 	}
 	
-	public void delete(int id) {
+	public void deleteById(int id) {
 		categoryRepository.deleteById(id);
 	}
+
 
 }

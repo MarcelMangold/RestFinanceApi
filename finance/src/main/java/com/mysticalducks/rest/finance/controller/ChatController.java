@@ -13,6 +13,7 @@ import com.mysticalducks.rest.finance.model.Chat;
 import com.mysticalducks.rest.finance.service.ChatService;
 
 @Controller
+//@V1APIController
 public class ChatController {
 
 	@Autowired

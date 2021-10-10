@@ -6,6 +6,6 @@ import com.mysticalducks.rest.finance.model.Icon;
 
 public interface IIconService {
 	
-	List<Icon> findAllIcon();
+	List<Icon> findAll();
 
 }

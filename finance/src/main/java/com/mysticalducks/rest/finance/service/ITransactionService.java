@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.mysticalducks.rest.finance.model.Transaction;
+import com.mysticalducks.rest.finance.model.User;
 import com.mysticalducks.rest.finance.repository.ITransactionInformations;
 
 public interface ITransactionService {
@@ -12,7 +13,7 @@ public interface ITransactionService {
 	
 	Optional<Transaction> findTransaction(int id);
 	
-	List<ITransactionInformations> findAllTransactionsByUserId(int userId);
+	List<ITransactionInformations> findAllTransactionsByUserId(User user);
 	
 	List<Transaction> findAllTransactionsByChatId(int chatId);
 

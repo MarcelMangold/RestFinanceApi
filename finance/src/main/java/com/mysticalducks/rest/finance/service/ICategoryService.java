@@ -1,16 +1,16 @@
 package com.mysticalducks.rest.finance.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.mysticalducks.rest.finance.model.Category;
+import com.mysticalducks.rest.finance.model.User;
 
 public interface ICategoryService {
 	
-	List<Category> findAllCategories();
+	List<Category> findAll();
 	
-	Optional<Category> findCategorie(int id);
+	Category findById(int id);
 	
-	List<Category> findAllCategoriesByUserId(int userId);
+	List<Category> findAllByUserId(User user);
 
 }

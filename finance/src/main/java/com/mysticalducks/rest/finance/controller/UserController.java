@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
+//@V1APIController
 public class UserController {
 
 	@Autowired
@@ -32,11 +33,10 @@ public class UserController {
 	@GetMapping("/user/{id}")
 	@ResponseBody
 	public ResponseEntity<User> findUser(@PathVariable int id){
-		Optional<User> user = userService.findUser(id);
+		User user = userService.findUser(id);
 		
-		if(user.isPresent()) {
-			return ResponseEntity.ok(user.get());
-		}
+		if(user != null) 
+			return ResponseEntity.ok(user);
 		
 		return new ResponseEntity(new EmptyJsonResponse() , HttpStatus.OK);
 	}

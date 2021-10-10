@@ -17,6 +17,7 @@
 
 	<properties>
 		<java.version>11</java.version>
+		<mockito.version>3.12.4</mockito.version>
 	</properties>
 
 	<dependencies>
@@ -25,12 +26,13 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
-		<!-- <dependency> <groupId>org.postgresql</groupId> <artifactId>postgresql</artifactId> 
-			<scope>runtime</scope> </dependency> -->
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
 		</dependency>
+		<!-- <dependency> <groupId>mysql</groupId> <artifactId>mysql-connector-java</artifactId> 
+			</dependency> -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -58,6 +60,10 @@
 			<artifactId>jjwt-api</artifactId>
 			<version>0.11.2</version>
 		</dependency>
+		<!-- <dependency> <groupId>org.mockito</groupId> <artifactId>mockito-core</artifactId> 
+			<version>${mockito.version}</version> <scope>test</scope> </dependency> <dependency> 
+			<groupId>org.mockito</groupId> <artifactId>mockito-junit-jupiter</artifactId> 
+			<version>${mockito.version}</version> <scope>test</scope> </dependency> -->
 		<dependency>
 			<!-- Automated JSON API documentation for API's built with Spring -->
 			<groupId>io.springfox</groupId>
