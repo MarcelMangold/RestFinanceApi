@@ -1,2 +1,4 @@
 /application.properties
 /applicationPI.properties
+/applicationKasserver.properties
+/applicationPostgres.properties
