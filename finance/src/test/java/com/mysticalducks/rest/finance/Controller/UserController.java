@@ -41,7 +41,7 @@ public class UserController {
 
 	@Test
 	public void getRequest() throws Exception {
-		given(this.userService.findUser(1).get()).willReturn(new User(1, "name", "password", 4));
+		given(this.userService.findUser(1)).willReturn(new User(1, "name", "password", 4));
 		this.mvc.perform(get("/icon/1").secure(false)).andExpect(status().isOk())
 				.andExpect(content().contentType("application/json")).andExpect(jsonPath("id").value(0))
 				.andExpect(jsonPath("name").value("test"));

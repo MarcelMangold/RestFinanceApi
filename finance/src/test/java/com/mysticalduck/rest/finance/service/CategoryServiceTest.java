@@ -46,6 +46,7 @@ public class CategoryServiceTest {
 
 	Category category;
 	User user;
+	Icon icon;
 
 	@BeforeEach
 	void setUp() {
@@ -83,7 +84,7 @@ public class CategoryServiceTest {
 	
 		
 		
-		Category savedCategory = service.save(1, "User", 1);
+		Category savedCategory = service.save(user, "User", icon);
 
 		verify(categoryRepository).save(any(Category.class));
 

@@ -51,12 +51,12 @@ public class TransactionController extends CommonController{
 	
 	@GetMapping("/transactions")
 	@ResponseBody
-	public ResponseEntity<?> findAllCategoriesByUserId(@RequestParam(name = "user_id") int userId){
+	public ResponseEntity<List<ITransactionInformations>> findAllCategoriesByUserId(@RequestParam(name = "user_id") int userId){
 		
 		User user = userService.findUser(userId);
 		
-		if(user == null)
-			return userNotFound(userId);
+//		if(user == null)
+//			return userNotFound(userId);
 		
 		return new ResponseEntity<List<ITransactionInformations>>(transactionService.findAllTransactionsByUserId(user), HttpStatus.OK) ;
 	}

@@ -3,6 +3,7 @@ package com.mysticalducks.rest.finance.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.mysticalducks.rest.finance.model.User;
@@ -21,7 +22,8 @@ public class UserService implements IUserService {
 	}
 	
 	public User findUser(int id) {
-		return userRepository.findById(id).orElse(null);
+		return userRepository.findById(id)
+				.orElseThrow(() -> new UsernameNotFoundException("User with id not found"));
 	}
 	
 	public void delete(int id) {
