@@ -2,8 +2,6 @@ package com.mysticalducks.rest.finance.Controller;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -13,17 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.mysticalducks.rest.finance.controller.IconController;
-import com.mysticalducks.rest.finance.model.Category;
-import com.mysticalducks.rest.finance.model.Icon;
 import com.mysticalducks.rest.finance.model.User;
-import com.mysticalducks.rest.finance.service.CategoryService;
-import com.mysticalducks.rest.finance.service.IconService;
 import com.mysticalducks.rest.finance.service.UserService;
 
 @WebMvcTest(value = IconController.class, excludeAutoConfiguration = { SecurityAutoConfiguration.class })
@@ -41,7 +34,7 @@ public class UserController {
 
 	@Test
 	public void getRequest() throws Exception {
-		given(this.userService.findUser(1)).willReturn(new User(1, "name", "password", 4));
+		given(this.userService.findById(1)).willReturn(new User(1, "name", "password", 4));
 		this.mvc.perform(get("/icon/1").secure(false)).andExpect(status().isOk())
 				.andExpect(content().contentType("application/json")).andExpect(jsonPath("id").value(0))
 				.andExpect(jsonPath("name").value("test"));
@@ -79,6 +72,11 @@ public class UserController {
 //			    .andExpect(status().isOk());
 //
 //		this.mvc.perform(delete("/icon/").secure(false)).andExpect(status().isMethodNotAllowed());
+	}
+
+
+	public static void main(String[] args) {
+		//foundUsers
 	}
 
 }

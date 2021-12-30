@@ -16,18 +16,27 @@ public class UserService implements IUserService {
 	 private UserRepository userRepository;
 
 
-	public List<User> findAllUsers() {
+	public List<User> findAll() {
 		List<User> users = (List<User>) userRepository.findAll();
 		return users;
 	}
 	
-	public User findUser(int id) {
+	public User findById(int id) {
 		return userRepository.findById(id)
 				.orElseThrow(() -> new UsernameNotFoundException("User with id not found"));
 	}
 	
-	public void delete(int id) {
+	public User save(User user) {
+		return userRepository.save(user);
+	}
+	
+	public void deleteById(int id) {
 		userRepository.deleteById(id);
 	}
+	
+	public void delete(User user) {
+		userRepository.delete(user);
+	}
+
 
 }

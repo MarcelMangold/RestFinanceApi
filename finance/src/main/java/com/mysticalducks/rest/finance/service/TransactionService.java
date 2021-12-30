@@ -41,15 +41,11 @@ public class TransactionService implements ITransactionService {
 	}
 
 	public List<Transaction> findAllTransactionsByChatId(int chatId) {
-		Optional<Chat> chat = chatService.findChat(chatId);
+		Chat chat = chatService.findById(chatId);
 
-		if (chat.isPresent()) {
-			List<Transaction> transactions = (List<Transaction>) transactionRepository
-					.findAllCategoriesByChatId(chat.get());
-			return transactions;
-		} else {
-			return null;
-		}
+		List<Transaction> transactions = (List<Transaction>) transactionRepository
+				.findAllCategoriesByChatId(chat);
+		return transactions;
 	}
 
 	public Transaction save(String name, double amount, Boolean isPositive, String note, Category category, User user,

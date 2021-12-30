@@ -1,9 +1,9 @@
 package com.mysticalducks.rest.finance.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.mysticalducks.rest.finance.model.Category;
@@ -34,7 +34,9 @@ public class CategoryService implements ICategoryService {
 	}
 
 	public Category findById(int id) {
-		return categoryRepository.findById(id).orElse(null);
+		return categoryRepository.findById(id).
+				orElseThrow(() -> new UsernameNotFoundException("Chat with id "+ id + " not found"));
+		
 	}
 
 	public List<Category> findAllByUserId(User user) {

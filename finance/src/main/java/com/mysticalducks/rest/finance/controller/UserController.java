@@ -27,13 +27,13 @@ public class UserController {
 	@GetMapping("/users")
 	@ResponseBody
 	public List<User> findUsers() {
-		return userService.findAllUsers();
+		return userService.findAll();
 	}
 
 	@GetMapping("/user/{id}")
 	@ResponseBody
 	public ResponseEntity<User> findUser(@PathVariable int id){
-		User user = userService.findUser(id);
+		User user = userService.findById(id);
 		
 		if(user != null) 
 			return ResponseEntity.ok(user);
@@ -43,6 +43,6 @@ public class UserController {
 	
 	@DeleteMapping("/user/{id}")
 	void delete(@PathVariable int id) {
-		userService.delete(id);
+		userService.deleteById(id);
 	}
 }

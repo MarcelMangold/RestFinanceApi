@@ -73,16 +73,14 @@ public class CategoryServiceTest {
 		assertThat(foundCategory).isNotNull();
 
 		verify(categoryRepository).findById(1);
+		
+		service.findById(2);
 
 	}
 
 	@Test
 	void save() {
 		when(categoryRepository.save(any(Category.class))).thenReturn(category);
-//		when(userRepository.findById(1)).thenReturn(Optional.of(user));
-//		when(userService.findUser(user.getId())).thenReturn(Optional.of(user));
-	
-		
 		
 		Category savedCategory = service.save(user, "User", icon);
 
@@ -107,15 +105,30 @@ public class CategoryServiceTest {
 
 	@Test
 	void replace() {
-		when(categoryRepository.findById(1)).thenReturn(Optional.of(category));
+		when(categoryRepository.findById(0)).thenReturn(Optional.of(category));
 		when(categoryRepository.save(any(Category.class))).thenReturn(category);
 
 		Category replacedCategory = service.replace(category);
 
-		verify(categoryRepository, times(2)).findById(1);
+		verify(categoryRepository, times(1)).findById(0);
 		verify(categoryRepository, times(1)).save(any(Category.class));
-//		verify(categoryRepository).save(any(Category.class));
 
 		assertThat(replacedCategory).isNotNull();
+	}
+	
+	@Test
+	void replaceNew() {
+		when(categoryRepository.findById(1)).thenReturn(Optional.of(category));
+		when(categoryRepository.save(any(Category.class))).thenReturn(category);
+		
+		Category newCategory = new Category("NewCategorie", user, icon);
+		newCategory.setID(1);
+		Category replacedCategory = service.replace(newCategory);
+
+		verify(categoryRepository, times(1)).findById(1);
+		verify(categoryRepository, times(1)).save(any(Category.class));
+		
+		assertThat(replacedCategory).isNotNull();
+		
 	}
 }

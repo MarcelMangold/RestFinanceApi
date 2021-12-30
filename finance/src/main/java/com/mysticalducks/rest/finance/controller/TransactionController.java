@@ -53,7 +53,7 @@ public class TransactionController extends CommonController{
 	@ResponseBody
 	public ResponseEntity<List<ITransactionInformations>> findAllCategoriesByUserId(@RequestParam(name = "user_id") int userId){
 		
-		User user = userService.findUser(userId);
+		User user = userService.findById(userId);
 		
 //		if(user == null)
 //			return userNotFound(userId);

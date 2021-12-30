@@ -6,8 +6,11 @@ import com.mysticalducks.rest.finance.model.User;
 
 public interface IUserService {
 	
-	List<User> findAllUsers();
+	List<User> findAll();
 	
-	User findUser(int id);
+	User findById(int id);
+	
+	void deleteById(int id);
 
+	void delete(User user);
 }

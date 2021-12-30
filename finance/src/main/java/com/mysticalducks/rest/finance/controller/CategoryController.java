@@ -61,7 +61,7 @@ public class CategoryController {
 	 @ResponseBody
 	 ResponseEntity<?> newCategory(@RequestParam int userId, @RequestParam String name, @RequestParam int iconId) {
 		 
-		 User user = userService.findUser(userId);
+		 User user = userService.findById(userId);
 		 Icon icon = iconService.findById(iconId);
 		 
 		 if(user == null) 

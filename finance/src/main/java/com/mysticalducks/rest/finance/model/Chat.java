@@ -16,6 +16,10 @@ public class Chat {
 	private int id;
 	
 	public Chat() {}
+	
+	public Chat(int id) {
+		this.id = id;
+	}
 
 	@Column(nullable = false)
 	public int getId() {
