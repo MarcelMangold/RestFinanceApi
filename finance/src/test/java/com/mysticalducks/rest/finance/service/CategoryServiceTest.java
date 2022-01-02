@@ -1,6 +1,8 @@
-package com.mysticalduck.rest.finance.service;
+package com.mysticalducks.rest.finance.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -20,17 +22,19 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
+import com.mysticalducks.rest.finance.exception.DataNotFoundException;
 import com.mysticalducks.rest.finance.model.Category;
 import com.mysticalducks.rest.finance.model.Icon;
 import com.mysticalducks.rest.finance.model.User;
 import com.mysticalducks.rest.finance.repository.CategoryRepository;
 import com.mysticalducks.rest.finance.repository.UserRepository;
-import com.mysticalducks.rest.finance.service.CategoryService;
-import com.mysticalducks.rest.finance.service.UserService;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class CategoryServiceTest {
+	
+	@InjectMocks
+	CategoryService service;
 
 	@Mock
 	UserRepository userRepository;
@@ -38,11 +42,8 @@ public class CategoryServiceTest {
 	@Mock
 	CategoryRepository categoryRepository;
 	
-	@InjectMocks
+	@Mock
 	UserService userService;
-
-	@InjectMocks
-	CategoryService service;
 
 	Category category;
 	User user;
@@ -50,9 +51,6 @@ public class CategoryServiceTest {
 
 	@BeforeEach
 	void setUp() {
-		MockitoAnnotations.initMocks(this);
-//		MockitoAnnotations.initMocks(this);
-//		this.userService = new UserService();
 		this.user = new User("User", "password", 0);
 		this.category = new Category("Category", user , new Icon("Icon"));
 	}
@@ -74,7 +72,10 @@ public class CategoryServiceTest {
 
 		verify(categoryRepository).findById(1);
 		
-		service.findById(2);
+		DataNotFoundException thrown = assertThrows(DataNotFoundException.class, () -> service.findById(2),
+				"No data found for the id 2");
+
+		assertTrue(thrown.getMessage().contains("2"));
 
 	}
 

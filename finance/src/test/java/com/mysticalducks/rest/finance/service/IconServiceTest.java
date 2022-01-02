@@ -1,6 +1,8 @@
-package com.mysticalduck.rest.finance.service;
+package com.mysticalducks.rest.finance.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -19,10 +21,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.mysticalducks.rest.finance.exception.DataNotFoundException;
 import com.mysticalducks.rest.finance.model.Icon;
 import com.mysticalducks.rest.finance.repository.IconRepository;
-import com.mysticalducks.rest.finance.service.IconService;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
 public class IconServiceTest {

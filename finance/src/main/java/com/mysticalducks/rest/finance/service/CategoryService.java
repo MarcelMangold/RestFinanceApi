@@ -3,9 +3,9 @@ package com.mysticalducks.rest.finance.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.mysticalducks.rest.finance.exception.DataNotFoundException;
 import com.mysticalducks.rest.finance.model.Category;
 import com.mysticalducks.rest.finance.model.Icon;
 import com.mysticalducks.rest.finance.model.User;
@@ -17,16 +17,6 @@ public class CategoryService implements ICategoryService {
 	@Autowired
 	private CategoryRepository categoryRepository;
 
-	private UserService userService;
-	
-	@Autowired
-	public void setMissionService(UserService userService) {
-        this.userService = userService;
-    }
-
-
-	@Autowired
-	private IconService iconService;
 
 	public List<Category> findAll() {
 		List<Category> categories = (List<Category>) categoryRepository.findAll();
@@ -34,8 +24,7 @@ public class CategoryService implements ICategoryService {
 	}
 
 	public Category findById(int id) {
-		return categoryRepository.findById(id).
-				orElseThrow(() -> new UsernameNotFoundException("Chat with id "+ id + " not found"));
+		return categoryRepository.findById(id).orElseThrow(() -> new DataNotFoundException(id));
 		
 	}
 

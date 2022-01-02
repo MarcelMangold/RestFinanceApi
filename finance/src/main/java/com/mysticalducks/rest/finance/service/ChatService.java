@@ -3,9 +3,9 @@ package com.mysticalducks.rest.finance.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.mysticalducks.rest.finance.exception.DataNotFoundException;
 import com.mysticalducks.rest.finance.model.Chat;
 import com.mysticalducks.rest.finance.repository.ChatRepository;
 
@@ -23,7 +23,7 @@ public class ChatService implements IChatService {
 	
 	public Chat findById(int id) {
 		return chatRepository.findById(id)
-				.orElseThrow(() -> new UsernameNotFoundException("Chat with id "+ id + " not found"));
+				.orElseThrow(() -> new DataNotFoundException(id));
 		
 	}
 	
