@@ -1,32 +1,20 @@
 package com.mysticalducks.rest.finance.controller;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.mysticalducks.rest.finance.model.Category;
 import com.mysticalducks.rest.finance.model.Transaction;
-import com.mysticalducks.rest.finance.model.User;
 import com.mysticalducks.rest.finance.repository.ITransactionInformations;
 import com.mysticalducks.rest.finance.service.TransactionService;
 import com.mysticalducks.rest.finance.service.UserService;
-
-import io.swagger.annotations.ApiOperation;
 
 @Controller
 //@V1APIController
@@ -41,24 +29,13 @@ public class TransactionController extends CommonController{
 	@GetMapping("/transaction/{id}")
 	@ResponseBody
 	public Transaction findCategory(@PathVariable int id){
-		Optional<Transaction> transactions = transactionService.findTransaction(id);
-		if(transactions.isPresent()) {
-			return transactions.get();
-		} else {
-			return null;
-		}
+		return transactionService.findById(id);
 	}
 	
 	@GetMapping("/transactions")
 	@ResponseBody
 	public ResponseEntity<List<ITransactionInformations>> findAllCategoriesByUserId(@RequestParam(name = "user_id") int userId){
-		
-		User user = userService.findById(userId);
-		
-//		if(user == null)
-//			return userNotFound(userId);
-		
-		return new ResponseEntity<List<ITransactionInformations>>(transactionService.findAllTransactionsByUserId(user), HttpStatus.OK) ;
+		return new ResponseEntity<List<ITransactionInformations>>(transactionService.findAllByUser(userService.findById(userId)), HttpStatus.OK) ;
 	}
 	
 //	@PostMapping("/transaction")

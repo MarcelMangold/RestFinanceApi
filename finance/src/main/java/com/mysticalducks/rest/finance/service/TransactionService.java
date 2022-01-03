@@ -5,11 +5,11 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoField;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mysticalducks.rest.finance.exception.DataNotFoundException;
 import com.mysticalducks.rest.finance.model.Category;
 import com.mysticalducks.rest.finance.model.Chat;
 import com.mysticalducks.rest.finance.model.Transaction;
@@ -26,23 +26,22 @@ public class TransactionService implements ITransactionService {
 	@Autowired
 	private ChatService chatService;
 
-	public List<Transaction> findAllTransactions() {
+	public List<Transaction> findAll() {
 		List<Transaction> transactions = (List<Transaction>) transactionRepository.findAll();
 		return transactions;
 	}
 
-	public Optional<Transaction> findTransaction(int id) {
-		return transactionRepository.findById(id);
+	public Transaction findById(int id) {
+		return transactionRepository.findById(id).orElseThrow(() -> new DataNotFoundException(id));
 	}
-
-	public List<ITransactionInformations> findAllTransactionsByUserId(User user) {
+	
+	public List<ITransactionInformations> findAllByUser(User user) {
 			return (List<ITransactionInformations>) transactionRepository
 					.getTransactionInformations(user);
 	}
 
-	public List<Transaction> findAllTransactionsByChatId(int chatId) {
+	public List<Transaction> findAllByChatId(int chatId) {
 		Chat chat = chatService.findById(chatId);
-
 		List<Transaction> transactions = (List<Transaction>) transactionRepository
 				.findAllCategoriesByChatId(chat);
 		return transactions;
@@ -54,8 +53,8 @@ public class TransactionService implements ITransactionService {
 
 	}
 
-	public Transaction replace(int id, Transaction newTransaction) {
-		return transactionRepository.findById(id).map(transaction -> {
+	public Transaction replace(Transaction newTransaction) {
+		return transactionRepository.findById(newTransaction.getId()).map(transaction -> {
 			transaction.setAmount(newTransaction.getAmount());
 			transaction.setCategory(newTransaction.getCategory());
 			transaction.setChat(newTransaction.getChat());
@@ -66,24 +65,24 @@ public class TransactionService implements ITransactionService {
 			transaction.setUser(newTransaction.getUser());
 			return transactionRepository.save(transaction);
 		}).orElseGet(() -> {
-			newTransaction.setId(id);
 			return transactionRepository.save(newTransaction);
 		});
 	}
-
-	public void delete(int id) {
+	
+	public void deleteById(int id) {
 		transactionRepository.deleteById(id);
 	}
 
-	public int totalAmount(User user, Chat chat) {
+
+	public double totalAmount(User user, Chat chat) {
 		return getTotalAmount(transactionRepository.getTransactionByUserAndChat(user, chat));
 	}
 
-	public int totalAmountByDate(User user, Chat chat, Date startDate, Date endDate) {
+	public double totalAmountByDate(User user, Chat chat, Date startDate, Date endDate) {
 		return getTotalAmount(transactionRepository.getTransactionByUserAndChatAndPeriod(user, chat, startDate, endDate));
 	}
 	
-	public int totalAmountByCurrentMonth(User user, Chat chat) {
+	public double totalAmountByCurrentMonth(User user, Chat chat) {
 		ZoneId zoneId = ZoneId.of ( "UTC" );
 		LocalDate today = LocalDate.now ( zoneId );
 		LocalDate firstOfCurrentMonth = today.with ( ChronoField.DAY_OF_MONTH , 1 );
@@ -91,8 +90,8 @@ public class TransactionService implements ITransactionService {
 		return getTotalAmount(transactionRepository.getTransactionByUserAndChatAndPeriod(user, chat, Date.from(firstOfCurrentMonth.atStartOfDay(ZoneId.systemDefault()).toInstant()), Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant())));
 	}
 
-	private int getTotalAmount(List<Transaction> transactions) {
-		int totalAmount = 0;
+	private double getTotalAmount(List<Transaction> transactions) {
+		double totalAmount = 0;
 		for (Transaction transaction : transactions) {
 			if (transaction.isPositive()) {
 				totalAmount += transaction.getAmount();
@@ -102,6 +101,7 @@ public class TransactionService implements ITransactionService {
 		}
 		return totalAmount;
 	}
+
 
 
 }
