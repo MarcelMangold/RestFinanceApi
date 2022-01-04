@@ -25,6 +25,9 @@ public class TransactionService implements ITransactionService {
 
 	@Autowired
 	private ChatService chatService;
+	
+	@Autowired
+	private UserService userService;
 
 	public List<Transaction> findAll() {
 		List<Transaction> transactions = (List<Transaction>) transactionRepository.findAll();
@@ -37,13 +40,20 @@ public class TransactionService implements ITransactionService {
 	
 	public List<ITransactionInformations> findAllByUser(User user) {
 			return (List<ITransactionInformations>) transactionRepository
-					.getTransactionInformations(user);
+					.getInformations(user);
 	}
 
 	public List<Transaction> findAllByChatId(int chatId) {
 		Chat chat = chatService.findById(chatId);
 		List<Transaction> transactions = (List<Transaction>) transactionRepository
-				.findAllCategoriesByChatId(chat);
+				.findAllByChatId(chat);
+		return transactions;
+	}
+	
+	public List<Transaction> findAllByUserId(int userId) {
+		User user = userService.findById(userId);
+		List<Transaction> transactions = (List<Transaction>) transactionRepository
+				.findAllByUserId(user);
 		return transactions;
 	}
 
@@ -75,11 +85,11 @@ public class TransactionService implements ITransactionService {
 
 
 	public double totalAmount(User user, Chat chat) {
-		return getTotalAmount(transactionRepository.getTransactionByUserAndChat(user, chat));
+		return getTotalAmount(transactionRepository.getByUserAndChat(user, chat));
 	}
 
 	public double totalAmountByDate(User user, Chat chat, Date startDate, Date endDate) {
-		return getTotalAmount(transactionRepository.getTransactionByUserAndChatAndPeriod(user, chat, startDate, endDate));
+		return getTotalAmount(transactionRepository.getByUserAndChatAndPeriod(user, chat, startDate, endDate));
 	}
 	
 	public double totalAmountByCurrentMonth(User user, Chat chat) {
@@ -87,7 +97,7 @@ public class TransactionService implements ITransactionService {
 		LocalDate today = LocalDate.now ( zoneId );
 		LocalDate firstOfCurrentMonth = today.with ( ChronoField.DAY_OF_MONTH , 1 );
 		
-		return getTotalAmount(transactionRepository.getTransactionByUserAndChatAndPeriod(user, chat, Date.from(firstOfCurrentMonth.atStartOfDay(ZoneId.systemDefault()).toInstant()), Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant())));
+		return getTotalAmount(transactionRepository.getByUserAndChatAndPeriod(user, chat, Date.from(firstOfCurrentMonth.atStartOfDay(ZoneId.systemDefault()).toInstant()), Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant())));
 	}
 
 	private double getTotalAmount(List<Transaction> transactions) {

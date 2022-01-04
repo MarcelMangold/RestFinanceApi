@@ -20,6 +20,8 @@ public interface ITransactionService {
 	List<ITransactionInformations> findAllByUser(User user);
 
 	List<Transaction> findAllByChatId(int chatId);
+	
+	List<Transaction> findAllByUserId(int userId);
 
 	Transaction save(String name, double amount, Boolean isPositive, String note, Category category, User user,
 			Chat chat);

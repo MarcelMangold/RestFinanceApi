@@ -16,18 +16,18 @@ import com.mysticalducks.rest.finance.model.User;
 public interface TransactionRepository extends CrudRepository<Transaction, Integer> {
 
 	@Query("select t from Transaction t where t.user=:user")
-	List<Transaction> findAllCategoriesByUserId(@Param("user") User user);
+	List<Transaction> findAllByUserId(@Param("user") User user);
 
 	@Query("select t from Transaction t where t.chat=:chat")
-	List<Transaction> findAllCategoriesByChatId(@Param("chat") Chat chat);
+	List<Transaction> findAllByChatId(@Param("chat") Chat chat);
 
 	@Query("select t from Transaction t where t.user=:user")
-	List<ITransactionInformations> getTransactionInformations(@Param("user") User user);
+	List<ITransactionInformations> getInformations(@Param("user") User user);
 	
 	@Query("select t from Transaction t where t.user=:user and t.chat=:chat")
-	List<Transaction> getTransactionByUserAndChat(@Param("user") User user, @Param("chat") Chat chat);
+	List<Transaction> getByUserAndChat(@Param("user") User user, @Param("chat") Chat chat);
 	
 	@Query(value = "select t from Transaction t where t.user=:user and t.chat=:chat and createdAt BETWEEN :startDate AND :endDate")
-	List<Transaction> getTransactionByUserAndChatAndPeriod(@Param("user") User user, @Param("chat") Chat chat, Date startDate, Date endDate);
+	List<Transaction> getByUserAndChatAndPeriod(@Param("user") User user, @Param("chat") Chat chat, Date startDate, Date endDate);
 
 }

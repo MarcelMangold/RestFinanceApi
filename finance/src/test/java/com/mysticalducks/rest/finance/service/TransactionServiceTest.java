@@ -9,7 +9,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoField;
@@ -33,7 +32,6 @@ import com.mysticalducks.rest.finance.model.Chat;
 import com.mysticalducks.rest.finance.model.Icon;
 import com.mysticalducks.rest.finance.model.Transaction;
 import com.mysticalducks.rest.finance.model.User;
-import com.mysticalducks.rest.finance.repository.ITransactionInformations;
 import com.mysticalducks.rest.finance.repository.TransactionRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,6 +46,9 @@ public class TransactionServiceTest {
 
 	@Mock
 	ChatService chatService;
+	
+	@Mock
+	UserService userService;
 
 	Transaction transaction;
 	User user;
@@ -125,17 +126,37 @@ public class TransactionServiceTest {
 		transactions.add(transaction);
 		transactions.add(newTransaction);
 
-		when(transactionRepository.findAllCategoriesByChatId(chat)).thenReturn(transactions);
+		when(transactionRepository.findAllByChatId(chat)).thenReturn(transactions);
 		when(chatService.findById(1)).thenReturn(chat);
 
 		List<Transaction> foundTransactions = service.findAllByChatId(chat.getId());
 
-		verify(transactionRepository).findAllCategoriesByChatId(chat);
+		verify(transactionRepository).findAllByChatId(chat);
 
 		assertThat(foundTransactions).hasSize(2);
 		assertEquals(foundTransactions.get(0), transaction);
 		assertEquals(foundTransactions.get(1), newTransaction);
 	}
+	
+	@Test
+	void findAllByUserId() {
+		List<Transaction> transactions = new ArrayList<>();
+		Transaction newTransaction = new Transaction("transaction", 200.0, false, "note", category, user, chat);
+		transactions.add(transaction);
+		transactions.add(newTransaction);
+
+		when(transactionRepository.findAllByUserId(user)).thenReturn(transactions);
+		when(userService.findById(user.getId())).thenReturn(user);
+
+		List<Transaction> foundTransactions = service.findAllByUserId(user.getId());
+
+		verify(transactionRepository).findAllByUserId(user);
+
+		assertThat(foundTransactions).hasSize(2);
+		assertEquals(foundTransactions.get(0), transaction);
+		assertEquals(foundTransactions.get(1), newTransaction);
+	}
+
 
 	@Test
 	void save() {
@@ -188,10 +209,10 @@ public class TransactionServiceTest {
 		transactions.add(transaction);
 		transactions.add(new Transaction("transaction", 250.0, true, "note", category, user, chat));
 
-		when(transactionRepository.getTransactionByUserAndChat(user, chat)).thenReturn(transactions);
+		when(transactionRepository.getByUserAndChat(user, chat)).thenReturn(transactions);
 
 		double amount = service.totalAmount(user, chat);
-		verify(transactionRepository).getTransactionByUserAndChat(user, chat);
+		verify(transactionRepository).getByUserAndChat(user, chat);
 
 		assertEquals(transactions.get(1).getAmount() - transactions.get(0).getAmount(), amount);
 
@@ -205,11 +226,11 @@ public class TransactionServiceTest {
 
 		Date startDate = new Date();
 		Date endDate = new Date();
-		when(transactionRepository.getTransactionByUserAndChatAndPeriod(user, chat, startDate, endDate))
+		when(transactionRepository.getByUserAndChatAndPeriod(user, chat, startDate, endDate))
 				.thenReturn(transactions);
 
 		double amount = service.totalAmountByDate(user, chat, startDate, endDate);
-		verify(transactionRepository).getTransactionByUserAndChatAndPeriod(user, chat, startDate, endDate);
+		verify(transactionRepository).getByUserAndChatAndPeriod(user, chat, startDate, endDate);
 
 		assertEquals(transactions.get(1).getAmount() - transactions.get(0).getAmount(), amount);
 
@@ -228,11 +249,11 @@ public class TransactionServiceTest {
 		Date firstDateOfMonth =  Date.from(firstOfCurrentMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
 		Date actualDate = Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-		when(transactionRepository.getTransactionByUserAndChatAndPeriod(user, chat, firstDateOfMonth, actualDate))
+		when(transactionRepository.getByUserAndChatAndPeriod(user, chat, firstDateOfMonth, actualDate))
 				.thenReturn(transactions);
 
 		double amount = service.totalAmountByCurrentMonth(user, chat);
-		verify(transactionRepository).getTransactionByUserAndChatAndPeriod(user, chat, firstDateOfMonth, actualDate);
+		verify(transactionRepository).getByUserAndChatAndPeriod(user, chat, firstDateOfMonth, actualDate);
 
 		assertEquals(transactions.get(1).getAmount() - transactions.get(0).getAmount(), amount);
 
