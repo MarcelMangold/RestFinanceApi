@@ -1,4 +1,4 @@
-package com.mysticalducks.rest.finance.Controller;
+package com.mysticalducks.rest.finance.controller;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -27,7 +27,7 @@ import com.mysticalducks.rest.finance.service.IconService;
 
 @WebMvcTest(value = IconController.class, excludeAutoConfiguration = { SecurityAutoConfiguration.class })
 @ActiveProfiles("test")
-public class CategoryController {
+public class CategoryControllerTest {
 
 	@Autowired
 	WebApplicationContext context;

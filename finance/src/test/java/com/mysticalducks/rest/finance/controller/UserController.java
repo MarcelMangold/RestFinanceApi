@@ -1,4 +1,4 @@
-package com.mysticalducks.rest.finance.Controller;
+package com.mysticalducks.rest.finance.controller;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
