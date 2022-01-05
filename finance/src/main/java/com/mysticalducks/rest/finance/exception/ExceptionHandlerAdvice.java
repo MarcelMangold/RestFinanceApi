@@ -13,8 +13,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -29,6 +31,7 @@ public class ExceptionHandlerAdvice extends ResponseEntityExceptionHandler {
 		// log exception
 		return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error Message");
 	}
+	
 
 	/*
 	 * @ExceptionHandler(DataNotFoundException.class) public @ResponseBody
@@ -43,6 +46,11 @@ public class ExceptionHandlerAdvice extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(DataNotFoundException.class)
 	public void springHandleNotFound(HttpServletResponse response) throws IOException {
 		response.sendError(HttpStatus.NOT_FOUND.value());
+	}
+	
+	@ExceptionHandler(EmptyBodyException.class)
+	public void springHandleEmptyBody(HttpServletResponse response) throws IOException {
+		response.sendError(HttpStatus.BAD_REQUEST.value());
 	}
 
 	@ExceptionHandler(Exception.class)

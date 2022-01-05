@@ -1,11 +1,15 @@
 package com.mysticalducks.rest.finance.controller;
 
-import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.ArgumentMatchers.any;
+
+import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +22,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.mysticalducks.rest.finance.controller.IconController;
 import com.mysticalducks.rest.finance.model.Icon;
 import com.mysticalducks.rest.finance.service.IconService;
 
@@ -34,58 +37,62 @@ public class IconControllerTest {
 
 	@MockBean
 	private IconService iconService;
-	
 
-	@MockBean
-	private IconController iconController;
-	
-	
 	@Value("${v1API}")
 	private String urlPrefix;
-	
-	
-	@Test
-	public void postRequest() throws Exception {
-//		given(this.iconController.findIcon(1)).willReturn(new Icon(1,"test"));
-//		this.mvc.perform(post(urlPrefix + "/icon/")
-//				.content("test")
-//				.secure(false)
-//				.contentType(MediaType.APPLICATION_JSON)
-//			    .accept(MediaType.APPLICATION_JSON))
-//			    .andExpect(status().isCreated())
-//			    .andExpect(jsonPath("name").value("test"))
-//			    .andExpect(jsonPath("id").value(1));
-//
-//		this.mvc.perform(post(urlPrefix +"/icon/").secure(false)).andExpect(status().isBadRequest());
-	}
-	
 
 	@Test
-	public void getRequest() throws Exception {
-		given(this.iconService.findById(1)).willReturn(new Icon("test"));
-		this.mvc.perform(get(urlPrefix + "/icon/1").secure(false)).andExpect(status().isOk())
-//				.andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-				.andExpect(jsonPath("id").value(0))
+	public void postIcon() throws Exception {
+		when(this.iconService.save(any(String.class))).thenReturn(new Icon(0, "newIcon"));
+
+		this.mvc.perform(post("/icon/").content("newIcon").secure(false).contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isCreated())
+			    .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(jsonPath("id").value(0)).andExpect(jsonPath("name").value("newIcon"));
+
+		this.mvc.perform(post(urlPrefix + "/icon/").secure(false)).andExpect(status().isNotFound());
+		
+		this.mvc.perform(post("/icon/").content("").secure(false).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).
+			andExpect(status().isBadRequest());
+	}
+
+	@Test
+	public void getIcon() throws Exception {
+		when(this.iconService.findById(1)).thenReturn(new Icon("test"));
+
+		this.mvc.perform(get("/icon/1").secure(false)).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE)).andExpect(jsonPath("id").value(0))
 				.andExpect(jsonPath("name").value("test"));
 
-		this.mvc.perform(get(urlPrefix +"/icon/").secure(false)).andExpect(status().isMethodNotAllowed());
+		this.mvc.perform(get(urlPrefix + "/icon/").secure(false)).andExpect(status().isNotFound());
 
-		this.mvc.perform(get(urlPrefix + "/icon/-1").secure(false)).andExpect(status().isOk())
-				.andExpect(content().contentType("application/json")).andExpect(jsonPath("$").exists());
+		this.mvc.perform(get(urlPrefix + "/icon/-1").secure(false)).andExpect(status().isNotFound());
 	}
-	
+
+	@Test
+	public void getIcons() throws Exception {
+		ArrayList<Icon> icons = new ArrayList<Icon>();
+		icons.add(new Icon(0, "Icon1"));
+		icons.add(new Icon(1, "Icon2"));
+		when(this.iconService.findAll()).thenReturn(icons);
+
+		this.mvc.perform(get("/icons").secure(false)).andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(jsonPath("$[0].id").value(0)).andExpect(jsonPath("$[0].name").value("Icon1"))
+				.andExpect(jsonPath("$[1].id").value("1")).andExpect(jsonPath("$[1].name").value("Icon2"));
+
+		this.mvc.perform(get(urlPrefix + "/icon/").secure(false)).andExpect(status().isNotFound());
+
+		this.mvc.perform(get(urlPrefix + "/icon/-1").secure(false)).andExpect(status().isNotFound());
+	}
+
 	@Test
 	public void deleteRequest() throws Exception {
-		this.mvc.perform(delete(urlPrefix +"/icon/100")
-				.contentType(MediaType.APPLICATION_JSON_VALUE)
-				.accept(MediaType.APPLICATION_JSON)
-				.characterEncoding("UTF-8")
-				.secure(false)
-				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk());
+		this.mvc.perform(delete("/icon/100").contentType(MediaType.APPLICATION_JSON_VALUE)
+				.accept(MediaType.APPLICATION_JSON).characterEncoding("UTF-8").secure(false)
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andExpect(status().isNoContent());
 
-		this.mvc.perform(delete(urlPrefix +"/icon/").secure(false)).andExpect(status().isMethodNotAllowed());
+		this.mvc.perform(delete("/icon/").secure(false)).andExpect(status().isMethodNotAllowed());
 	}
 
 }
