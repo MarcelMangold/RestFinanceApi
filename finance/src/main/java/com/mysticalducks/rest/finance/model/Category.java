@@ -9,31 +9,31 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 
 @Entity
 @Table(name = "category")
-@ApiModel(description = "Details about the category")
+@Schema(description = "Details about the category")
 public class Category {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@ApiModelProperty(notes = "The unique id of the category")
+	@Schema(accessMode = Schema.AccessMode.READ_ONLY, description  = "The unique id of the category")
 	private int id;
 	
-	@ApiModelProperty(notes = "The name fo the category")
+	@Schema(description  = "The name fo the category")
 	private String name;
 	
 	@ManyToOne
 	@JoinColumn(name = "user_id", referencedColumnName="id")
-	@ApiModelProperty(notes = "The user of the category")
+	@Schema(description = "The user of the category")
 	private User user;
 	
 	
 	@ManyToOne
 	@JoinColumn(name = "icon_id", referencedColumnName="id")
-	@ApiModelProperty(notes = "The icon of the category")
+	@Schema(description  = "The icon of the category")
 	private Icon icon;
 	
 	public Category() {}
