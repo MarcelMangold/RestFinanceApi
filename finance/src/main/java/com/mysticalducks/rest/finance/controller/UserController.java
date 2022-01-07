@@ -1,25 +1,25 @@
 package com.mysticalducks.rest.finance.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.mysticalducks.rest.finance.model.Icon;
 import com.mysticalducks.rest.finance.model.User;
 import com.mysticalducks.rest.finance.service.UserService;
-import com.mysticalducks.rest.finance.util.EmptyJsonResponse;
-
-import java.util.List;
-import java.util.Optional;
 
 @Controller
 //@V1APIController
-public class UserController {
+public class UserController extends AbstractController {
 
 	@Autowired
 	private UserService userService;
@@ -32,16 +32,21 @@ public class UserController {
 
 	@GetMapping("/user/{id}")
 	@ResponseBody
-	public ResponseEntity<User> findUser(@PathVariable int id){
-		User user = userService.findById(id);
-		
-		if(user != null) 
-			return ResponseEntity.ok(user);
-		
-		return new ResponseEntity(new EmptyJsonResponse() , HttpStatus.OK);
+	public User findUser(@PathVariable int id){
+		return userService.findById(id);
+	}
+	
+	@PostMapping(value="/user", produces=MediaType.APPLICATION_JSON_VALUE)
+	@ResponseStatus(HttpStatus.CREATED)
+	@ResponseBody
+	public User newIcon(@RequestBody User user) {
+		checkIfParameterIsEmpty(user.getName());
+		checkIfParameterIsEmpty(user.getPassword());
+		return userService.save(user);
 	}
 	
 	@DeleteMapping("/user/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	void delete(@PathVariable int id) {
 		userService.deleteById(id);
 	}

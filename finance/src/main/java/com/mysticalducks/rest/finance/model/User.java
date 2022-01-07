@@ -7,12 +7,17 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+
 @Entity
 @Table(name = "user_management")
 public class User {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
+	@Schema(accessMode = Schema.AccessMode.READ_ONLY)
 	private int id;
 	
 	private String name;

@@ -80,6 +80,12 @@ public class UserServiceTest {
 		verify(userRepository).save(any(User.class));
 		
 		assertThat(savedUser).isNotNull();
+
+		when(service.save(any(User.class))).thenReturn(user);
+		
+		User savedUserWithParams = service.save("test", "password", 0);
+
+		assertThat(savedUserWithParams).isNotNull();
 	}
 	
 	@Test
