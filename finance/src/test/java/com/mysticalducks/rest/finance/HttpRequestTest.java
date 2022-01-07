@@ -24,8 +24,8 @@ public class HttpRequestTest {
 
 	@Test
 	public void greetingShouldReturnMessage() throws Exception {
-		String body = this.restTemplate.getForObject("http://localhost:" + port + "/", String.class);
-		assertThat(body).isEqualTo("Welcome to FinanceDB Api <br> For more information see: <br> <a href=\"http://localhost:9000/swagger-ui.html#/\">Api Documentation</a>");
+		String body = this.restTemplate.getForObject("http://localhost:" + port + "/api/v1", String.class);
+		assertThat(body).isEqualTo("Welcome to FinanceDB Api <br> For more information see: <br> <a href=\"http://localhost:9000/api/v1/swagger-ui.html#/\">Api Documentation</a>");
 	}
 
 }
