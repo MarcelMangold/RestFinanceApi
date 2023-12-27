@@ -7,7 +7,7 @@
       http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.5.xsd">
 	<changeSet author="mangold" id="A00003_10-icon">
 		<createTable tableName="icon">
-			<column name="id" type="INTEGER">
+			<column name="id" type="INTEGER" autoIncrement="true">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="pk_icon_id" />
 			</column>
 			<column name="name" type="VARCHAR(128)">

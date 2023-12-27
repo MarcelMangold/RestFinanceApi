@@ -59,16 +59,16 @@ public class TransactionServiceTest {
 	@BeforeEach
 	void setUp() {
 		this.chat = new Chat(1);
-		this.user = new User("User", "password", 0);
+		this.user = new User("User","email", "password", 0);
 		this.category = new Category("Category", user, new Icon("Icon"));
-		this.transaction = new Transaction("transaction", 200.0, false, "note", category, user, chat);
+		this.transaction = new Transaction("transaction", -200.0, "note", category, user, chat);
 	}
 
 	@Test
 	void findAll() {
 		List<Transaction> transactions = new ArrayList<>();
 		transactions.add(transaction);
-		transactions.add(new Transaction("transaction", 200.0, false, "note", category, user, chat));
+		transactions.add(new Transaction("transaction", -200.0, "note", category, user, chat));
 
 		when(transactionRepository.findAll()).thenReturn(transactions);
 
@@ -122,7 +122,7 @@ public class TransactionServiceTest {
 	@Test
 	void findAllByChatId() {
 		List<Transaction> transactions = new ArrayList<>();
-		Transaction newTransaction = new Transaction("transaction", 200.0, false, "note", category, user, chat);
+		Transaction newTransaction = new Transaction("transaction", -200.0, "note", category, user, chat);
 		transactions.add(transaction);
 		transactions.add(newTransaction);
 
@@ -141,7 +141,7 @@ public class TransactionServiceTest {
 	@Test
 	void findAllByUserId() {
 		List<Transaction> transactions = new ArrayList<>();
-		Transaction newTransaction = new Transaction("transaction", 200.0, false, "note", category, user, chat);
+		Transaction newTransaction = new Transaction("transaction", -200.0, "note", category, user, chat);
 		transactions.add(transaction);
 		transactions.add(newTransaction);
 
@@ -162,7 +162,7 @@ public class TransactionServiceTest {
 	void save() {
 		when(transactionRepository.save(any(Transaction.class))).thenReturn(transaction);
 
-		Transaction savedTransaction = service.save("newTransaction", 200.0, false, "note", category, user, chat);
+		Transaction savedTransaction = service.save("newTransaction", -200.0, "note", category, user, chat);
 
 		verify(transactionRepository).save(any(Transaction.class));
 
@@ -186,7 +186,7 @@ public class TransactionServiceTest {
 	void replaceNew() {
 		when(transactionRepository.save(any(Transaction.class))).thenReturn(transaction);
 
-		Transaction newTransaction = new Transaction("newTransaction", 200.0, false, "note", category, user, chat);
+		Transaction newTransaction = new Transaction("newTransaction", -200.0, "note", category, user, chat);
 		newTransaction.setId(1);
 		Transaction replacedTransaction = service.replace(newTransaction);
 
@@ -207,14 +207,14 @@ public class TransactionServiceTest {
 	void totalAmount() {
 		List<Transaction> transactions = new ArrayList<>();
 		transactions.add(transaction);
-		transactions.add(new Transaction("transaction", 250.0, true, "note", category, user, chat));
+		transactions.add(new Transaction("transaction", 250.0, "note", category, user, chat));
 
 		when(transactionRepository.getByUserAndChat(user, chat)).thenReturn(transactions);
 
 		double amount = service.totalAmount(user, chat);
 		verify(transactionRepository).getByUserAndChat(user, chat);
 
-		assertEquals(transactions.get(1).getAmount() - transactions.get(0).getAmount(), amount);
+		assertEquals(getAmount(transactions), amount);
 
 	}
 
@@ -222,7 +222,7 @@ public class TransactionServiceTest {
 	void totalAmountByDate() {
 		List<Transaction> transactions = new ArrayList<>();
 		transactions.add(transaction);
-		transactions.add(new Transaction("transaction", 250.0, true, "note", category, user, chat));
+		transactions.add(new Transaction("transaction", 250.0, "note", category, user, chat));
 
 		Date startDate = new Date();
 		Date endDate = new Date();
@@ -232,7 +232,7 @@ public class TransactionServiceTest {
 		double amount = service.totalAmountByDate(user, chat, startDate, endDate);
 		verify(transactionRepository).getByUserAndChatAndPeriod(user, chat, startDate, endDate);
 
-		assertEquals(transactions.get(1).getAmount() - transactions.get(0).getAmount(), amount);
+		assertEquals(getAmount(transactions), amount);
 
 	}
 
@@ -240,7 +240,7 @@ public class TransactionServiceTest {
 	void totalAmountByCurrentMonth() {
 		List<Transaction> transactions = new ArrayList<>();
 		transactions.add(transaction);
-		transactions.add(new Transaction("transaction", 250.0, true, "note", category, user, chat));
+		transactions.add(new Transaction("transaction", 250.0, "note", category, user, chat));
 
 		ZoneId zoneId = ZoneId.of ( "UTC" );
 		LocalDate today = LocalDate.now ( zoneId );
@@ -255,7 +255,11 @@ public class TransactionServiceTest {
 		double amount = service.totalAmountByCurrentMonth(user, chat);
 		verify(transactionRepository).getByUserAndChatAndPeriod(user, chat, firstDateOfMonth, actualDate);
 
-		assertEquals(transactions.get(1).getAmount() - transactions.get(0).getAmount(), amount);
+		assertEquals(getAmount(transactions), amount);
 
+	}
+	
+	private Double getAmount(List<Transaction> transactions) {
+		return transactions.stream().mapToDouble(Transaction::getAmount).sum();
 	}
 }

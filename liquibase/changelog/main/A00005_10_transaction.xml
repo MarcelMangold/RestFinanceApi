@@ -7,7 +7,7 @@
       http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.5.xsd">
 	<changeSet author="mangold" id="A00005_10-transaction">
 		<createTable tableName="transaction">
-			<column name="id" type="INTEGER">
+			<column name="id" type="INTEGER" autoIncrement="true">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="pk_transaction_id" />
 			</column>
             <column name="name" type="VARCHAR(50)" >
@@ -24,7 +24,7 @@
 			<column name="chat_id" type="INTEGER" >
                 <constraints nullable="false" foreignKeyName="fk_chat_id" references="chat(id)" />
             </column>
-			<column name="timestamp" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+			<column name="created_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
 		</createTable>

@@ -35,7 +35,7 @@ public class UserServiceTest {
 	
 	@BeforeEach
 	void setUp() {
-		this.user = new User(1,"test", "password", 0);
+		this.user = new User(1,"test", "email", "password", 0);
 				
 	}
 
@@ -75,7 +75,7 @@ public class UserServiceTest {
 	void save() {
 		when(userRepository.save(any(User.class))).thenReturn(user);
 		
-		User savedUser = service.save(new User(2,"test", "password", 0));
+		User savedUser = service.save(new User(2,"test", "email", "password", 0));
 		
 		verify(userRepository).save(any(User.class));
 		
@@ -83,7 +83,7 @@ public class UserServiceTest {
 
 		when(service.save(any(User.class))).thenReturn(user);
 		
-		User savedUserWithParams = service.save("test", "password", 0);
+		User savedUserWithParams = service.save("test", "email", "password", 0);
 
 		assertThat(savedUserWithParams).isNotNull();
 	}

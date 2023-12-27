@@ -27,9 +27,6 @@ public class Transaction {
 	
 	private double amount;
 	
-	@Column(name="is_positive")
-	private boolean isPositive;
-	
 	private String note;
 	
 	@ManyToOne
@@ -51,10 +48,9 @@ public class Transaction {
 	
 	public Transaction() {}
 	
-	public Transaction(String name, double amount, boolean isPositive, String note, Category category, User user, Chat chat) {
+	public Transaction(String name, double amount, String note, Category category, User user, Chat chat) {
 		this.name = name;
 		this.amount = amount;
-		this.isPositive = isPositive;
 		this.note = note;
 		this.category = category;
 		this.user = user;
@@ -75,14 +71,6 @@ public class Transaction {
 
 	public void setAmount(double amount) {
 		this.amount = amount;
-	}
-
-	public boolean isPositive() {
-		return isPositive;
-	}
-
-	public void setPositive(boolean isPositive) {
-		this.isPositive = isPositive;
 	}
 
 	public String getNote() {

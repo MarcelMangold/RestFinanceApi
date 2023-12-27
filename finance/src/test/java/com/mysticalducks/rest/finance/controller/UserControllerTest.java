@@ -41,8 +41,8 @@ public class UserControllerTest {
 	@Test
 	public void getUsers() throws Exception {
 		ArrayList<User> users = new ArrayList<User>();
-		users.add(new User(0, "User1", "password", 0));
-		users.add(new User(1, "User2", "password", 0));
+		users.add(new User(0, "User1", "email","password", 0));
+		users.add(new User(1, "User2", "email","password", 0));
 		when(this.userService.findAll()).thenReturn(users);
 		
 		this.mvc.perform(get("/users").secure(false)).andExpect(status().isOk())
@@ -55,7 +55,7 @@ public class UserControllerTest {
 
 	@Test
 	public void getUser() throws Exception {
-		given(this.userService.findById(1)).willReturn(new User(1, "name", "password", 4));
+		given(this.userService.findById(1)).willReturn(new User(1, "name", "email","password", 4));
 		
 		this.mvc.perform(get("/user/1").secure(false)).andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -73,8 +73,8 @@ public class UserControllerTest {
 	
 	@Test
 	public void postUser() throws Exception {
-		User user = new User("name", "password", 4);
-		when(this.userService.save(any(String.class), any(String.class), any(Integer.class))).thenReturn(user);
+		User user = new User("name", "email","password", 4);
+		when(this.userService.save(any(String.class), any(String.class), any(String.class), any(Integer.class))).thenReturn(user);
 		when(this.userService.save(any(User.class))).thenReturn(user);
 		this.mvc.perform(
 				post("/user")

@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import com.mysticalducks.rest.finance.exception.DataNotFoundException;
 import com.mysticalducks.rest.finance.model.Category;
@@ -57,9 +58,9 @@ public class TransactionService implements ITransactionService {
 		return transactions;
 	}
 
-	public Transaction save(String name, double amount, Boolean isPositive, String note, Category category, User user,
+	public Transaction save(String name, double amount, String note, Category category, User user,
 			Chat chat) {
-		return transactionRepository.save(new Transaction(name, amount, isPositive, note, category, user, chat));
+		return transactionRepository.save(new Transaction(name, amount, note, category, user, chat));
 
 	}
 
@@ -70,7 +71,6 @@ public class TransactionService implements ITransactionService {
 			transaction.setChat(newTransaction.getChat());
 			transaction.setName(newTransaction.getName());
 			transaction.setNote(newTransaction.getNote());
-			transaction.setPositive(newTransaction.isPositive());
 			transaction.setCreatedAt(newTransaction.getCreatedAt());
 			transaction.setUser(newTransaction.getUser());
 			return transactionRepository.save(transaction);
@@ -101,15 +101,10 @@ public class TransactionService implements ITransactionService {
 	}
 
 	private double getTotalAmount(List<Transaction> transactions) {
-		double totalAmount = 0;
-		for (Transaction transaction : transactions) {
-			if (transaction.isPositive()) {
-				totalAmount += transaction.getAmount();
-			} else {
-				totalAmount -= transaction.getAmount();
-			}
-		}
-		return totalAmount;
+		return transactions
+				.stream()
+				.mapToDouble(Transaction::getAmount)
+				.sum();
 	}
 
 

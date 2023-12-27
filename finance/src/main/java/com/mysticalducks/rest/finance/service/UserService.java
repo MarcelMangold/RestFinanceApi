@@ -25,8 +25,8 @@ public class UserService implements IUserService {
 		return userRepository.findById(id).orElseThrow(() -> new DataNotFoundException(id));
 	}
 	
-	public User save(String name, String password, int language ) {
-		return save(new User(name, password, language));
+	public User save(String name, String email, String password, int language ) {
+		return save(new User(name, email, password, language));
 	}
 	
 	public User save(User user) {

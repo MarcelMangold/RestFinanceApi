@@ -30,11 +30,11 @@ public class TransactionRepositoryTest extends AbstractRepositoryTest {
 
 	@BeforeEach
 	void setUp() {
-		this.chat = new Chat();
-		this.user = new User("User", "password", 0);
+		this.chat = new Chat(0);
+		this.user = new User("User", "email", "password", 0);
 		this.icon = new Icon("Icon");
 		this.category = new Category("Category", user, icon);
-		this.transaction = new Transaction("Transaction", 200.0, false, "note", category, user, chat);
+		this.transaction = new Transaction("Transaction", 200.0, "note", category, user, chat);
 
 		chatRepository.save(chat);
 		userRepository.save(user);
@@ -47,7 +47,7 @@ public class TransactionRepositoryTest extends AbstractRepositoryTest {
 
 	@Test
 	public void findAllByUserId() throws Exception {
-		User newUser = new User("newUser", "password", 0);
+		User newUser = new User("newUser", "email", "password", 0);
 		userRepository.save(newUser);
 		Transaction transactionUser = addNewTransaction("TransactionUser", user);
 		addNewTransaction("TransactionNewUser", newUser);
@@ -63,10 +63,10 @@ public class TransactionRepositoryTest extends AbstractRepositoryTest {
 	
 	@Test
 	public void findAllByChatId() throws Exception {
-		Chat newChat = new Chat();
+		Chat newChat = new Chat(1);
 		chatRepository.save(newChat);
 		
-		User newUser = new User("newUser", "password", 0);
+		User newUser = new User("newUser", "email", "password", 0);
 		userRepository.save(newUser);
 		
 		Transaction transactionUser = addNewTransaction("TransactionUser", chat);
@@ -89,10 +89,10 @@ public class TransactionRepositoryTest extends AbstractRepositoryTest {
 
 	@Test
 	public void getByUserAndChat() throws Exception {
-		Chat newChat = new Chat();
+		Chat newChat = new Chat(2);
 		chatRepository.save(newChat);
 		
-		User newUser = new User("newUser", "password", 0);
+		User newUser = new User("newUser","email", "password", 0);
 		userRepository.save(newUser);
 		
 		Transaction transactionUser = addNewTransaction("TransactionUser", chat);
@@ -112,10 +112,10 @@ public class TransactionRepositoryTest extends AbstractRepositoryTest {
 		Date startDate = Date.from(Instant.parse("2020-01-01T00:00:00.000Z"));
 		Date endDate = Date.from(Instant.parse("2020-02-01T00:00:00.000Z"));
 		
-		Chat newChat = new Chat();
+		Chat newChat = new Chat(2);
 		chatRepository.save(newChat);
 		
-		User newUser = new User("newUser", "password", 0);
+		User newUser = new User("newUser","email", "password", 0);
 		userRepository.save(newUser);
 		
 		// Case 1: no transactions are in the time period

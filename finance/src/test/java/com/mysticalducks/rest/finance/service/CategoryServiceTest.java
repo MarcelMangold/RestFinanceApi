@@ -56,7 +56,7 @@ public class CategoryServiceTest {
 	@BeforeEach
 	void setUp() {
 		this.icon = new Icon("Icon");
-		this.user = new User("User", "password", 0);
+		this.user = new User("User", "email", "password", 0);
 		this.category = new Category("Category", user , icon);
 	}
 

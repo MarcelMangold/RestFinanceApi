@@ -27,7 +27,7 @@ public class CategoryRepositoryTest extends AbstractRepositoryTest{
 	@BeforeEach
 	void setUp() {
 		this.chat = new Chat(1);
-		this.user = new User("User", "password", 0);
+		this.user = new User("User", "email", "password", 0);
 		this.icon = new Icon("Icon");
 		this.category = new Category("Category", user, icon);
 		
@@ -37,10 +37,9 @@ public class CategoryRepositoryTest extends AbstractRepositoryTest{
     	categoryRepository.save(category);
 	}
 
-
     @Test
     public void findAllCategoriesByUserIdTest() throws Exception {
-    	User newUser = new User("newUser", "password", 0);
+    	User newUser = new User("User", "email", "password", 0);
     	userRepository.save(newUser);
     	addNewCategory("newUserCategory1", newUser);
     	addNewCategory("newUserCategory2", newUser);

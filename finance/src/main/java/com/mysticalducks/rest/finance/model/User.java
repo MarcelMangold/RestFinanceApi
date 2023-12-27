@@ -15,28 +15,44 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class User {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
+	@Column(unique = true, nullable = false)
 	@Schema(accessMode = Schema.AccessMode.READ_ONLY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
 	private String name;
 	
+	@Column(name = "telegram_user_id")
+	private int telegramUserId;
+	
 	private String password;
+	
+	private String email;
 	
 	private int language;
 	
 	public User() {}
 	
-	public User(int id, String name, String password, int language) {
+	public User(int id, int telegram_user_id, String name, String email, String password, int language) {
 		this.id = id;
+		this.telegramUserId = telegram_user_id;
 		this.name = name;
+		this.email = email;
 		this.password = password;
 		this.language = language;
 	}
 	
-	public User(String name, String password, int language) {
+	public User(int id, String name, String email, String password, int language) {
+		this.id = id;
 		this.name = name;
+		this.email = email;
+		this.password = password;
+		this.language = language;
+	}
+	
+	public User(String name, String email, String password, int language) {
+		this.name = name;
+		this.email = email;
 		this.password = password;
 		this.language = language;
 	}
@@ -54,6 +70,14 @@ public class User {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public int getTelegramUserId() {
+		return telegramUserId;
+	}
+
+	public void setTelegramUserId(int telegramUserId) {
+		this.telegramUserId = telegramUserId;
+	}
 
 	public String getPassword() {
 		return password;
@@ -61,6 +85,14 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public int getLanguage() {

@@ -47,7 +47,7 @@ public abstract class AbstractRepositoryTest {
 	}
 
 	protected Transaction addNewTransaction(TransactionRepository repository, String transactionName, User u, Chat c) {
-		Transaction transaction = new Transaction(transactionName, 200.0, false, "note", category, u, c);
+		Transaction transaction = new Transaction(transactionName, 200.0, "note", category, u, c);
 		repository.save(transaction);
 
 		return transaction;
