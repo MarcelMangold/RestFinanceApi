@@ -22,7 +22,8 @@ import com.mysticalducks.rest.finance.service.CategoryService;
 import com.mysticalducks.rest.finance.service.IconService;
 import com.mysticalducks.rest.finance.service.UserService;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+
 
 @Controller
 //@V1APIController
@@ -44,10 +45,6 @@ public class CategoryController {
 	}
 
 	@GetMapping("/categories/{id}")
-	@ApiOperation(value = "Finds categorie by id", 
-			notes = "Provide an id to look up spezific category from the finance database",
-			response = Category.class)
-	@ResponseBody
 	public Category findCategory(@PathVariable int id){
 		Category category = categoryService.findById(id);
 		if(category != null) {

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd
+      http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.5.xsd">
+	<changeSet author="mangold" id="A00001_10-user_management">
+		<createTable tableName="user_management">
+			<column name="id" type="INTEGER">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="pk_user_id" />
+			</column>
+            <column name="name" type="VARCHAR(150)" >
+                <constraints nullable="false" unique="true" uniqueConstraintName="unique_name"/>
+            </column>
+            <column name="email" type="VARCHAR(150)" >
+                <constraints nullable="false" unique="true" uniqueConstraintName="unique_email"/>
+            </column>
+            <column name="password" type="VARCHAR(32)" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="language" type="INTEGER" />
+		</createTable>
+	</changeSet>
+</databaseChangeLog>
