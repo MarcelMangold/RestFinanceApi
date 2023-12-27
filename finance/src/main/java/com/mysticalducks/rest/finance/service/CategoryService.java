@@ -3,9 +3,12 @@ package com.mysticalducks.rest.finance.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.mysticalducks.rest.finance.exception.DataNotFoundException;
+import com.mysticalducks.rest.finance.exception.IconNotFoundException;
+import com.mysticalducks.rest.finance.exception.UserNotFoundException;
 import com.mysticalducks.rest.finance.model.Category;
 import com.mysticalducks.rest.finance.model.Icon;
 import com.mysticalducks.rest.finance.model.User;
@@ -16,6 +19,12 @@ public class CategoryService implements ICategoryService {
 
 	@Autowired
 	private CategoryRepository categoryRepository;
+	
+	@Autowired
+	private UserService userService;
+	
+	@Autowired
+	private IconService iconService;
 
 
 	public List<Category> findAll() {
@@ -32,7 +41,16 @@ public class CategoryService implements ICategoryService {
 		return (List<Category>) categoryRepository.findAllCategoriesByUserId(user);
 	}
 
-	public Category save(User user, String name, Icon icon) {
+	public Category save(Integer userId, String name, Integer iconId) throws UserNotFoundException, IconNotFoundException {
+		 User user = userService.findById(userId);
+		 Icon icon = iconService.findById(iconId);
+		 
+		 if(user == null) 
+			  throw new UserNotFoundException("User not found with id " + userId);
+		 
+		 if(icon == null)
+			 throw new IconNotFoundException("Icon not found with id " + iconId);
+		
 		return categoryRepository.save(new Category(name, user, icon));
 	}
 	

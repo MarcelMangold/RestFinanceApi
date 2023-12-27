@@ -22,6 +22,8 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
 import com.mysticalducks.rest.finance.exception.DataNotFoundException;
+import com.mysticalducks.rest.finance.exception.IconNotFoundException;
+import com.mysticalducks.rest.finance.exception.UserNotFoundException;
 import com.mysticalducks.rest.finance.model.Category;
 import com.mysticalducks.rest.finance.model.Icon;
 import com.mysticalducks.rest.finance.model.User;
@@ -43,6 +45,9 @@ public class CategoryServiceTest {
 	
 	@Mock
 	UserService userService;
+	
+	@Mock
+	IconService iconService;
 
 	Category category;
 	User user;
@@ -50,8 +55,9 @@ public class CategoryServiceTest {
 
 	@BeforeEach
 	void setUp() {
+		this.icon = new Icon("Icon");
 		this.user = new User("User", "password", 0);
-		this.category = new Category("Category", user , new Icon("Icon"));
+		this.category = new Category("Category", user , icon);
 	}
 
 	@Test
@@ -82,13 +88,38 @@ public class CategoryServiceTest {
 	void save() {
 		when(categoryRepository.save(any(Category.class))).thenReturn(category);
 		
-		Category savedCategory = service.save(user, "User", icon);
+		when(userService.findById(user.getId())).thenReturn(user);
+		when(iconService.findById(icon.getId())).thenReturn(icon);
+		
+		Category savedCategory = service.save(user.getId(), "User", icon.getId());
 
 		verify(categoryRepository).save(any(Category.class));
 
 		assertThat(savedCategory).isNotNull();
 	}
 
+	
+	@Test
+	void save_userIsNull() {
+		assertThrows(UserNotFoundException.class, () -> {
+			when(userService.findById(user.getId())).thenReturn(null);
+
+			service.save(user.getId(), "User", icon.getId());
+			}
+		);
+	}
+
+	@Test
+	void save_iconIsNull() {
+		assertThrows(IconNotFoundException.class, () -> {
+			when(userService.findById(user.getId())).thenReturn(user);
+			when(iconService.findById(icon.getId())).thenReturn(null);
+			
+			service.save(user.getId(), "User", icon.getId());
+			}
+		);
+	}
+	
 	@Test
 	void findAll() {
 		List<Category> categories = new ArrayList<>();

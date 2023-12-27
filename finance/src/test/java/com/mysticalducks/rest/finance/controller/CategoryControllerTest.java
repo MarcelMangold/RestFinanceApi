@@ -24,8 +24,9 @@ import com.mysticalducks.rest.finance.model.Icon;
 import com.mysticalducks.rest.finance.model.User;
 import com.mysticalducks.rest.finance.service.CategoryService;
 import com.mysticalducks.rest.finance.service.IconService;
+import com.mysticalducks.rest.finance.service.UserService;
 
-@WebMvcTest(value = IconController.class, excludeAutoConfiguration = { SecurityAutoConfiguration.class })
+@WebMvcTest(value = CategoryController.class, excludeAutoConfiguration = { SecurityAutoConfiguration.class })
 @ActiveProfiles("test")
 public class CategoryControllerTest {
 
@@ -37,18 +38,19 @@ public class CategoryControllerTest {
 
 	@MockBean
 	private CategoryService categoryService;
+	
 
 	@Test
 	public void getRequest() throws Exception {
-//		given(this.categoryService.findCategorie(1)).willReturn(new Category("categorie", new User(), new Icon("icon")));
-//		this.mvc.perform(get("/icon/1").secure(false)).andExpect(status().isOk())
-//				.andExpect(content().contentType("application/json")).andExpect(jsonPath("id").value(0))
-//				.andExpect(jsonPath("name").value("test"));
-//
-//		this.mvc.perform(get("/icon/").secure(false)).andExpect(status().isMethodNotAllowed());
-//
-//		this.mvc.perform(get("/icon/-1").secure(false)).andExpect(status().isOk())
-//				.andExpect(content().contentType("application/json")).andExpect(jsonPath("$").exists());
+		given(this.categoryService.findById(1)).willReturn(new Category("categorie", new User(), new Icon("icon")));
+		this.mvc.perform(get("/category/0").secure(false)).andExpect(status().isOk())
+				.andExpect(content().contentType("application/json")).andExpect(jsonPath("id").value(0))
+				.andExpect(jsonPath("name").value("test"));
+
+		this.mvc.perform(get("/icon/").secure(false)).andExpect(status().isMethodNotAllowed());
+
+		this.mvc.perform(get("/icon/-1").secure(false)).andExpect(status().isOk())
+				.andExpect(content().contentType("application/json")).andExpect(jsonPath("$").exists());
 	}
 	
 	

@@ -58,6 +58,16 @@ public class ExceptionHandlerAdvice extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(new ErrorDetails(new Date(), exception.getMessage(), request.getDescription(false)),
 				HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+	
+	@ExceptionHandler(UserNotFoundException.class)
+	public ResponseEntity<?> handleUserNotFoundException(UserNotFoundException ex) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+	}
+	
+	@ExceptionHandler(IconNotFoundException.class)
+	public ResponseEntity<?> handleUserNotFoundException(IconNotFoundException ex) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+	}
 
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
