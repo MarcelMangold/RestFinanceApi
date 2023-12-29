@@ -1,7 +1,5 @@
 package com.mysticalducks.rest.finance.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,13 +23,8 @@ public class CategoryController {
 	@Autowired
 	private CategoryService categoryService;
 
-	@GetMapping("/categories")
+	@GetMapping("/category/{id}")
 	@ResponseBody
-	public List<Category> findCategories() {
-		return categoryService.findAll();
-	}
-
-	@GetMapping("/categories/{id}")
 	ResponseEntity<Category> findCategory(@PathVariable int id) {
 		return new ResponseEntity<Category>(categoryService.findById(id), HttpStatus.OK);
 	}
@@ -42,7 +35,7 @@ public class CategoryController {
 		return new ResponseEntity<Category>(categoryService.save(userId, name, iconId), HttpStatus.OK);
 	}
 
-	@PutMapping("/category/")
+	@PutMapping("/category")
 	@ResponseBody
 	Category replaceCategory(@RequestBody Category category) {
 		return categoryService.replace(category);

@@ -42,8 +42,8 @@ public class CategoryService implements ICategoryService {
 	}
 
 	public Category save(Integer userId, String name, Integer iconId) throws UserNotFoundException, IconNotFoundException {
-		 User user = userService.findById(userId);
-		 Icon icon = iconService.findById(iconId);
+		User user = userService.findById(userId);
+		Icon icon = iconService.findById(iconId);
 		 
 		 if(user == null) 
 			  throw new UserNotFoundException("User not found with id " + userId);
