@@ -1,6 +1,6 @@
 package com.mysticalducks.rest.finance.repository;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
@@ -28,6 +28,6 @@ public interface TransactionRepository extends CrudRepository<Transaction, Integ
 	List<Transaction> getByUserAndChat(@Param("user") User user, @Param("chat") Chat chat);
 	
 	@Query(value = "select t from Transaction t where t.user=:user and t.chat=:chat and createdAt BETWEEN :startDate AND :endDate")
-	List<Transaction> getByUserAndChatAndPeriod(@Param("user") User user, @Param("chat") Chat chat, Date startDate, Date endDate);
+	List<Transaction> getByUserAndChatAndPeriod(@Param("user") User user, @Param("chat") Chat chat, LocalDateTime startDate, LocalDateTime endDate);
 
 }

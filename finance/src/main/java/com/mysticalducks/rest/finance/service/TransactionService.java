@@ -1,16 +1,17 @@
 package com.mysticalducks.rest.finance.service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoField;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.support.TransactionTemplate;
 
+import com.mysticalducks.rest.finance.exception.CategoryNotFoundException;
+import com.mysticalducks.rest.finance.exception.ChatNotFoundException;
 import com.mysticalducks.rest.finance.exception.DataNotFoundException;
+import com.mysticalducks.rest.finance.exception.UserNotFoundException;
 import com.mysticalducks.rest.finance.model.Category;
 import com.mysticalducks.rest.finance.model.Chat;
 import com.mysticalducks.rest.finance.model.Transaction;
@@ -29,6 +30,10 @@ public class TransactionService implements ITransactionService {
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private CategoryService categoryService;
+	
 
 	public List<Transaction> findAll() {
 		List<Transaction> transactions = (List<Transaction>) transactionRepository.findAll();
@@ -58,8 +63,22 @@ public class TransactionService implements ITransactionService {
 		return transactions;
 	}
 
-	public Transaction save(String name, double amount, String note, Category category, User user,
-			Chat chat) {
+	public Transaction save(String name, double amount, String note, int categoryId, int userId,
+			int chatId) {
+		
+		User user = userService.findById(userId);
+		Category category = categoryService.findById(categoryId);
+		Chat chat = chatService.findById(chatId);
+		
+		if(user == null) 
+		  throw new UserNotFoundException("User not found with id " + userId);
+		 
+		if(chat == null) 
+			  throw new ChatNotFoundException("User not found with id " + userId);
+			 
+		if(category == null) 
+			  throw new CategoryNotFoundException("User not found with id " + userId);
+		 
 		return transactionRepository.save(new Transaction(name, amount, note, category, user, chat));
 
 	}
@@ -84,20 +103,49 @@ public class TransactionService implements ITransactionService {
 	}
 
 
-	public double totalAmount(User user, Chat chat) {
+	public double totalAmount(int userId, int chatId) {
+		User user = userService.findById(userId);
+		Chat chat = chatService.findById(chatId);
+		
+		if(user == null) 
+			  throw new UserNotFoundException("User not found with id " + userId);
+			 
+		if(chat == null) 
+			  throw new ChatNotFoundException("User not found with id " + userId);
+				
+		
 		return getTotalAmount(transactionRepository.getByUserAndChat(user, chat));
 	}
 
-	public double totalAmountByDate(User user, Chat chat, Date startDate, Date endDate) {
+	public double totalAmountByDate(int userId, int chatId, LocalDateTime startDate, LocalDateTime endDate) {
+		User user = userService.findById(userId);
+		Chat chat = chatService.findById(chatId);
+		
+		if(user == null) 
+			  throw new UserNotFoundException("User not found with id " + userId);
+			 
+		if(chat == null) 
+			  throw new ChatNotFoundException("User not found with id " + userId);
+		
+		
 		return getTotalAmount(transactionRepository.getByUserAndChatAndPeriod(user, chat, startDate, endDate));
 	}
 	
-	public double totalAmountByCurrentMonth(User user, Chat chat) {
-		ZoneId zoneId = ZoneId.of ( "UTC" );
-		LocalDate today = LocalDate.now ( zoneId );
-		LocalDate firstOfCurrentMonth = today.with ( ChronoField.DAY_OF_MONTH , 1 );
+	public double totalAmountByCurrentMonth(int userId, int chatId) {
+		User user = userService.findById(userId);
+		Chat chat = chatService.findById(chatId);
 		
-		return getTotalAmount(transactionRepository.getByUserAndChatAndPeriod(user, chat, Date.from(firstOfCurrentMonth.atStartOfDay(ZoneId.systemDefault()).toInstant()), Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant())));
+		if(user == null) 
+			  throw new UserNotFoundException("User not found with id " + userId);
+			 
+		if(chat == null) 
+			  throw new ChatNotFoundException("User not found with id " + userId);
+		
+		ZoneId zoneId = ZoneId.of ( "UTC" );
+		LocalDateTime today = LocalDateTime.now ( zoneId );
+		LocalDateTime firstOfCurrentMonth = today.with ( ChronoField.DAY_OF_MONTH , 1 );
+		
+		return getTotalAmount(transactionRepository.getByUserAndChatAndPeriod(user, chat, firstOfCurrentMonth, today));
 	}
 
 	private double getTotalAmount(List<Transaction> transactions) {

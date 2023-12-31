@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
@@ -109,8 +111,8 @@ public class TransactionRepositoryTest extends AbstractRepositoryTest {
 	
 	@Test
 	public void getByUserAndChatAndPeriod() throws Exception {
-		Date startDate = Date.from(Instant.parse("2020-01-01T00:00:00.000Z"));
-		Date endDate = Date.from(Instant.parse("2020-02-01T00:00:00.000Z"));
+		LocalDateTime startDate = Instant.parse("2020-01-01T00:00:00.000Z").atZone(ZoneId.systemDefault()).toLocalDateTime();
+		LocalDateTime endDate = Instant.parse("2020-02-01T00:00:00.000Z").atZone(ZoneId.systemDefault()).toLocalDateTime();
 		
 		Chat newChat = new Chat(2);
 		chatRepository.save(newChat);
@@ -120,11 +122,11 @@ public class TransactionRepositoryTest extends AbstractRepositoryTest {
 		
 		// Case 1: no transactions are in the time period
 		Transaction beforePeriodTransaction = addNewTransaction("beforePeriodTransaction", user, chat);
-		beforePeriodTransaction.setCreatedAt( Date.from(Instant.parse("2019-12-31T23:59:00.000Z")));
+		beforePeriodTransaction.setCreatedAt( Instant.parse("2019-12-31T23:59:00.000Z").atZone(ZoneId.systemDefault()).toLocalDateTime());
 		Transaction afterPeriodTransaction = addNewTransaction("afterPeriodTransaction", user, chat);
-		afterPeriodTransaction.setCreatedAt( Date.from(Instant.parse("2021-02-01T00:00:00.001Z")));
+		afterPeriodTransaction.setCreatedAt( Instant.parse("2021-02-01T00:00:00.001Z").atZone(ZoneId.systemDefault()).toLocalDateTime());
 		Transaction equalPeriodEndTime = addNewTransaction("equalPeriodEndTime", user, chat);
-		equalPeriodEndTime.setCreatedAt( Date.from(Instant.parse("2021-02-01T00:00:00.000Z")));
+		equalPeriodEndTime.setCreatedAt( Instant.parse("2021-02-01T00:00:00.000Z").atZone(ZoneId.systemDefault()).toLocalDateTime());
 
 		transactionRepository.save(equalPeriodEndTime);
 		transactionRepository.save(afterPeriodTransaction);
@@ -137,15 +139,15 @@ public class TransactionRepositoryTest extends AbstractRepositoryTest {
 		
 		// Case 2: transactions are in the time period
 		Transaction equalPeriodStartTime = addNewTransaction("equalPeriodStartTime", user, chat);
-		equalPeriodStartTime.setCreatedAt( Date.from(Instant.parse("2020-01-01T00:00:00.000Z")));
+		equalPeriodStartTime.setCreatedAt( Instant.parse("2020-01-01T00:00:00.000Z").atZone(ZoneId.systemDefault()).toLocalDateTime());
 		Transaction inPeriod = addNewTransaction("inPeriod", user, chat);
-		inPeriod.setCreatedAt( Date.from(Instant.parse("2020-01-05T00:00:00.000Z")));
+		inPeriod.setCreatedAt( Instant.parse("2020-01-05T00:00:00.000Z").atZone(ZoneId.systemDefault()).toLocalDateTime());
 		Transaction inPeriodWithOtherUser = addNewTransaction("inPeriodWithOtherUser", newUser, chat);
-		inPeriodWithOtherUser.setCreatedAt( Date.from(Instant.parse("2020-01-05T00:00:00.000Z")));
+		inPeriodWithOtherUser.setCreatedAt( Instant.parse("2020-01-05T00:00:00.000Z").atZone(ZoneId.systemDefault()).toLocalDateTime());
 		Transaction inPeriodWithOtherChat = addNewTransaction("inPeriodWithOtherChat", user, newChat);
-		inPeriodWithOtherChat.setCreatedAt( Date.from(Instant.parse("2020-01-05T00:00:00.000Z")));
+		inPeriodWithOtherChat.setCreatedAt( Instant.parse("2020-01-05T00:00:00.000Z").atZone(ZoneId.systemDefault()).toLocalDateTime());
 		Transaction inPeriodWithOtherUserAndChat = addNewTransaction("inPeriodWithOtherUserAndChat", newUser, newChat);
-		inPeriodWithOtherUserAndChat.setCreatedAt( Date.from(Instant.parse("2020-01-05T00:00:00.000Z")));
+		inPeriodWithOtherUserAndChat.setCreatedAt( Instant.parse("2020-01-05T00:00:00.000Z").atZone(ZoneId.systemDefault()).toLocalDateTime());
 		
 		transactionRepository.save(inPeriod);
 		transactionRepository.save(equalPeriodStartTime);

@@ -3,6 +3,7 @@ package com.mysticalducks.rest.finance.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -68,6 +69,17 @@ public class ChatServiceTest {
 		verify(chatRepository).findAll();
 		
 		assertThat(foundChats).hasSize(1);
+	}
+	
+	@Test
+	void save() {
+		when(chatRepository.save(any(Chat.class))).thenReturn(chat);
+
+		Chat savedChat = service.save(1);
+
+		verify(chatRepository).save(any(Chat.class));
+
+		assertThat(savedChat).isNotNull();
 	}
 
 }

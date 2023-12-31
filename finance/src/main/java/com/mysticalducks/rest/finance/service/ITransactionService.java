@@ -1,10 +1,8 @@
 package com.mysticalducks.rest.finance.service;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
-import com.mysticalducks.rest.finance.model.Category;
-import com.mysticalducks.rest.finance.model.Chat;
 import com.mysticalducks.rest.finance.model.Transaction;
 import com.mysticalducks.rest.finance.model.User;
 import com.mysticalducks.rest.finance.repository.ITransactionInformations;
@@ -23,15 +21,15 @@ public interface ITransactionService {
 	
 	List<Transaction> findAllByUserId(int userId);
 
-	Transaction save(String name, double amount, String note, Category category, User user,
-			Chat chat);
+	Transaction save(String name, double amount, String note, int categoryId, int userId,
+			int chatId);
 	
 	Transaction replace(Transaction newTransaction);
 	
-	double totalAmount(User user, Chat chat);
+	double totalAmount(int userId, int chatId);
 	
-	double totalAmountByDate(User user, Chat chat, Date startDate, Date endDate);
+	double totalAmountByDate(int userId, int chatId, LocalDateTime startDate, LocalDateTime endDate);
 		
-	double totalAmountByCurrentMonth(User user, Chat chat);
+	double totalAmountByCurrentMonth(int userId, int chatId);
 	
 }

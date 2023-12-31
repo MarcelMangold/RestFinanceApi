@@ -26,6 +26,9 @@ public class ChatService implements IChatService {
 				.orElseThrow(() -> new DataNotFoundException(id));
 		
 	}
-	
+
+	public Chat save(int id) {
+		return chatRepository.save(new Chat(id));
+	}
 
 }

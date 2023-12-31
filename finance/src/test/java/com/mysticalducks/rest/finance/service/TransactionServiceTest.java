@@ -5,15 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.temporal.ChronoField;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +24,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
+import com.mysticalducks.rest.finance.exception.CategoryNotFoundException;
+import com.mysticalducks.rest.finance.exception.ChatNotFoundException;
 import com.mysticalducks.rest.finance.exception.DataNotFoundException;
+import com.mysticalducks.rest.finance.exception.UserNotFoundException;
 import com.mysticalducks.rest.finance.model.Category;
 import com.mysticalducks.rest.finance.model.Chat;
 import com.mysticalducks.rest.finance.model.Icon;
@@ -50,11 +51,16 @@ public class TransactionServiceTest {
 	@Mock
 	UserService userService;
 
+	@Mock
+	CategoryService categoryService;
+	
 	Transaction transaction;
 	User user;
 	Icon icon;
 	Category category;
 	Chat chat;
+	LocalDateTime startDate;
+	LocalDateTime endDate;
 
 	@BeforeEach
 	void setUp() {
@@ -62,6 +68,8 @@ public class TransactionServiceTest {
 		this.user = new User("User","email", "password", 0);
 		this.category = new Category("Category", user, new Icon("Icon"));
 		this.transaction = new Transaction("transaction", -200.0, "note", category, user, chat);
+		this.startDate = LocalDateTime.now();
+		this.endDate = LocalDateTime.now();
 	}
 
 	@Test
@@ -162,13 +170,50 @@ public class TransactionServiceTest {
 	void save() {
 		when(transactionRepository.save(any(Transaction.class))).thenReturn(transaction);
 
-		Transaction savedTransaction = service.save("newTransaction", -200.0, "note", category, user, chat);
+		when(userService.findById(user.getId())).thenReturn(user);
+		when(chatService.findById(chat.getId())).thenReturn(chat);
+		when(categoryService.findById(category.getId())).thenReturn(category);
+		
+		Transaction savedTransaction = service.save("newTransaction", -200.0, "note", category.getId(), user.getId(), chat.getId());
 
 		verify(transactionRepository).save(any(Transaction.class));
 
 		assertThat(savedTransaction).isNotNull();
 	}
+	
+	@Test
+	void save_userIsNull() {
+		assertThrows(UserNotFoundException.class, () -> {
+			when(userService.findById(user.getId())).thenReturn(null);
 
+			service.save("newTransaction", -200.0, "note", category.getId(), user.getId(), chat.getId());
+			}
+		);
+	}
+
+	@Test
+	void save_chatIsNull() {
+		assertThrows(ChatNotFoundException.class, () -> {
+			when(userService.findById(user.getId())).thenReturn(user);
+			when(chatService.findById(chat.getId())).thenReturn(null);
+			
+			service.save("newTransaction", -200.0, "note", category.getId(), user.getId(), chat.getId());
+			}
+		);
+	}
+
+	@Test
+	void save_categorieIsNull() {
+		assertThrows(CategoryNotFoundException.class, () -> {
+			when(userService.findById(user.getId())).thenReturn(user);
+			when(chatService.findById(chat.getId())).thenReturn(chat);
+			when(categoryService.findById(category.getId())).thenReturn(null);
+			
+			service.save("newTransaction", -200.0, "note", category.getId(), user.getId(), chat.getId());
+			}
+		);
+	}
+	
 	@Test
 	void replace() {
 		when(transactionRepository.findById(0)).thenReturn(Optional.of(transaction));
@@ -210,13 +255,37 @@ public class TransactionServiceTest {
 		transactions.add(new Transaction("transaction", 250.0, "note", category, user, chat));
 
 		when(transactionRepository.getByUserAndChat(user, chat)).thenReturn(transactions);
-
-		double amount = service.totalAmount(user, chat);
+		when(userService.findById(user.getId())).thenReturn(user);
+		when(chatService.findById(chat.getId())).thenReturn(chat);
+		
+		double amount = service.totalAmount(user.getId(), chat.getId());
 		verify(transactionRepository).getByUserAndChat(user, chat);
 
 		assertEquals(getAmount(transactions), amount);
 
 	}
+	
+	@Test
+	void totalAmount_userIsNull() {
+		assertThrows(UserNotFoundException.class, () -> {
+			when(userService.findById(user.getId())).thenReturn(null);
+
+			service.totalAmount(0, 0);
+			}
+		);
+	}
+
+	@Test
+	void totalAmount_chatIsNull() {
+		assertThrows(ChatNotFoundException.class, () -> {
+			when(userService.findById(user.getId())).thenReturn(user);
+			when(chatService.findById(chat.getId())).thenReturn(null);
+			
+			service.totalAmount(0, 0);
+			}
+		);
+	}
+
 
 	@Test
 	void totalAmountByDate() {
@@ -224,16 +293,37 @@ public class TransactionServiceTest {
 		transactions.add(transaction);
 		transactions.add(new Transaction("transaction", 250.0, "note", category, user, chat));
 
-		Date startDate = new Date();
-		Date endDate = new Date();
 		when(transactionRepository.getByUserAndChatAndPeriod(user, chat, startDate, endDate))
 				.thenReturn(transactions);
+		when(userService.findById(user.getId())).thenReturn(user);
+		when(chatService.findById(chat.getId())).thenReturn(chat);
 
-		double amount = service.totalAmountByDate(user, chat, startDate, endDate);
+		double amount = service.totalAmountByDate(user.getId(), chat.getId(), startDate, endDate);
 		verify(transactionRepository).getByUserAndChatAndPeriod(user, chat, startDate, endDate);
 
 		assertEquals(getAmount(transactions), amount);
 
+	}
+	
+	@Test
+	void totalAmountByDate_userIsNull() {
+		assertThrows(UserNotFoundException.class, () -> {
+			when(userService.findById(user.getId())).thenReturn(null);
+
+			service.totalAmountByDate(user.getId(), chat.getId(), startDate, endDate);;
+			}
+		);
+	}
+
+	@Test
+	void totalAmountByDate_chatIsNull() {
+		assertThrows(ChatNotFoundException.class, () -> {
+			when(userService.findById(user.getId())).thenReturn(user);
+			when(chatService.findById(chat.getId())).thenReturn(null);
+			
+			service.totalAmountByDate(user.getId(), chat.getId(), startDate, endDate);
+			}
+		);
 	}
 
 	@Test
@@ -242,21 +332,37 @@ public class TransactionServiceTest {
 		transactions.add(transaction);
 		transactions.add(new Transaction("transaction", 250.0, "note", category, user, chat));
 
-		ZoneId zoneId = ZoneId.of ( "UTC" );
-		LocalDate today = LocalDate.now ( zoneId );
-		LocalDate firstOfCurrentMonth = today.with ( ChronoField.DAY_OF_MONTH , 1 );
-		
-		Date firstDateOfMonth =  Date.from(firstOfCurrentMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
-		Date actualDate = Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant());
-
-		when(transactionRepository.getByUserAndChatAndPeriod(user, chat, firstDateOfMonth, actualDate))
+		when(transactionRepository.getByUserAndChatAndPeriod(eq(user), eq(chat),  any(LocalDateTime.class),  any(LocalDateTime.class)))
 				.thenReturn(transactions);
+		when(userService.findById(user.getId())).thenReturn(user);
+		when(chatService.findById(chat.getId())).thenReturn(chat);
 
-		double amount = service.totalAmountByCurrentMonth(user, chat);
-		verify(transactionRepository).getByUserAndChatAndPeriod(user, chat, firstDateOfMonth, actualDate);
+		double amount = service.totalAmountByCurrentMonth(user.getId(), chat.getId());
+		verify(transactionRepository).getByUserAndChatAndPeriod(eq(user), eq(chat),  any(LocalDateTime.class),  any(LocalDateTime.class));
 
 		assertEquals(getAmount(transactions), amount);
 
+	}
+	
+	@Test
+	void totalAmountByCurrentMonth_userIsNull() {
+		assertThrows(UserNotFoundException.class, () -> {
+			when(userService.findById(user.getId())).thenReturn(null);
+
+			service.totalAmountByCurrentMonth(user.getId(), chat.getId());
+			}
+		);
+	}
+
+	@Test
+	void totalAmountByCurrentMonth_chatIsNull() {
+		assertThrows(ChatNotFoundException.class, () -> {
+			when(userService.findById(user.getId())).thenReturn(user);
+			when(chatService.findById(chat.getId())).thenReturn(null);
+			
+			service.totalAmountByCurrentMonth(user.getId(), chat.getId());
+			}
+		);
 	}
 	
 	private Double getAmount(List<Transaction> transactions) {

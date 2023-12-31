@@ -1,6 +1,6 @@
 package com.mysticalducks.rest.finance.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,8 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -42,9 +40,8 @@ public class Transaction {
 	private Chat chat;
 	
 	@CreationTimestamp
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="created_at")
-	private Date createdAt;
+	private LocalDateTime createdAt;
 	
 	public Transaction() {}
 	
@@ -105,11 +102,11 @@ public class Transaction {
 		this.chat = chat;
 	}
 
-	public Date getCreatedAt() {
+	public LocalDateTime getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(Date createdAt) {
+	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
 	

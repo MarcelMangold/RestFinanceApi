@@ -9,5 +9,7 @@ public interface IChatService {
 	List<Chat> findAll();
 	
 	Chat findById(int id);
+	
+	Chat save(int id);
 
 }
