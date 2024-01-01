@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.mysticalducks.rest.finance.model.Category;
 import com.mysticalducks.rest.finance.service.CategoryService;
@@ -30,6 +31,7 @@ public class CategoryController {
 	}
 
 	@PostMapping("/category")
+	@ResponseStatus(HttpStatus.CREATED)
 	@ResponseBody
 	ResponseEntity<Category> newCategory(@RequestParam int userId, @RequestParam String name, @RequestParam int iconId) {
 		return new ResponseEntity<Category>(categoryService.save(userId, name, iconId), HttpStatus.OK);
