@@ -21,7 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
-import com.mysticalducks.rest.finance.exception.DataNotFoundException;
+import com.mysticalducks.rest.finance.exception.CategoryNotFoundException;
 import com.mysticalducks.rest.finance.exception.IconNotFoundException;
 import com.mysticalducks.rest.finance.exception.UserNotFoundException;
 import com.mysticalducks.rest.finance.model.Category;
@@ -77,7 +77,7 @@ public class CategoryServiceTest {
 
 		verify(categoryRepository).findById(1);
 		
-		DataNotFoundException thrown = assertThrows(DataNotFoundException.class, () -> service.findById(2),
+		CategoryNotFoundException thrown = assertThrows(CategoryNotFoundException.class, () -> service.findById(2),
 				"No data found for the id 2");
 
 		assertTrue(thrown.getMessage().contains("2"));

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mysticalducks.rest.finance.exception.CategoryNotFoundException;
 import com.mysticalducks.rest.finance.exception.DataNotFoundException;
 import com.mysticalducks.rest.finance.exception.IconNotFoundException;
 import com.mysticalducks.rest.finance.exception.UserNotFoundException;
@@ -32,7 +33,7 @@ public class CategoryService implements ICategoryService {
 	}
 
 	public Category findById(int id) {
-		return categoryRepository.findById(id).orElseThrow(() -> new DataNotFoundException(id));
+		return categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
 		
 	}
 

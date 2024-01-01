@@ -18,7 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.mysticalducks.rest.finance.exception.DataNotFoundException;
+import com.mysticalducks.rest.finance.exception.IconNotFoundException;
 import com.mysticalducks.rest.finance.model.Icon;
 import com.mysticalducks.rest.finance.repository.IconRepository;
 
@@ -55,7 +55,7 @@ public class IconServiceTest {
 
 		verify(iconRepository).findById(1);
 
-		DataNotFoundException thrown = assertThrows(DataNotFoundException.class, () -> service.findById(2),
+		IconNotFoundException thrown = assertThrows(IconNotFoundException.class, () -> service.findById(2),
 				"No data found for the id 2");
 
 		assertTrue(thrown.getMessage().contains("2"));

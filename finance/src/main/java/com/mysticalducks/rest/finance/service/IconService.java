@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mysticalducks.rest.finance.exception.DataNotFoundException;
+import com.mysticalducks.rest.finance.exception.IconNotFoundException;
 import com.mysticalducks.rest.finance.model.Icon;
 import com.mysticalducks.rest.finance.repository.IconRepository;
 
@@ -20,7 +21,7 @@ public class IconService implements IIconService {
 	}
 
 	public Icon findById(int id) {
-		return iconRepository.findById(id).orElseThrow(() -> new DataNotFoundException(id));
+		return iconRepository.findById(id).orElseThrow(() -> new IconNotFoundException(id));
 	}
 
 	public Icon save(String name) {

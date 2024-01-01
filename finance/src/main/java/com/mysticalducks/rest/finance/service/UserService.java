@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.mysticalducks.rest.finance.exception.DataNotFoundException;
+import com.mysticalducks.rest.finance.exception.UserNotFoundException;
 import com.mysticalducks.rest.finance.model.User;
 import com.mysticalducks.rest.finance.repository.UserRepository;
 
@@ -22,7 +22,7 @@ public class UserService implements IUserService {
 	}
 	
 	public User findById(int id) {
-		return userRepository.findById(id).orElseThrow(() -> new DataNotFoundException(id));
+		return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
 	}
 	
 	public User save(String name, String email, String password, int language ) {

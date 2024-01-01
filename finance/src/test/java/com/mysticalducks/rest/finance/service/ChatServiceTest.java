@@ -18,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.mysticalducks.rest.finance.exception.ChatNotFoundException;
 import com.mysticalducks.rest.finance.exception.DataNotFoundException;
 import com.mysticalducks.rest.finance.model.Chat;
 import com.mysticalducks.rest.finance.repository.ChatRepository;
@@ -50,8 +51,8 @@ public class ChatServiceTest {
 
 		verify(chatRepository).findById(1);
 		
-		DataNotFoundException thrown = assertThrows(DataNotFoundException.class, () -> service.findById(2),
-				"No data found for the id 2");
+		ChatNotFoundException thrown = assertThrows(ChatNotFoundException.class, () -> service.findById(2),
+				"No data found for the chat with id 2");
 
 		assertTrue(thrown.getMessage().contains("2"));
 

@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.mysticalducks.rest.finance.exception.DataNotFoundException;
+import com.mysticalducks.rest.finance.exception.ChatNotFoundException;
 import com.mysticalducks.rest.finance.model.Chat;
 import com.mysticalducks.rest.finance.repository.ChatRepository;
 
@@ -23,7 +23,7 @@ public class ChatService implements IChatService {
 	
 	public Chat findById(int id) {
 		return chatRepository.findById(id)
-				.orElseThrow(() -> new DataNotFoundException(id));
+				.orElseThrow(() -> new ChatNotFoundException(id));
 		
 	}
 

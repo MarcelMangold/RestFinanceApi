@@ -31,23 +31,7 @@ public class ExceptionHandlerAdvice extends ResponseEntityExceptionHandler {
 		// log exception
 		return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error Message");
 	}
-	
 
-	/*
-	 * @ExceptionHandler(DataNotFoundException.class) public @ResponseBody
-	 * ResponseEntity<?> dataNotFoundExceptionHandling(Exception exception,
-	 * WebRequest request) {
-	 * System.out.println("--------------------------------------------------asdasd"
-	 * ); return new ResponseEntity<>(new ErrorDetails(new Date(),
-	 * exception.getMessage(), request.getDescription(falseHttpServletResponse)),
-	 * HttpStatus.NOT_FOUND); }
-	 */
-
-	@ExceptionHandler(DataNotFoundException.class)
-	public void springHandleNotFound(HttpServletResponse response) throws IOException {
-		response.sendError(HttpStatus.NOT_FOUND.value());
-	}
-	
 	@ExceptionHandler(EmptyBodyException.class)
 	public void springHandleEmptyBody(HttpServletResponse response) throws IOException {
 		response.sendError(HttpStatus.BAD_REQUEST.value());
@@ -59,24 +43,46 @@ public class ExceptionHandlerAdvice extends ResponseEntityExceptionHandler {
 				HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
+	@ExceptionHandler(DataNotFoundException.class)
+	public ResponseEntity<?> handleDataNotFoundException(DataNotFoundException ex) {
+		ApiErrorResponse response = new ApiErrorResponse(HttpStatus.NOT_FOUND, ApiError.DATA_NOT_FOUND);
+		
+		return new ResponseEntity<>(response, response.getStatus());
+	}
+	
 	@ExceptionHandler(UserNotFoundException.class)
 	public ResponseEntity<?> handleUserNotFoundException(UserNotFoundException ex) {
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+		ApiErrorResponse response = new ApiErrorResponse(HttpStatus.NOT_FOUND, ApiError.USER_NOT_FOUND);
+		
+		return new ResponseEntity<>(response, response.getStatus());
 	}
 	
 	@ExceptionHandler(IconNotFoundException.class)
 	public ResponseEntity<?> handleUserNotFoundException(IconNotFoundException ex) {
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+		ApiErrorResponse response = new ApiErrorResponse(HttpStatus.NOT_FOUND, ApiError.ICON_NOT_FOUND);
+		
+		return new ResponseEntity<>(response, response.getStatus());
 	}
 
 	@ExceptionHandler(CategoryNotFoundException.class)
 	public ResponseEntity<?> handleCategoryNotFoundException(CategoryNotFoundException ex) {
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+		ApiErrorResponse response = new ApiErrorResponse(HttpStatus.NOT_FOUND, ApiError.CATEGORY_NOT_FOUND);
+		
+		return new ResponseEntity<>(response, response.getStatus());
 	}
 
 	@ExceptionHandler(ChatNotFoundException.class)
 	public ResponseEntity<?> handleChatNotFoundException(ChatNotFoundException ex) {
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+		ApiErrorResponse response = new ApiErrorResponse(HttpStatus.NOT_FOUND, ApiError.CHAT_NOT_FOUND);
+		
+		return new ResponseEntity<>(response, response.getStatus());
+	}
+	
+	@ExceptionHandler(TransactionNotFoundException.class)
+	public ResponseEntity<?> handleTransactionNotFoundException(TransactionNotFoundException ex) {
+		ApiErrorResponse response = new ApiErrorResponse(HttpStatus.NOT_FOUND, ApiError.TRANSACTION_NOT_FOUND);
+		
+		return new ResponseEntity<>(response, response.getStatus());
 	}
 
 	@Override
