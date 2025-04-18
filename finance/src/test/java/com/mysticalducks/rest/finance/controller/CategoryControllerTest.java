@@ -21,9 +21,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -44,7 +44,7 @@ public class CategoryControllerTest extends AbstractControllerTest {
 	@Autowired
 	private MockMvc mvc;
 
-	@MockBean
+	@MockitoBean
 	private CategoryService categoryService;
 	
 
@@ -57,7 +57,7 @@ public class CategoryControllerTest extends AbstractControllerTest {
 				.andExpect(jsonPath("user.id").value(0))
 				.andExpect(jsonPath("icon.id").value(0));
 
-		this.mvc.perform(get("/category/").secure(false)).andExpect(status().isMethodNotAllowed());
+		this.mvc.perform(get("/category").secure(false)).andExpect(status().isMethodNotAllowed());
 
 		this.mvc.perform(get("/category/-1").secure(false)).andExpect(status().isOk());
 	}
@@ -66,7 +66,7 @@ public class CategoryControllerTest extends AbstractControllerTest {
 	@Test
 	public void newCategory() throws Exception {
 		given(this.categoryService.save(category.getUser().getId(), category.getName(), category.getIcon().getId())).willReturn(category);
-		this.mvc.perform(post("/category/")
+		this.mvc.perform(post("/category")
 				.queryParam("userId", "0")
 				.queryParam("name", "category")
 				.queryParam("iconId", "0")
@@ -79,7 +79,7 @@ public class CategoryControllerTest extends AbstractControllerTest {
 			    .andExpect(jsonPath("user.id").value(category.getUser().getId()))
 				.andExpect(jsonPath("icon.id").value(category.getIcon().getId()));
 
-		this.mvc.perform(post("/category/").secure(false)).andExpect(status().isBadRequest());
+		this.mvc.perform(post("/category").secure(false)).andExpect(status().isBadRequest());
 	}
 	
 	@Test

@@ -19,7 +19,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.mysticalducks.rest.finance.exception.ChatNotFoundException;
-import com.mysticalducks.rest.finance.exception.DataNotFoundException;
 import com.mysticalducks.rest.finance.model.Chat;
 import com.mysticalducks.rest.finance.repository.ChatRepository;
 

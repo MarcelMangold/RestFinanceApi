@@ -1,7 +1,9 @@
 package com.mysticalducks.rest.finance.exception;
 
 public class IconNotFoundException extends RuntimeException { 
-    public IconNotFoundException(String iconMessage) {
+	private static final long serialVersionUID = 5495153203624364513L;
+
+	public IconNotFoundException(String iconMessage) {
         super(iconMessage);
     }
     

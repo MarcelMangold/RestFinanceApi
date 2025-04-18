@@ -1,7 +1,10 @@
 package com.mysticalducks.rest.finance.exception;
 
 public class CategoryNotFoundException extends RuntimeException { 
-    public CategoryNotFoundException(String iconMessage) {
+
+	private static final long serialVersionUID = 3273156020021374668L;
+
+	public CategoryNotFoundException(String iconMessage) {
         super(iconMessage);
     }
     

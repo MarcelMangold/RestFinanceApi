@@ -26,9 +26,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -48,7 +48,7 @@ public class TransactionControllerTest extends AbstractControllerTest {
 	@Autowired
 	private MockMvc mvc;
 
-	@MockBean
+	@MockitoBean
 	private TransactionService transactionService;
 	
 
@@ -65,7 +65,7 @@ public class TransactionControllerTest extends AbstractControllerTest {
 				.andExpect(jsonPath("category.id").value(transaction.getCategory().getId()))
 				.andExpect(jsonPath("note").value(transaction.getNote()));
 
-		this.mvc.perform(get("/transaction/").secure(false)).andExpect(status().isMethodNotAllowed());
+		this.mvc.perform(get("/transaction").secure(false)).andExpect(status().isMethodNotAllowed());
 	}
 	
 	@Test
@@ -91,7 +91,7 @@ public class TransactionControllerTest extends AbstractControllerTest {
 	@Test
 	public void newTranscation() throws Exception {
 		given(this.transactionService.save(transaction.getName(), transaction.getAmount(), transaction.getNote(), transaction.getCategory().getId(), transaction.getUser().getId(), transaction.getChat().getId())).willReturn(transaction);
-		this.mvc.perform(post("/transaction/")
+		this.mvc.perform(post("/transaction")
 				.queryParam("name", "transaction")
 				.queryParam("amount", "250.0")
 				.queryParam("note", "note")
@@ -117,7 +117,7 @@ public class TransactionControllerTest extends AbstractControllerTest {
 	public void newTransaction_userNotFoundException() throws Exception {
 		doThrow(new UserNotFoundException("User not found with id " + -1)).when(transactionService).save(anyString(), anyDouble(), anyString(), anyInt(), anyInt(), anyInt());
 		
-		this.mvc.perform(post("/transaction/")
+		this.mvc.perform(post("/transaction")
 				.queryParam("name", "transaction")
 				.queryParam("amount", "250.0")
 				.queryParam("note", "note")
@@ -136,7 +136,7 @@ public class TransactionControllerTest extends AbstractControllerTest {
 	public void newTransaction_chatNotFoundException() throws Exception {
 		doThrow(new ChatNotFoundException("Chat not found with id " + -1)).when(transactionService).save(anyString(), anyDouble(), anyString(), anyInt(), anyInt(), anyInt());
 		
-		this.mvc.perform(post("/transaction/")
+		this.mvc.perform(post("/transaction")
 				.queryParam("name", "transaction")
 				.queryParam("amount", "250.0")
 				.queryParam("note", "note")
@@ -155,7 +155,7 @@ public class TransactionControllerTest extends AbstractControllerTest {
 	public void newTransaction_categoryNotFoundException() throws Exception {
 		doThrow(new CategoryNotFoundException("Category not found with id " + -1)).when(transactionService).save(anyString(), anyDouble(), anyString(), anyInt(), anyInt(), anyInt());
 		
-		this.mvc.perform(post("/transaction/")
+		this.mvc.perform(post("/transaction")
 				.queryParam("name", "transaction")
 				.queryParam("amount", "250.0")
 				.queryParam("note", "note")
@@ -221,7 +221,7 @@ public class TransactionControllerTest extends AbstractControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().string(Double.toString(totalAmountValue)));
 
-		this.mvc.perform(get("/transaction/").secure(false)).andExpect(status().isMethodNotAllowed());
+		this.mvc.perform(get("/transaction").secure(false)).andExpect(status().isMethodNotAllowed());
 	}
 	
 	@Test

@@ -1,7 +1,10 @@
 package com.mysticalducks.rest.finance.exception;
 
 public class TransactionNotFoundException extends RuntimeException { 
-    public TransactionNotFoundException(String transactionMessage) {
+
+	private static final long serialVersionUID = 8124694649162605003L;
+
+	public TransactionNotFoundException(String transactionMessage) {
         super(transactionMessage);
     }
     

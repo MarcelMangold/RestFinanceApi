@@ -16,9 +16,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,7 +32,7 @@ public class UserControllerTest {
 	@Autowired
 	private MockMvc mvc;
 
-	@MockBean
+	@MockitoBean
 	private UserService userService;
 	
 	 @Autowired
@@ -64,7 +64,7 @@ public class UserControllerTest {
 			.andExpect(jsonPath("password").value("password"))
 			.andExpect(jsonPath("language").value(4));
 
-		this.mvc.perform(get("/user/").secure(false)).andExpect(status().isMethodNotAllowed());
+		this.mvc.perform(get("/user").secure(false)).andExpect(status().isMethodNotAllowed());
 		
 		this.mvc.perform(get("/user/-1").secure(false)).andExpect(status().isOk());
 
@@ -90,9 +90,9 @@ public class UserControllerTest {
 			.andExpect(jsonPath("language").value(4));
 
 
-		this.mvc.perform(post("/user/").secure(false)).andExpect(status().isBadRequest());
+		this.mvc.perform(post("/user").secure(false)).andExpect(status().isBadRequest());
 		
-		this.mvc.perform(post("/user/").content("").secure(false).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).
+		this.mvc.perform(post("/user").content("").secure(false).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).
 			andExpect(status().isBadRequest());
 	}
 	@Test
@@ -101,7 +101,7 @@ public class UserControllerTest {
 				.accept(MediaType.APPLICATION_JSON).characterEncoding("UTF-8").secure(false)
 				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andExpect(status().isNoContent());
 
-		this.mvc.perform(delete("/user/").secure(false)).andExpect(status().isMethodNotAllowed());
+		this.mvc.perform(delete("/user").secure(false)).andExpect(status().isMethodNotAllowed());
 	}
 	
 

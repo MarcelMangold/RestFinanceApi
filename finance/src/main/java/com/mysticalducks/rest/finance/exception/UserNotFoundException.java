@@ -1,7 +1,9 @@
 package com.mysticalducks.rest.finance.exception;
 
 public class UserNotFoundException extends RuntimeException { 
-    public UserNotFoundException(String userId) {
+	private static final long serialVersionUID = 7257945264431026483L;
+
+	public UserNotFoundException(String userId) {
         super(userId);
     }
     
