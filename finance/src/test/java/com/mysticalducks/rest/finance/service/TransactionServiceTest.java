@@ -105,6 +105,21 @@ public class TransactionServiceTest {
 	    assertEquals(foundTransactions.get(0), transaction);
 	    assertEquals(foundTransactions.get(1).getName(), "transaction2");
 	}
+	
+	
+	@Test
+	void getAllTransactionsByUserId_userNotFound() {
+	    int invalidUserId = -1;
+
+	    when(userService.findById(invalidUserId)).thenReturn(null);
+
+	    UserNotFoundException exception = assertThrows(UserNotFoundException.class, 
+	        () -> service.getAllTransactionsByUserId(invalidUserId));
+
+	    assertEquals("User not found with id " + invalidUserId, exception.getMessage());
+	    verify(userService, times(1)).findById(invalidUserId);
+	    verify(transactionRepository, times(0)).findAllByUserId(any());
+	}
 
 	@Test
 	void findById() {
