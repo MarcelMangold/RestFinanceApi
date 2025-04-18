@@ -1,6 +1,7 @@
 package com.mysticalducks.rest.finance.controller;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -32,6 +33,13 @@ public class TransactionController{
 	public ResponseEntity<Transaction> findTransaction(@PathVariable int id){
 		return new ResponseEntity<Transaction>(transactionService.findById(id), HttpStatus.OK);
 	}
+	
+	@GetMapping("/transactions/{userId}")
+	@ResponseBody
+	public ResponseEntity<List<Transaction>> getAllTransactionsByUserId(@PathVariable int userId) {
+	    return new ResponseEntity<>(transactionService.getAllTransactionsByUserId(userId), HttpStatus.OK);
+	}
+
 	
 	
 	@PostMapping("/transaction")

@@ -86,6 +86,25 @@ public class TransactionServiceTest {
 
 		assertThat(foundTransactions).hasSize(2);
 	}
+	
+	@Test
+	void getAllTransactionsByUserId() {
+	    List<Transaction> transactions = new ArrayList<>();
+	    transactions.add(transaction);
+	    transactions.add(new Transaction("transaction2", 300.0, "note2", category, user, chat));
+
+	    when(userService.findById(user.getId())).thenReturn(user);
+	    when(transactionRepository.findAllByUserId(user)).thenReturn(transactions);
+
+	    List<Transaction> foundTransactions = service.getAllTransactionsByUserId(user.getId());
+
+	    verify(userService, times(1)).findById(user.getId());
+	    verify(transactionRepository, times(1)).findAllByUserId(user);
+
+	    assertThat(foundTransactions).hasSize(2);
+	    assertEquals(foundTransactions.get(0), transaction);
+	    assertEquals(foundTransactions.get(1).getName(), "transaction2");
+	}
 
 	@Test
 	void findById() {

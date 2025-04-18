@@ -49,6 +49,14 @@ public class TransactionService implements ITransactionService {
 					.getInformations(user);
 	}
 
+	public List<Transaction> getAllTransactionsByUserId(int userId) {
+	    User user = userService.findById(userId);
+	    if (user == null) {
+	        throw new UserNotFoundException("User not found with id " + userId);
+	    }
+	    return transactionRepository.findAllByUserId(user);
+	}
+	
 	public List<Transaction> findAllByChatId(int chatId) {
 		Chat chat = chatService.findById(chatId);
 		List<Transaction> transactions = (List<Transaction>) transactionRepository

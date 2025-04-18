@@ -19,7 +19,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +67,25 @@ public class TransactionControllerTest extends AbstractControllerTest {
 
 		this.mvc.perform(get("/transaction/").secure(false)).andExpect(status().isMethodNotAllowed());
 	}
+	
+	@Test
+	public void getAllTransactionsByUserId() throws Exception {
+	    List<Transaction> transactions = new ArrayList<>();
+	    transactions.add(transaction);
+	    transactions.add(new Transaction("transaction2", 300.0, "note2", category, user, chat));
+
+	    given(transactionService.getAllTransactionsByUserId(user.getId())).willReturn(transactions);
+
+	    mvc.perform(get("/transactions/" + user.getId())
+	            .contentType(MediaType.APPLICATION_JSON))
+	            .andExpect(status().isOk())
+	            .andExpect(jsonPath("$.length()").value(2))
+	            .andExpect(jsonPath("$[0].name").value(transaction.getName()))
+	            .andExpect(jsonPath("$[1].name").value("transaction2"));
+
+	    verify(transactionService, times(1)).getAllTransactionsByUserId(user.getId());
+	}
+
 	
 	
 	@Test
