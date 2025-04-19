@@ -7,5 +7,6 @@
       http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.5.xsd">  
 
 	<includeAll path="main/" errorIfMissingOrEmpty="false" relativeToChangelogFile="true" />
+  <includeAll path="workbench/" errorIfMissingOrEmpty="false" relativeToChangelogFile="true" context="workbench"/>
 	
 </databaseChangeLog>

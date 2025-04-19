@@ -1,6 +1,10 @@
 # RestFinanceApi
 
 
+## Start docker db and initialize database with database structure and testdata:
+```
+bash startDatabaseWithTestdata.sh
+```
 
 ## application.properties
 ```
