@@ -16,22 +16,6 @@
     </changeSet>
 
     <changeSet id="A00001_10_create_testdata-2" author="mangold" context="workbench">
-        <!-- testdata for icon -->
-        <insert tableName="icon">
-            <column name="id" valueNumeric="1"/>
-            <column name="name" value="egg_alt"/>
-        </insert>
-        <insert tableName="icon">
-            <column name="id" valueNumeric="2"/>
-            <column name="name" value="sports_soccer"/>
-        </insert>
-        <insert tableName="icon">
-            <column name="id" valueNumeric="3"/>
-            <column name="name" value="health_and_safety"/>
-        </insert>
-    </changeSet>
-
-    <changeSet id="A00001_10_create_testdata-3" author="mangold" context="workbench">
         <!-- testdata for user_management -->
         <insert tableName="user_management">
             <column name="id" valueNumeric="1"/>
@@ -43,7 +27,7 @@
         </insert>
     </changeSet>
 
-    <changeSet id="A00001_10_create_testdata-4" author="mangold" context="workbench">
+    <changeSet id="A00001_10_create_testdata-3" author="mangold" context="workbench">
         <!-- testdata for category -->
         <insert tableName="category">
             <column name="id" valueNumeric="1"/>
@@ -65,7 +49,7 @@
         </insert>
     </changeSet>
 
-    <changeSet id="A00001_10_create_testdata-5" author="mangold" context="workbench">
+    <changeSet id="A00001_10_create_testdata-4" author="mangold" context="workbench">
         <!-- testdata for transaction -->
         <insert tableName="transaction">
             <column name="id" valueNumeric="1"/>

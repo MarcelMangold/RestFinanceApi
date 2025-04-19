@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd
+      http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.5.xsd">
+    <changeSet author="mangold" id="A00006_50_create_icon_data" context="main">
+        <insert tableName="icon">
+            <column name="id" valueNumeric="1"/>
+            <column name="name" value="shopping_cart"/>
+        </insert>
+        <insert tableName="icon">
+            <column name="id" valueNumeric="2"/>
+            <column name="name" value="local_grocery_store"/>
+        </insert>
+        <insert tableName="icon">
+            <column name="id" valueNumeric="3"/>
+            <column name="name" value="restaurant"/>
+        </insert>
+        <insert tableName="icon">
+            <column name="id" valueNumeric="4"/>
+            <column name="name" value="local_cafe"/>
+        </insert>
+        <insert tableName="icon">
+            <column name="id" valueNumeric="5"/>
+            <column name="name" value="home"/>
+        </insert>
+        <insert tableName="icon">
+            <column name="id" valueNumeric="6"/>
+            <column name="name" value="kitchen"/>
+        </insert>
+        <insert tableName="icon">
+            <column name="id" valueNumeric="7"/>
+            <column name="name" value="local_laundry_service"/>
+        </insert>
+        <insert tableName="icon">
+            <column name="id" valueNumeric="8"/>
+            <column name="name" value="directions_car"/>
+        </insert>
+        <insert tableName="icon">
+            <column name="id" valueNumeric="9"/>
+            <column name="name" value="directions_bus"/>
+        </insert>
+        <insert tableName="icon">
+            <column name="id" valueNumeric="10"/>
+            <column name="name" value="train"/>
+        </insert>
+        <insert tableName="icon">
+            <column name="id" valueNumeric="11"/>
+            <column name="name" value="flight"/>
+        </insert>
+        <insert tableName="icon">
+            <column name="id" valueNumeric="12"/>
+            <column name="name" value="local_gas_station"/>
+        </insert>
+        <insert tableName="icon">
+            <column name="id" valueNumeric="13"/>
+            <column name="name" value="directions_bike"/>
+        </insert>
+        <insert tableName="icon">
+            <column name="id" valueNumeric="14"/>
+            <column name="name" value="hotel"/>
+        </insert>
+        <insert tableName="icon">
+            <column name="id" valueNumeric="15"/>
+            <column name="name" value="movie"/>
+        </insert>
+        <insert tableName="icon">
+            <column name="id" valueNumeric="16"/>
+            <column name="name" value="music_note"/>
+        </insert>
+        <insert tableName="icon">
+            <column name="id" valueNumeric="17"/>
+            <column name="name" value="sports_soccer"/>
+        </insert>
+        <insert tableName="icon">
+            <column name="id" valueNumeric="18"/>
+            <column name="name" value="local_bar"/>
+        </insert>
+        <insert tableName="icon">
+            <column name="id" valueNumeric="19"/>
+            <column name="name" value="casino"/>
+        </insert>
+        <insert tableName="icon">
+            <column name="id" valueNumeric="20"/>
+            <column name="name" value="palette"/>
+        </insert>
+        <insert tableName="icon">
+            <column name="id" valueNumeric="21"/>
+            <column name="name" value="local_hospital"/>
+        </insert>
+        <insert tableName="icon">
+            <column name="id" valueNumeric="22"/>
+            <column name="name" value="fitness_center"/>
+        </insert>
+        <insert tableName="icon">
+            <column name="id" valueNumeric="23"/>
+            <column name="name" value="school"/>
+        </insert>
+        <insert tableName="icon">
+            <column name="id" valueNumeric="24"/>
+            <column name="name" value="book"/>
+        </insert>
+        <insert tableName="icon">
+            <column name="id" valueNumeric="25"/>
+            <column name="name" value="pets"/>
+        </insert>
+        <insert tableName="icon">
+            <column name="id" valueNumeric="26"/>
+            <column name="name" value="account_balance"/>
+        </insert>
+        <insert tableName="icon">
+            <column name="id" valueNumeric="27"/>
+            <column name="name" value="credit_card"/>
+        </insert>
+        <insert tableName="icon">
+            <column name="id" valueNumeric="28"/>
+            <column name="name" value="euro_symbol"/>
+        </insert>
+        <insert tableName="icon">
+            <column name="id" valueNumeric="29"/>
+            <column name="name" value="receipt"/>
+        </insert>
+        <insert tableName="icon">
+            <column name="id" valueNumeric="30"/>
+            <column name="name" value="security"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
