@@ -19,7 +19,15 @@
         <!-- testdata for icon -->
         <insert tableName="icon">
             <column name="id" valueNumeric="1"/>
-            <column name="name" value="default_icon"/>
+            <column name="name" value="egg_alt"/>
+        </insert>
+        <insert tableName="icon">
+            <column name="id" valueNumeric="2"/>
+            <column name="name" value="sports_soccer"/>
+        </insert>
+        <insert tableName="icon">
+            <column name="id" valueNumeric="3"/>
+            <column name="name" value="health_and_safety"/>
         </insert>
     </changeSet>
 
@@ -27,8 +35,8 @@
         <!-- testdata for user_management -->
         <insert tableName="user_management">
             <column name="id" valueNumeric="1"/>
-            <column name="name" value="John Doe"/>
-            <column name="email" value="john.doe@example.com"/>
+            <column name="name" value="Nathanael"/>
+            <column name="email" value="nathanael@example.com"/>
             <column name="password" value="password123"/>
             <column name="telegram_user_id" valueNumeric="123456"/>
             <column name="language" valueNumeric="1"/>
@@ -39,9 +47,21 @@
         <!-- testdata for category -->
         <insert tableName="category">
             <column name="id" valueNumeric="1"/>
-            <column name="name" value="Groceries"/>
+            <column name="name" value="Food"/>
             <column name="user_id" valueNumeric="1"/>
             <column name="icon_id" valueNumeric="1"/>
+        </insert>
+        <insert tableName="category">
+            <column name="id" valueNumeric="2"/>
+            <column name="name" value="Sport"/>
+            <column name="user_id" valueNumeric="1"/>
+            <column name="icon_id" valueNumeric="2"/>
+        </insert>
+        <insert tableName="category">
+            <column name="id" valueNumeric="3"/>
+            <column name="name" value="Health"/>
+            <column name="user_id" valueNumeric="1"/>
+            <column name="icon_id" valueNumeric="3"/>
         </insert>
     </changeSet>
 
@@ -65,7 +85,7 @@
             <column name="category_id" valueNumeric="1"/>
             <column name="user_id" valueNumeric="1"/>
             <column name="chat_id" valueNumeric="1"/>
-            <column name="created_at" valueDate="2025-04-11T20:30:00"/>
+            <column name="created_at" valueDate="2025-04-10T20:30:00"/>
         </insert>
         <insert tableName="transaction">
             <column name="id" valueNumeric="3"/>
@@ -82,17 +102,17 @@
             <column name="name" value="Tanken"/>
             <column name="amount" valueNumeric="60.00"/>
             <column name="note" value="Tankstelle"/>
-            <column name="category_id" valueNumeric="1"/>
+            <column name="category_id" valueNumeric="2"/>
             <column name="user_id" valueNumeric="1"/>
             <column name="chat_id" valueNumeric="1"/>
-            <column name="created_at" valueDate="2025-04-13T08:45:00"/>
+            <column name="created_at" valueDate="2025-04-12T08:45:00"/>
         </insert>
         <insert tableName="transaction">
             <column name="id" valueNumeric="5"/>
             <column name="name" value="Kinokarten"/>
             <column name="amount" valueNumeric="28.00"/>
             <column name="note" value="Kinoabend"/>
-            <column name="category_id" valueNumeric="1"/>
+            <column name="category_id" valueNumeric="2"/>
             <column name="user_id" valueNumeric="1"/>
             <column name="chat_id" valueNumeric="1"/>
             <column name="created_at" valueDate="2025-04-14T19:30:00"/>
@@ -112,7 +132,7 @@
             <column name="name" value="Apotheke"/>
             <column name="amount" valueNumeric="18.20"/>
             <column name="note" value="Medikamente"/>
-            <column name="category_id" valueNumeric="1"/>
+            <column name="category_id" valueNumeric="3"/>
             <column name="user_id" valueNumeric="1"/>
             <column name="chat_id" valueNumeric="1"/>
             <column name="created_at" valueDate="2025-04-16T11:10:00"/>
@@ -125,14 +145,14 @@
             <column name="category_id" valueNumeric="1"/>
             <column name="user_id" valueNumeric="1"/>
             <column name="chat_id" valueNumeric="1"/>
-            <column name="created_at" valueDate="2025-04-17T14:45:00"/>
+            <column name="created_at" valueDate="2025-04-18T14:45:00"/>
         </insert>
         <insert tableName="transaction">
             <column name="id" valueNumeric="9"/>
             <column name="name" value="Abo"/>
             <column name="amount" valueNumeric="12.99"/>
             <column name="note" value="Musik-Streaming"/>
-            <column name="category_id" valueNumeric="1"/>
+            <column name="category_id" valueNumeric="3"/>
             <column name="user_id" valueNumeric="1"/>
             <column name="chat_id" valueNumeric="1"/>
             <column name="created_at" valueDate="2025-04-18T07:30:00"/>
@@ -145,7 +165,7 @@
             <column name="category_id" valueNumeric="1"/>
             <column name="user_id" valueNumeric="1"/>
             <column name="chat_id" valueNumeric="1"/>
-            <column name="created_at" valueDate="2025-04-19T10:00:00"/>
+            <column name="created_at" valueDate="2025-04-18T10:00:00"/>
         </insert>
     </changeSet>
 
