@@ -5,7 +5,7 @@
 	xmlns:pro="http://www.liquibase.org/xml/ns/pro"
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd
       http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.5.xsd">
-	<changeSet author="mangold" id="A00004_10-category" context="master">
+	<changeSet author="mangold" id="A00004_10-category" context="main">
 		<createTable tableName="category">
 			<column name="id" type="INTEGER" autoIncrement="true">
 				<constraints nullable="false" primaryKey="true" primaryKeyName="pk_category_id" />

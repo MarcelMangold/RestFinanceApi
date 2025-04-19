@@ -1,7 +1,7 @@
 # Liquibase
 
-> Before you run the scripts, you must define your IP in the liquibase.properties file.
-{.is-error}
+> Before you run the scripts, you must rename the liquibase.properties.template to liquibase.properties and define your IP in the file.
+
 
 
 ## Init database structure for running docker db finance_db
