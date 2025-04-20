@@ -20,6 +20,27 @@ CREATE TABLE user_management (
     CONSTRAINT pk_user_id PRIMARY KEY (id)
 );
 
+-- Drop and create financial information table
+DROP TABLE IF EXISTS finance_information;
+
+CREATE TABLE finance_information (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+	budget NUMERIC(19, 2) NOT NULL,
+    CONSTRAINT pk_finance_information_id PRIMARY KEY (id)
+);
+
+-- Drop and create party table
+DROP TABLE IF EXISTS party;
+
+CREATE TABLE party (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(128) NULL,
+    finance_information_id INT NOT NULL,
+    CONSTRAINT fk_party_finance_information_id FOREIGN KEY (finance_information_id) REFERENCES finance_information(id),
+    CONSTRAINT pk_party_id PRIMARY KEY (id)
+);
+
+
 -- Drop and create category table
 DROP TABLE IF EXISTS category;
 

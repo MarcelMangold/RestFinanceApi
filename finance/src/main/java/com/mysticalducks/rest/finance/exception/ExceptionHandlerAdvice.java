@@ -70,12 +70,20 @@ public class ExceptionHandlerAdvice extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(response, response.getStatus());
 	}
 
-	@ExceptionHandler(ChatNotFoundException.class)
-	public ResponseEntity<?> handleChatNotFoundException(ChatNotFoundException ex) {
+	@ExceptionHandler(PartyNotFoundException.class)
+	public ResponseEntity<?> handlePartyNotFoundException(PartyNotFoundException ex) {
 		ApiErrorResponse response = new ApiErrorResponse(HttpStatus.NOT_FOUND, ApiError.CHAT_NOT_FOUND);
 		
 		return new ResponseEntity<>(response, response.getStatus());
 	}
+	
+	@ExceptionHandler(FinanceInformationNotFoundException.class)
+	public ResponseEntity<?> handleFinanceInformationNotFoundException(FinanceInformationNotFoundException ex) {
+		ApiErrorResponse response = new ApiErrorResponse(HttpStatus.NOT_FOUND, ApiError.CHAT_NOT_FOUND);
+		
+		return new ResponseEntity<>(response, response.getStatus());
+	}
+	
 	
 	@ExceptionHandler(TransactionNotFoundException.class)
 	public ResponseEntity<?> handleTransactionNotFoundException(TransactionNotFoundException ex) {

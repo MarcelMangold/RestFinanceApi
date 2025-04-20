@@ -10,5 +10,12 @@ public abstract class AbstractController {
 			throw new EmptyBodyException();
 		}
 	}
+	
+	protected void checkIfParameterIsEmpty(Double param) {
+		if(param == null || param == 0) {
+			throw new EmptyBodyException();
+		}
+	}
+	
 
 }

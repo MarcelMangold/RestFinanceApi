@@ -33,7 +33,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.mysticalducks.rest.finance.exception.CategoryNotFoundException;
-import com.mysticalducks.rest.finance.exception.ChatNotFoundException;
+import com.mysticalducks.rest.finance.exception.PartyNotFoundException;
 import com.mysticalducks.rest.finance.exception.UserNotFoundException;
 import com.mysticalducks.rest.finance.model.Transaction;
 import com.mysticalducks.rest.finance.service.TransactionService;
@@ -130,7 +130,7 @@ public class TransactionControllerTest extends AbstractControllerTest {
 	
 	@Test
 	public void newTransaction_chatNotFoundException() throws Exception {
-		doThrow(new ChatNotFoundException("Chat not found with id " + -1)).when(transactionService).save(anyString(), anyDouble(), anyString(), anyInt(), anyInt());
+		doThrow(new PartyNotFoundException("Chat not found with id " + -1)).when(transactionService).save(anyString(), anyDouble(), anyString(), anyInt(), anyInt());
 		
 		this.mvc.perform(post("/transaction")
 				.queryParam("name", "transaction")
