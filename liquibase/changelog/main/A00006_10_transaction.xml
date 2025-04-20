@@ -15,6 +15,8 @@
             </column>
 			<column name="amount" type="DECIMAL(19,2)"/>
             <column name="note" type="VARCHAR(250)"/>
+            <column name="latitude" type="DOUBLE PRECISION"/>
+            <column name="longitude" type="DOUBLE PRECISION"/>
 		    <column name="category_id" type="INTEGER" >
                 <constraints nullable="false" foreignKeyName="fk_category_id" references="category(id)" />
             </column>
