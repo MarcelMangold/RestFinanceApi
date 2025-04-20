@@ -13,8 +13,8 @@
             <column name="name" type="VARCHAR(150)" >
                 <constraints nullable="false"/>
             </column>
-            <column name="user_id" type="INTEGER" >
-                <constraints nullable="false" foreignKeyName="fk_user_id" references="user_management(id)" />
+            <column name="group_id" type="INTEGER" >
+                <constraints nullable="false" foreignKeyName="fk_group_id" references="group(id)" />
             </column>
             <column name="icon_id" type="INTEGER" >
                 <constraints foreignKeyName="fk_icon_id" references="icon(id)" />
