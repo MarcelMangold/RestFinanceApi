@@ -1,11 +1,3 @@
--- Drop and create chat table
-DROP TABLE IF EXISTS chat;
-
-CREATE TABLE chat (
-    id INT NOT NULL,
-    CONSTRAINT pk_chat_id PRIMARY KEY (id)
-);
-
 -- Drop and create icon table
 DROP TABLE IF EXISTS icon;
 
@@ -52,10 +44,8 @@ CREATE TABLE transaction (
     note VARCHAR(250) NULL,
     category_id INT NOT NULL,
     user_id INT NOT NULL,
-    chat_id INT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     CONSTRAINT pk_transaction_id PRIMARY KEY (id),
     CONSTRAINT fk_category_id FOREIGN KEY (category_id) REFERENCES category(id),
-    CONSTRAINT fk_chat_id FOREIGN KEY (chat_id) REFERENCES chat(id),
     CONSTRAINT fk_transaction_user_id FOREIGN KEY (user_id) REFERENCES user_management(id)
 );

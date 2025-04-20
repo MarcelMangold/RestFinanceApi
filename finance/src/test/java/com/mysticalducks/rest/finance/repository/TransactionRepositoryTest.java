@@ -17,7 +17,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.mysticalducks.rest.finance.model.Category;
-import com.mysticalducks.rest.finance.model.Chat;
 import com.mysticalducks.rest.finance.model.Icon;
 import com.mysticalducks.rest.finance.model.Transaction;
 import com.mysticalducks.rest.finance.model.User;
@@ -29,13 +28,11 @@ public class TransactionRepositoryTest extends AbstractRepositoryTest {
 
 	@BeforeEach
 	void setUp() {
-		this.chat = new Chat(0);
 		this.user = new User("User", "email", "password", 0);
 		this.icon = new Icon("Icon");
 		this.category = new Category("Category", user, icon);
-		this.transaction = new Transaction("Transaction", 200.0, "note", category, user, chat);
+		this.transaction = new Transaction("Transaction", 200.0, "note", category, user);
 
-		chatRepository.save(chat);
 		userRepository.save(user);
 		iconRepository.save(icon);
 		categoryRepository.save(category);
@@ -60,69 +57,28 @@ public class TransactionRepositoryTest extends AbstractRepositoryTest {
 		assertEquals(transactionUser, queryResult.get(1));
 	}
 	
-	@Test
-	public void findAllByChatId() throws Exception {
-		Chat newChat = new Chat(1);
-		chatRepository.save(newChat);
-		
-		User newUser = new User("newUser", "email", "password", 0);
-		userRepository.save(newUser);
-		
-		Transaction transactionUser = addNewTransaction("TransactionUser", chat);
-		addNewTransaction("TransactionNewUserNewChat", newUser, newChat);
-		Transaction transactionNewUserOldChat = addNewTransaction("TransactionNewUser", newUser);
-
-		List<Transaction> queryResult = (List<Transaction>) transactionRepository.findAllByChatId(chat);
-
-		assertFalse(queryResult.isEmpty());
-		assertEquals(3, queryResult.size());
-		assertEquals(transaction, queryResult.get(0));
-		assertEquals(transactionUser, queryResult.get(1));
-		assertEquals(transactionNewUserOldChat, queryResult.get(2));
-	}
 	
 	//@TODO add logic
 	@Test
 	public void ITransactionInformations() throws Exception {
 	}
 
-	@Test
-	public void getByUserAndChat() throws Exception {
-		Chat newChat = new Chat(2);
-		chatRepository.save(newChat);
-		
-		User newUser = new User("newUser","email", "password", 0);
-		userRepository.save(newUser);
-		
-		Transaction transactionUser = addNewTransaction("TransactionUser", chat);
-		addNewTransaction("TransactionNewUserNewChat", newUser, newChat);
-		addNewTransaction("TransactionNewUser", newUser);
-
-		List<Transaction> queryResult = (List<Transaction>) transactionRepository.getByUserAndChat(user,chat);
-
-		assertFalse(queryResult.isEmpty());
-		assertEquals(2, queryResult.size());
-		assertEquals(transaction, queryResult.get(0));
-		assertEquals(transactionUser, queryResult.get(1));
-	}
 	
 	@Test
-	public void getByUserAndChatAndPeriod() throws Exception {
+	public void getByUserdPeriod() throws Exception {
 		LocalDateTime startDate = Instant.parse("2020-01-01T00:00:00.000Z").atZone(ZoneId.systemDefault()).toLocalDateTime();
 		LocalDateTime endDate = Instant.parse("2020-02-01T00:00:00.000Z").atZone(ZoneId.systemDefault()).toLocalDateTime();
 		
-		Chat newChat = new Chat(2);
-		chatRepository.save(newChat);
 		
 		User newUser = new User("newUser","email", "password", 0);
 		userRepository.save(newUser);
 		
 		// Case 1: no transactions are in the time period
-		Transaction beforePeriodTransaction = addNewTransaction("beforePeriodTransaction", user, chat);
+		Transaction beforePeriodTransaction = addNewTransaction("beforePeriodTransaction", user);
 		beforePeriodTransaction.setCreatedAt( Instant.parse("2019-12-31T23:59:00.000Z").atZone(ZoneId.systemDefault()).toLocalDateTime());
-		Transaction afterPeriodTransaction = addNewTransaction("afterPeriodTransaction", user, chat);
+		Transaction afterPeriodTransaction = addNewTransaction("afterPeriodTransaction", user);
 		afterPeriodTransaction.setCreatedAt( Instant.parse("2021-02-01T00:00:00.001Z").atZone(ZoneId.systemDefault()).toLocalDateTime());
-		Transaction equalPeriodEndTime = addNewTransaction("equalPeriodEndTime", user, chat);
+		Transaction equalPeriodEndTime = addNewTransaction("equalPeriodEndTime", user);
 		equalPeriodEndTime.setCreatedAt( Instant.parse("2021-02-01T00:00:00.000Z").atZone(ZoneId.systemDefault()).toLocalDateTime());
 
 		transactionRepository.save(equalPeriodEndTime);
@@ -130,20 +86,20 @@ public class TransactionRepositoryTest extends AbstractRepositoryTest {
 		transactionRepository.save(beforePeriodTransaction);
 
 		
-		List<Transaction> queryResultWithoutTransaction = (List<Transaction>) transactionRepository.getByUserAndChatAndPeriod(user,chat, startDate, endDate);
+		List<Transaction> queryResultWithoutTransaction = (List<Transaction>) transactionRepository.getByUserPeriod(user, startDate, endDate);
 
 		assertTrue(queryResultWithoutTransaction.isEmpty());
 		
 		// Case 2: transactions are in the time period
-		Transaction equalPeriodStartTime = addNewTransaction("equalPeriodStartTime", user, chat);
+		Transaction equalPeriodStartTime = addNewTransaction("equalPeriodStartTime", user);
 		equalPeriodStartTime.setCreatedAt( Instant.parse("2020-01-01T00:00:00.000Z").atZone(ZoneId.systemDefault()).toLocalDateTime());
-		Transaction inPeriod = addNewTransaction("inPeriod", user, chat);
+		Transaction inPeriod = addNewTransaction("inPeriod", user);
 		inPeriod.setCreatedAt( Instant.parse("2020-01-05T00:00:00.000Z").atZone(ZoneId.systemDefault()).toLocalDateTime());
-		Transaction inPeriodWithOtherUser = addNewTransaction("inPeriodWithOtherUser", newUser, chat);
+		Transaction inPeriodWithOtherUser = addNewTransaction("inPeriodWithOtherUser", newUser);
 		inPeriodWithOtherUser.setCreatedAt( Instant.parse("2020-01-05T00:00:00.000Z").atZone(ZoneId.systemDefault()).toLocalDateTime());
-		Transaction inPeriodWithOtherChat = addNewTransaction("inPeriodWithOtherChat", user, newChat);
+		Transaction inPeriodWithOtherChat = addNewTransaction("inPeriodWithOtherChat", user);
 		inPeriodWithOtherChat.setCreatedAt( Instant.parse("2020-01-05T00:00:00.000Z").atZone(ZoneId.systemDefault()).toLocalDateTime());
-		Transaction inPeriodWithOtherUserAndChat = addNewTransaction("inPeriodWithOtherUserAndChat", newUser, newChat);
+		Transaction inPeriodWithOtherUserAndChat = addNewTransaction("inPeriodWithOtherUserAndChat", newUser);
 		inPeriodWithOtherUserAndChat.setCreatedAt( Instant.parse("2020-01-05T00:00:00.000Z").atZone(ZoneId.systemDefault()).toLocalDateTime());
 		
 		transactionRepository.save(inPeriod);
@@ -152,27 +108,18 @@ public class TransactionRepositoryTest extends AbstractRepositoryTest {
 		transactionRepository.save(inPeriodWithOtherChat);
 		transactionRepository.save(inPeriodWithOtherUserAndChat);
 
-		List<Transaction> queryResultInPeriod = (List<Transaction>) transactionRepository.getByUserAndChatAndPeriod(user, chat, startDate, endDate);
+		List<Transaction> queryResultInPeriod = (List<Transaction>) transactionRepository.getByUserPeriod(user, startDate, endDate);
 			
-		assertEquals(2, queryResultInPeriod.size());
+		assertEquals(3, queryResultInPeriod.size());
 		assertEquals(equalPeriodStartTime, queryResultInPeriod.get(0));
 		assertEquals(inPeriod, queryResultInPeriod.get(1));
 		
 		
-		List<Transaction> queryResultOtherChat = (List<Transaction>) transactionRepository.getByUserAndChatAndPeriod(user, newChat, startDate, endDate);
+		List<Transaction> queryResultOtherUser = (List<Transaction>) transactionRepository.getByUserPeriod(newUser, startDate, endDate);
 		
-		assertEquals(1, queryResultOtherChat.size());
-		assertEquals(inPeriodWithOtherChat, queryResultOtherChat.get(0));
-		
-		List<Transaction> queryResultOtherUser = (List<Transaction>) transactionRepository.getByUserAndChatAndPeriod(newUser, chat, startDate, endDate);
-		
-		assertEquals(1, queryResultOtherUser.size());
+		assertEquals(2, queryResultOtherUser.size());
 		assertEquals(inPeriodWithOtherUser, queryResultOtherUser.get(0));
 		
-		List<Transaction> queryResultOtherUserAndChat = (List<Transaction>) transactionRepository.getByUserAndChatAndPeriod(newUser, newChat, startDate, endDate);
-		
-		assertEquals(1, queryResultOtherUserAndChat.size());
-		assertEquals(inPeriodWithOtherUserAndChat, queryResultOtherUserAndChat.get(0));
 	}
 	
 	

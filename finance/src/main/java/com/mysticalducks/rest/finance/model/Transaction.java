@@ -35,9 +35,6 @@ public class Transaction {
 	@JoinColumn(name = "user_id", referencedColumnName="id")
 	private User user;
 	
-	@ManyToOne
-	@JoinColumn(name = "chat_id", referencedColumnName="id")
-	private Chat chat;
 	
 	@CreationTimestamp
 	@Column(name="created_at")
@@ -45,13 +42,12 @@ public class Transaction {
 	
 	public Transaction() {}
 	
-	public Transaction(String name, double amount, String note, Category category, User user, Chat chat) {
+	public Transaction(String name, double amount, String note, Category category, User user) {
 		this.name = name;
 		this.amount = amount;
 		this.note = note;
 		this.category = category;
 		this.user = user;
-		this.chat = chat;
 	}
 
 	public String getName() {
@@ -92,14 +88,6 @@ public class Transaction {
 
 	public void setUser(User user) {
 		this.user = user;
-	}
-
-	public Chat getChat() {
-		return chat;
-	}
-
-	public void setChat(Chat chat) {
-		this.chat = chat;
 	}
 
 	public LocalDateTime getCreatedAt() {

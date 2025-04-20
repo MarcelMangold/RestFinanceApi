@@ -44,8 +44,8 @@ public class TransactionController{
 	
 	@PostMapping("/transaction")
 	@ResponseBody
-	Transaction newTransaction(@RequestParam String name, @RequestParam Double amount, @RequestParam String note, @RequestParam int categoryId, @RequestParam int userId, @RequestParam int chatId) {
-		return transactionService.save(name, amount, note, categoryId, userId, chatId);
+	Transaction newTransaction(@RequestParam String name, @RequestParam Double amount, @RequestParam String note, @RequestParam int categoryId, @RequestParam int userId) {
+		return transactionService.save(name, amount, note, categoryId, userId);
 	}
 	
 	@PutMapping("/transaction")
@@ -62,19 +62,19 @@ public class TransactionController{
 	
 	@GetMapping("/totalAmount/{userId}") 
 	@ResponseBody
-	ResponseEntity<Double> totalAmount(@PathVariable int userId, @RequestParam int chatId){
-		return new ResponseEntity<Double>(transactionService.totalAmount(userId, chatId), HttpStatus.OK);
+	ResponseEntity<Double> totalAmount(@PathVariable int userId){
+		return new ResponseEntity<Double>(transactionService.totalAmount(userId), HttpStatus.OK);
 	}
 	
 	@GetMapping("/totalAmountByPeriod/{userId}") 
 	@ResponseBody
-	ResponseEntity<Double> totalAmountByPeriod(@PathVariable int userId, @RequestParam int chatId, @RequestParam @DateTimeFormat(iso=ISO.DATE_TIME) LocalDateTime startDate, @RequestParam @DateTimeFormat(iso=ISO.DATE_TIME) LocalDateTime endDate){
-		return new ResponseEntity<Double>(transactionService.totalAmountByDate(userId, chatId, startDate, endDate), HttpStatus.OK);
+	ResponseEntity<Double> totalAmountByPeriod(@PathVariable int userId, @RequestParam @DateTimeFormat(iso=ISO.DATE_TIME) LocalDateTime startDate, @RequestParam @DateTimeFormat(iso=ISO.DATE_TIME) LocalDateTime endDate){
+		return new ResponseEntity<Double>(transactionService.totalAmountByDate(userId, startDate, endDate), HttpStatus.OK);
 	}
 	
 	@GetMapping("/totalAmountByCurrentMonth/{userId}") 
 	@ResponseBody
-	ResponseEntity<Double> totalAmountByCurrentMonth(@PathVariable int userId, @RequestParam int chatId){
-		return new ResponseEntity<Double>(transactionService.totalAmountByCurrentMonth(userId, chatId), HttpStatus.OK);
+	ResponseEntity<Double> totalAmountByCurrentMonth(@PathVariable int userId){
+		return new ResponseEntity<Double>(transactionService.totalAmountByCurrentMonth(userId), HttpStatus.OK);
 	}
 }

@@ -25,11 +25,9 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
 import com.mysticalducks.rest.finance.exception.CategoryNotFoundException;
-import com.mysticalducks.rest.finance.exception.ChatNotFoundException;
 import com.mysticalducks.rest.finance.exception.DataNotFoundException;
 import com.mysticalducks.rest.finance.exception.UserNotFoundException;
 import com.mysticalducks.rest.finance.model.Category;
-import com.mysticalducks.rest.finance.model.Chat;
 import com.mysticalducks.rest.finance.model.Icon;
 import com.mysticalducks.rest.finance.model.Transaction;
 import com.mysticalducks.rest.finance.model.User;
@@ -44,9 +42,6 @@ public class TransactionServiceTest {
 
 	@Mock
 	TransactionRepository transactionRepository;
-
-	@Mock
-	ChatService chatService;
 	
 	@Mock
 	UserService userService;
@@ -58,16 +53,14 @@ public class TransactionServiceTest {
 	User user;
 	Icon icon;
 	Category category;
-	Chat chat;
 	LocalDateTime startDate;
 	LocalDateTime endDate;
 
 	@BeforeEach
 	void setUp() {
-		this.chat = new Chat(1);
 		this.user = new User("User","email", "password", 0);
 		this.category = new Category("Category", user, new Icon("Icon"));
-		this.transaction = new Transaction("transaction", -200.0, "note", category, user, chat);
+		this.transaction = new Transaction("transaction", -200.0, "note", category, user);
 		this.startDate = LocalDateTime.now();
 		this.endDate = LocalDateTime.now();
 	}
@@ -76,7 +69,7 @@ public class TransactionServiceTest {
 	void findAll() {
 		List<Transaction> transactions = new ArrayList<>();
 		transactions.add(transaction);
-		transactions.add(new Transaction("transaction", -200.0, "note", category, user, chat));
+		transactions.add(new Transaction("transaction", -200.0, "note", category, user));
 
 		when(transactionRepository.findAll()).thenReturn(transactions);
 
@@ -91,7 +84,7 @@ public class TransactionServiceTest {
 	void getAllTransactionsByUserId() {
 	    List<Transaction> transactions = new ArrayList<>();
 	    transactions.add(transaction);
-	    transactions.add(new Transaction("transaction2", 300.0, "note2", category, user, chat));
+	    transactions.add(new Transaction("transaction2", 300.0, "note2", category, user));
 
 	    when(userService.findById(user.getId())).thenReturn(user);
 	    when(transactionRepository.findAllByUserId(user)).thenReturn(transactions);
@@ -161,29 +154,11 @@ public class TransactionServiceTest {
 //		assertTrue(thrown.getMessage().contains("2"));
 //	  }
 
-	@Test
-	void findAllByChatId() {
-		List<Transaction> transactions = new ArrayList<>();
-		Transaction newTransaction = new Transaction("transaction", -200.0, "note", category, user, chat);
-		transactions.add(transaction);
-		transactions.add(newTransaction);
-
-		when(transactionRepository.findAllByChatId(chat)).thenReturn(transactions);
-		when(chatService.findById(1)).thenReturn(chat);
-
-		List<Transaction> foundTransactions = service.findAllByChatId(chat.getId());
-
-		verify(transactionRepository).findAllByChatId(chat);
-
-		assertThat(foundTransactions).hasSize(2);
-		assertEquals(foundTransactions.get(0), transaction);
-		assertEquals(foundTransactions.get(1), newTransaction);
-	}
 	
 	@Test
 	void findAllByUserId() {
 		List<Transaction> transactions = new ArrayList<>();
-		Transaction newTransaction = new Transaction("transaction", -200.0, "note", category, user, chat);
+		Transaction newTransaction = new Transaction("transaction", -200.0, "note", category, user);
 		transactions.add(transaction);
 		transactions.add(newTransaction);
 
@@ -205,10 +180,9 @@ public class TransactionServiceTest {
 		when(transactionRepository.save(any(Transaction.class))).thenReturn(transaction);
 
 		when(userService.findById(user.getId())).thenReturn(user);
-		when(chatService.findById(chat.getId())).thenReturn(chat);
 		when(categoryService.findById(category.getId())).thenReturn(category);
 		
-		Transaction savedTransaction = service.save("newTransaction", -200.0, "note", category.getId(), user.getId(), chat.getId());
+		Transaction savedTransaction = service.save("newTransaction", -200.0, "note", category.getId(), user.getId());
 
 		verify(transactionRepository).save(any(Transaction.class));
 
@@ -220,30 +194,19 @@ public class TransactionServiceTest {
 		assertThrows(UserNotFoundException.class, () -> {
 			when(userService.findById(user.getId())).thenReturn(null);
 
-			service.save("newTransaction", -200.0, "note", category.getId(), user.getId(), chat.getId());
+			service.save("newTransaction", -200.0, "note", category.getId(), user.getId());
 			}
 		);
 	}
 
-	@Test
-	void save_chatIsNull() {
-		assertThrows(ChatNotFoundException.class, () -> {
-			when(userService.findById(user.getId())).thenReturn(user);
-			when(chatService.findById(chat.getId())).thenReturn(null);
-			
-			service.save("newTransaction", -200.0, "note", category.getId(), user.getId(), chat.getId());
-			}
-		);
-	}
 
 	@Test
 	void save_categorieIsNull() {
 		assertThrows(CategoryNotFoundException.class, () -> {
 			when(userService.findById(user.getId())).thenReturn(user);
-			when(chatService.findById(chat.getId())).thenReturn(chat);
 			when(categoryService.findById(category.getId())).thenReturn(null);
 			
-			service.save("newTransaction", -200.0, "note", category.getId(), user.getId(), chat.getId());
+			service.save("newTransaction", -200.0, "note", category.getId(), user.getId());
 			}
 		);
 	}
@@ -265,7 +228,7 @@ public class TransactionServiceTest {
 	void replaceNew() {
 		when(transactionRepository.save(any(Transaction.class))).thenReturn(transaction);
 
-		Transaction newTransaction = new Transaction("newTransaction", -200.0, "note", category, user, chat);
+		Transaction newTransaction = new Transaction("newTransaction", -200.0, "note", category, user);
 		newTransaction.setId(1);
 		Transaction replacedTransaction = service.replace(newTransaction);
 
@@ -286,14 +249,13 @@ public class TransactionServiceTest {
 	void totalAmount() {
 		List<Transaction> transactions = new ArrayList<>();
 		transactions.add(transaction);
-		transactions.add(new Transaction("transaction", 250.0, "note", category, user, chat));
+		transactions.add(new Transaction("transaction", 250.0, "note", category, user));
 
-		when(transactionRepository.getByUserAndChat(user, chat)).thenReturn(transactions);
+		when(transactionRepository.findAllByUserId(user)).thenReturn(transactions);
 		when(userService.findById(user.getId())).thenReturn(user);
-		when(chatService.findById(chat.getId())).thenReturn(chat);
 		
-		double amount = service.totalAmount(user.getId(), chat.getId());
-		verify(transactionRepository).getByUserAndChat(user, chat);
+		double amount = service.totalAmount(user.getId());
+		verify(transactionRepository).findAllByUserId(user);
 
 		assertEquals(getAmount(transactions), amount);
 
@@ -304,36 +266,25 @@ public class TransactionServiceTest {
 		assertThrows(UserNotFoundException.class, () -> {
 			when(userService.findById(user.getId())).thenReturn(null);
 
-			service.totalAmount(0, 0);
+			service.totalAmount(0);
 			}
 		);
 	}
 
-	@Test
-	void totalAmount_chatIsNull() {
-		assertThrows(ChatNotFoundException.class, () -> {
-			when(userService.findById(user.getId())).thenReturn(user);
-			when(chatService.findById(chat.getId())).thenReturn(null);
-			
-			service.totalAmount(0, 0);
-			}
-		);
-	}
 
 
 	@Test
 	void totalAmountByDate() {
 		List<Transaction> transactions = new ArrayList<>();
 		transactions.add(transaction);
-		transactions.add(new Transaction("transaction", 250.0, "note", category, user, chat));
+		transactions.add(new Transaction("transaction", 250.0, "note", category, user));
 
-		when(transactionRepository.getByUserAndChatAndPeriod(user, chat, startDate, endDate))
+		when(transactionRepository.getByUserPeriod(user, startDate, endDate))
 				.thenReturn(transactions);
 		when(userService.findById(user.getId())).thenReturn(user);
-		when(chatService.findById(chat.getId())).thenReturn(chat);
 
-		double amount = service.totalAmountByDate(user.getId(), chat.getId(), startDate, endDate);
-		verify(transactionRepository).getByUserAndChatAndPeriod(user, chat, startDate, endDate);
+		double amount = service.totalAmountByDate(user.getId(), startDate, endDate);
+		verify(transactionRepository).getByUserPeriod(user, startDate, endDate);
 
 		assertEquals(getAmount(transactions), amount);
 
@@ -344,35 +295,24 @@ public class TransactionServiceTest {
 		assertThrows(UserNotFoundException.class, () -> {
 			when(userService.findById(user.getId())).thenReturn(null);
 
-			service.totalAmountByDate(user.getId(), chat.getId(), startDate, endDate);;
+			service.totalAmountByDate(user.getId(), startDate, endDate);;
 			}
 		);
 	}
 
-	@Test
-	void totalAmountByDate_chatIsNull() {
-		assertThrows(ChatNotFoundException.class, () -> {
-			when(userService.findById(user.getId())).thenReturn(user);
-			when(chatService.findById(chat.getId())).thenReturn(null);
-			
-			service.totalAmountByDate(user.getId(), chat.getId(), startDate, endDate);
-			}
-		);
-	}
 
 	@Test
 	void totalAmountByCurrentMonth() {
 		List<Transaction> transactions = new ArrayList<>();
 		transactions.add(transaction);
-		transactions.add(new Transaction("transaction", 250.0, "note", category, user, chat));
+		transactions.add(new Transaction("transaction", 250.0, "note", category, user));
 
-		when(transactionRepository.getByUserAndChatAndPeriod(eq(user), eq(chat),  any(LocalDateTime.class),  any(LocalDateTime.class)))
+		when(transactionRepository.getByUserPeriod(eq(user), any(LocalDateTime.class),  any(LocalDateTime.class)))
 				.thenReturn(transactions);
 		when(userService.findById(user.getId())).thenReturn(user);
-		when(chatService.findById(chat.getId())).thenReturn(chat);
 
-		double amount = service.totalAmountByCurrentMonth(user.getId(), chat.getId());
-		verify(transactionRepository).getByUserAndChatAndPeriod(eq(user), eq(chat),  any(LocalDateTime.class),  any(LocalDateTime.class));
+		double amount = service.totalAmountByCurrentMonth(user.getId());
+		verify(transactionRepository).getByUserPeriod(eq(user), any(LocalDateTime.class),  any(LocalDateTime.class));
 
 		assertEquals(getAmount(transactions), amount);
 
@@ -383,22 +323,11 @@ public class TransactionServiceTest {
 		assertThrows(UserNotFoundException.class, () -> {
 			when(userService.findById(user.getId())).thenReturn(null);
 
-			service.totalAmountByCurrentMonth(user.getId(), chat.getId());
+			service.totalAmountByCurrentMonth(user.getId());
 			}
 		);
 	}
 
-	@Test
-	void totalAmountByCurrentMonth_chatIsNull() {
-		assertThrows(ChatNotFoundException.class, () -> {
-			when(userService.findById(user.getId())).thenReturn(user);
-			when(chatService.findById(chat.getId())).thenReturn(null);
-			
-			service.totalAmountByCurrentMonth(user.getId(), chat.getId());
-			}
-		);
-	}
-	
 	private Double getAmount(List<Transaction> transactions) {
 		return transactions.stream().mapToDouble(Transaction::getAmount).sum();
 	}

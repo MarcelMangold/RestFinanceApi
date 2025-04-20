@@ -16,20 +16,17 @@ public interface ITransactionService {
 	void deleteById(int id);
 
 	List<ITransactionInformations> findAllByUser(User user);
-
-	List<Transaction> findAllByChatId(int chatId);
 	
 	List<Transaction> findAllByUserId(int userId);
 
-	Transaction save(String name, double amount, String note, int categoryId, int userId,
-			int chatId);
+	Transaction save(String name, double amount, String note, int categoryId, int userId);
 	
 	Transaction replace(Transaction newTransaction);
 	
-	double totalAmount(int userId, int chatId);
+	double totalAmount(int userId);
 	
-	double totalAmountByDate(int userId, int chatId, LocalDateTime startDate, LocalDateTime endDate);
+	double totalAmountByDate(int userId, LocalDateTime startDate, LocalDateTime endDate);
 		
-	double totalAmountByCurrentMonth(int userId, int chatId);
+	double totalAmountByCurrentMonth(int userId);
 	
 }

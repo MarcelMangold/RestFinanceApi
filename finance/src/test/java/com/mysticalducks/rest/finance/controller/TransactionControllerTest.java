@@ -61,7 +61,6 @@ public class TransactionControllerTest extends AbstractControllerTest {
 				.andExpect(jsonPath("id").value(0))
 				.andExpect(jsonPath("amount").value(transaction.getAmount()))
 				.andExpect(jsonPath("user.id").value(transaction.getUser().getId()))
-				.andExpect(jsonPath("user.id").value(transaction.getChat().getId()))
 				.andExpect(jsonPath("category.id").value(transaction.getCategory().getId()))
 				.andExpect(jsonPath("note").value(transaction.getNote()));
 
@@ -72,16 +71,14 @@ public class TransactionControllerTest extends AbstractControllerTest {
 	public void getAllTransactionsByUserId() throws Exception {
 	    List<Transaction> transactions = new ArrayList<>();
 	    transactions.add(transaction);
-	    transactions.add(new Transaction("transaction2", 300.0, "note2", category, user, chat));
 
 	    given(transactionService.getAllTransactionsByUserId(user.getId())).willReturn(transactions);
 
 	    mvc.perform(get("/transactions/" + user.getId())
 	            .contentType(MediaType.APPLICATION_JSON))
 	            .andExpect(status().isOk())
-	            .andExpect(jsonPath("$.length()").value(2))
-	            .andExpect(jsonPath("$[0].name").value(transaction.getName()))
-	            .andExpect(jsonPath("$[1].name").value("transaction2"));
+	            .andExpect(jsonPath("$.length()").value(1))
+	            .andExpect(jsonPath("$[0].name").value(transaction.getName()));
 
 	    verify(transactionService, times(1)).getAllTransactionsByUserId(user.getId());
 	}
@@ -90,7 +87,7 @@ public class TransactionControllerTest extends AbstractControllerTest {
 	
 	@Test
 	public void newTranscation() throws Exception {
-		given(this.transactionService.save(transaction.getName(), transaction.getAmount(), transaction.getNote(), transaction.getCategory().getId(), transaction.getUser().getId(), transaction.getChat().getId())).willReturn(transaction);
+		given(this.transactionService.save(transaction.getName(), transaction.getAmount(), transaction.getNote(), transaction.getCategory().getId(), transaction.getUser().getId())).willReturn(transaction);
 		this.mvc.perform(post("/transaction")
 				.queryParam("name", "transaction")
 				.queryParam("amount", "250.0")
@@ -107,7 +104,6 @@ public class TransactionControllerTest extends AbstractControllerTest {
 			    .andExpect(jsonPath("note").value(transaction.getNote()))
 			    .andExpect(jsonPath("id").value(transaction.getId()))
 			    .andExpect(jsonPath("user.id").value(transaction.getUser().getId()))
-				.andExpect(jsonPath("chat.id").value(transaction.getChat().getId()))
 				.andExpect(jsonPath("category.id").value(transaction.getCategory().getId()));
 
 		this.mvc.perform(post("/category/").secure(false)).andExpect(status().isNotFound());
@@ -115,7 +111,7 @@ public class TransactionControllerTest extends AbstractControllerTest {
 	
 	@Test
 	public void newTransaction_userNotFoundException() throws Exception {
-		doThrow(new UserNotFoundException("User not found with id " + -1)).when(transactionService).save(anyString(), anyDouble(), anyString(), anyInt(), anyInt(), anyInt());
+		doThrow(new UserNotFoundException("User not found with id " + -1)).when(transactionService).save(anyString(), anyDouble(), anyString(), anyInt(), anyInt());
 		
 		this.mvc.perform(post("/transaction")
 				.queryParam("name", "transaction")
@@ -129,12 +125,12 @@ public class TransactionControllerTest extends AbstractControllerTest {
 			    .accept(MediaType.APPLICATION_JSON))
 			    .andExpect(status().isNotFound());
 
-		verify(transactionService, times(1)).save(anyString(), anyDouble(), anyString(), anyInt(), anyInt(), anyInt());
+		verify(transactionService, times(1)).save(anyString(), anyDouble(), anyString(), anyInt(), anyInt());
 	}
 	
 	@Test
 	public void newTransaction_chatNotFoundException() throws Exception {
-		doThrow(new ChatNotFoundException("Chat not found with id " + -1)).when(transactionService).save(anyString(), anyDouble(), anyString(), anyInt(), anyInt(), anyInt());
+		doThrow(new ChatNotFoundException("Chat not found with id " + -1)).when(transactionService).save(anyString(), anyDouble(), anyString(), anyInt(), anyInt());
 		
 		this.mvc.perform(post("/transaction")
 				.queryParam("name", "transaction")
@@ -148,12 +144,12 @@ public class TransactionControllerTest extends AbstractControllerTest {
 			    .accept(MediaType.APPLICATION_JSON))
 			    .andExpect(status().isNotFound());
 
-		verify(transactionService, times(1)).save(anyString(), anyDouble(), anyString(), anyInt(), anyInt(), anyInt());
+		verify(transactionService, times(1)).save(anyString(), anyDouble(), anyString(), anyInt(), anyInt());
 	}
 	
 	@Test
 	public void newTransaction_categoryNotFoundException() throws Exception {
-		doThrow(new CategoryNotFoundException("Category not found with id " + -1)).when(transactionService).save(anyString(), anyDouble(), anyString(), anyInt(), anyInt(), anyInt());
+		doThrow(new CategoryNotFoundException("Category not found with id " + -1)).when(transactionService).save(anyString(), anyDouble(), anyString(), anyInt(), anyInt());
 		
 		this.mvc.perform(post("/transaction")
 				.queryParam("name", "transaction")
@@ -167,7 +163,7 @@ public class TransactionControllerTest extends AbstractControllerTest {
 			    .accept(MediaType.APPLICATION_JSON))
 			    .andExpect(status().isNotFound());
 
-		verify(transactionService, times(1)).save(anyString(), anyDouble(), anyString(), anyInt(), anyInt(), anyInt());
+		verify(transactionService, times(1)).save(anyString(), anyDouble(), anyString(), anyInt(), anyInt());
 	}
 	
 	@Test
@@ -184,7 +180,7 @@ public class TransactionControllerTest extends AbstractControllerTest {
 	@Test
 	public void replaceCategory() throws Exception {
 		when(transactionService.replace(any(Transaction.class))).thenReturn(transaction);
-		String categoryJson = "{\"id\":0,\"name\":\"transaction\",\"amount\":250.0,\"note\":\"note\",\"category\":{\"id\":0,\"name\":\"category\",\"user\":{\"id\":0,\"name\":\"Hans\",\"telegramUserId\":0,\"password\":\"password\",\"email\":\"email\",\"language\":0},\"icon\":{\"id\":0,\"name\":\"Icon\"}},\"user\":{\"id\":0,\"name\":\"Hans\",\"telegramUserId\":0,\"password\":\"password\",\"email\":\"email\",\"language\":0},\"chat\":{\"id\":0},\"createdAt\":null}";;
+		String categoryJson = "{\"id\":0,\"name\":\"transaction\",\"amount\":250.0,\"note\":\"note\",\"category\":{\"id\":0,\"name\":\"category\",\"user\":{\"id\":0,\"name\":\"Hans\",\"telegramUserId\":0,\"password\":\"password\",\"email\":\"email\",\"language\":0},\"icon\":{\"id\":0,\"name\":\"Icon\"}},\"user\":{\"id\":0,\"name\":\"Hans\",\"telegramUserId\":0,\"password\":\"password\",\"email\":\"email\",\"language\":0},\"createdAt\":null}";;
 		
 		mvc.perform(put("/transaction")
 		.content(categoryJson)
@@ -199,7 +195,7 @@ public class TransactionControllerTest extends AbstractControllerTest {
 	@Test
 	public void totalAmount() throws Exception {
 		Double totalAmountValue = 250.50;
-		given(this.transactionService.totalAmount(0,0)).willReturn(totalAmountValue);
+		given(this.transactionService.totalAmount(0)).willReturn(totalAmountValue);
 		this.mvc.perform(get("/totalAmount/0")
 				.queryParam("chatId", "0")
 				.secure(false)).andExpect(status().isOk())
@@ -212,7 +208,7 @@ public class TransactionControllerTest extends AbstractControllerTest {
 		Double totalAmountValue = 250.50;
 		LocalDateTime startDate = LocalDateTime.of(2023, 12, 01, 0, 0);
 		LocalDateTime endDate = LocalDateTime.of(2023, 12, 31, 0, 0);
-		given(this.transactionService.totalAmountByDate(0,0, startDate, endDate)).willReturn(totalAmountValue);
+		given(this.transactionService.totalAmountByDate(0, startDate, endDate)).willReturn(totalAmountValue);
 		this.mvc.perform(get("/totalAmountByPeriod/0" )
                 .param("chatId", String.valueOf(0))
                 .param("startDate", startDate.toString())
@@ -227,7 +223,7 @@ public class TransactionControllerTest extends AbstractControllerTest {
 	@Test
 	public void totalAmountByCurrentMonth() throws Exception {
 		Double totalAmountValue = 250.50;
-		given(this.transactionService.totalAmountByCurrentMonth(0,0)).willReturn(totalAmountValue);
+		given(this.transactionService.totalAmountByCurrentMonth(0)).willReturn(totalAmountValue);
 		this.mvc.perform(get("/totalAmountByCurrentMonth/0")
 				.queryParam("chatId", "0")
 				.secure(false)).andExpect(status().isOk())
