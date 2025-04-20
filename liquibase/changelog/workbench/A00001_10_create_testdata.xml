@@ -5,13 +5,28 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
+
+    <changeSet id="A00001_10_create_testdata-0" author="mangold" context="workbench">
+        <!-- testdata for financial_information -->
+        <insert tableName="financial_information">
+            <column name="id" valueNumeric="1"/>
+            <column name="budget" valueNumeric="2000.00"/>
+        </insert>
+            <insert tableName="financial_information">
+            <column name="id" valueNumeric="2"/>
+            <column name="budget" valueNumeric="5000.00"/>
+        </insert>
+    </changeSet>
+
     <changeSet id="A00001_10_create_testdata-1" author="mangold" context="workbench">
         <!-- testdata for chat -->
         <insert tableName="chat">
             <column name="id" valueNumeric="1"/>
+            <column name="financial_information_id" valueNumeric="1"/>
         </insert>
         <insert tableName="chat">
             <column name="id" valueNumeric="2"/>
+            <column name="financial_information_id" valueNumeric="2"/>
         </insert>
     </changeSet>
 
@@ -24,6 +39,7 @@
             <column name="password" value="password123"/>
             <column name="telegram_user_id" valueNumeric="123456"/>
             <column name="language" valueNumeric="1"/>
+            <column name="financial_information_id" valueNumeric="1"/>
         </insert>
     </changeSet>
 
