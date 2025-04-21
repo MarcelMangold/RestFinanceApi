@@ -59,11 +59,11 @@ DROP TABLE IF EXISTS category;
 CREATE TABLE category (
    	id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(150) NOT NULL,
-    user_id INT NOT NULL,
+    party_id INT NOT NULL,
     icon_id INT NULL,
     CONSTRAINT pk_category_id PRIMARY KEY (id),
     CONSTRAINT fk_icon_id FOREIGN KEY (icon_id) REFERENCES icon(id),
-    CONSTRAINT fk_category_user_id FOREIGN KEY (user_id) REFERENCES user_management(id)
+    CONSTRAINT fk_category_party_id FOREIGN KEY (party_id) REFERENCES party(id)
 );
 
 
@@ -76,9 +76,9 @@ CREATE TABLE transaction (
     amount NUMERIC(19, 2) NULL,
     note VARCHAR(250) NULL,
     category_id INT NOT NULL,
-    user_id INT NOT NULL,
+    party_id INT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     CONSTRAINT pk_transaction_id PRIMARY KEY (id),
     CONSTRAINT fk_category_id FOREIGN KEY (category_id) REFERENCES category(id),
-    CONSTRAINT fk_transaction_user_id FOREIGN KEY (user_id) REFERENCES user_management(id)
+    CONSTRAINT fk_transaction_party_id FOREIGN KEY (party_id) REFERENCES party(id)
 );

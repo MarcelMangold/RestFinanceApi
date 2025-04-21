@@ -34,18 +34,16 @@ public class TransactionController{
 		return new ResponseEntity<Transaction>(transactionService.findById(id), HttpStatus.OK);
 	}
 	
-	@GetMapping("/transactions/{userId}")
+	@GetMapping("/transactions/{partyId}")
 	@ResponseBody
-	public ResponseEntity<List<Transaction>> getAllTransactionsByUserId(@PathVariable int userId) {
-	    return new ResponseEntity<>(transactionService.getAllTransactionsByUserId(userId), HttpStatus.OK);
+	public ResponseEntity<List<Transaction>> getAllTransactionsByPartyId(@PathVariable int partyId) {
+	    return new ResponseEntity<>(transactionService.getAllTransactionsByPartyId(partyId), HttpStatus.OK);
 	}
 
-	
-	
 	@PostMapping("/transaction")
 	@ResponseBody
-	Transaction newTransaction(@RequestParam String name, @RequestParam Double amount, @RequestParam String note, @RequestParam int categoryId, @RequestParam int userId) {
-		return transactionService.save(name, amount, note, categoryId, userId);
+	Transaction newTransaction(@RequestParam String name, @RequestParam Double amount, @RequestParam String note, @RequestParam int categoryId, @RequestParam int partyId) {
+		return transactionService.save(name, amount, note, categoryId, partyId);
 	}
 	
 	@PutMapping("/transaction")
@@ -60,21 +58,21 @@ public class TransactionController{
 		
 	}
 	
-	@GetMapping("/totalAmount/{userId}") 
+	@GetMapping("/totalAmount/{partyId}") 
 	@ResponseBody
-	ResponseEntity<Double> totalAmount(@PathVariable int userId){
-		return new ResponseEntity<Double>(transactionService.totalAmount(userId), HttpStatus.OK);
+	ResponseEntity<Double> totalAmount(@PathVariable int partyId){
+		return new ResponseEntity<Double>(transactionService.totalAmount(partyId), HttpStatus.OK);
 	}
 	
-	@GetMapping("/totalAmountByPeriod/{userId}") 
+	@GetMapping("/totalAmountByPeriod/{partyId}") 
 	@ResponseBody
-	ResponseEntity<Double> totalAmountByPeriod(@PathVariable int userId, @RequestParam @DateTimeFormat(iso=ISO.DATE_TIME) LocalDateTime startDate, @RequestParam @DateTimeFormat(iso=ISO.DATE_TIME) LocalDateTime endDate){
-		return new ResponseEntity<Double>(transactionService.totalAmountByDate(userId, startDate, endDate), HttpStatus.OK);
+	ResponseEntity<Double> totalAmountByPeriod(@PathVariable int partyId, @RequestParam @DateTimeFormat(iso=ISO.DATE_TIME) LocalDateTime startDate, @RequestParam @DateTimeFormat(iso=ISO.DATE_TIME) LocalDateTime endDate){
+		return new ResponseEntity<Double>(transactionService.totalAmountByDate(partyId, startDate, endDate), HttpStatus.OK);
 	}
 	
-	@GetMapping("/totalAmountByCurrentMonth/{userId}") 
+	@GetMapping("/totalAmountByCurrentMonth/{partyId}") 
 	@ResponseBody
-	ResponseEntity<Double> totalAmountByCurrentMonth(@PathVariable int userId){
-		return new ResponseEntity<Double>(transactionService.totalAmountByCurrentMonth(userId), HttpStatus.OK);
+	ResponseEntity<Double> totalAmountByCurrentMonth(@PathVariable int partyId){
+		return new ResponseEntity<Double>(transactionService.totalAmountByCurrentMonth(partyId), HttpStatus.OK);
 	}
 }

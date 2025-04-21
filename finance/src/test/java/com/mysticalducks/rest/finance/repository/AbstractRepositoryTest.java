@@ -29,42 +29,44 @@ public abstract class AbstractRepositoryTest {
 	@Autowired PartyRepository partyRepository;
 
 	protected User user;
+	protected Party party;
 	protected Icon icon;
 	protected Category category;
 	protected Transaction transaction;
+	protected FinanceInformation financeInformation;
 
-	protected Category addNewCategory(String categoryName, User u) {
-		return addNewCategory(categoryRepository, categoryName, u, icon);
+	protected Category addNewCategory(String categoryName, Party party) {
+		return addNewCategory(categoryRepository, categoryName, party, icon);
 	}
 
-	protected Category addNewCategory(CategoryRepository repository, String categoryName, User u, Icon i) {
-		Category newCategory = new Category(categoryName, u, i);
+	protected Category addNewCategory(CategoryRepository repository, String categoryName, Party party, Icon i) {
+		Category newCategory = new Category(categoryName, party, i);
 		repository.save(newCategory);
 
 		return newCategory;
 	}
 
-	protected Category addNewCategory(CategoryRepository repository, String categoryName, User u) {
-		return addNewCategory(repository, categoryName, u, icon);
+	protected Category addNewCategory(CategoryRepository repository, String categoryName, Party party) {
+		return addNewCategory(repository, categoryName, party, icon);
 	}
 
-	protected Transaction addNewTransaction(TransactionRepository repository, String transactionName, User u) {
-		Transaction transaction = new Transaction(transactionName, 200.0, "note", category, u);
+	protected Transaction addNewTransaction(TransactionRepository repository, String transactionName, Party party) {
+		Transaction transaction = new Transaction(transactionName, 200.0, "note", category, party);
 		repository.save(transaction);
 
 		return transaction;
 	}
 	
 	protected Transaction addNewTransaction(TransactionRepository repository, String transactionName) {
-		return addNewTransaction(repository, transactionName, user);
+		return addNewTransaction(repository, transactionName, party);
 	}
 	
-	protected Transaction addNewTransaction(String transactionName, User u) {
-		return addNewTransaction(transactionRepository, transactionName, u);
+	protected Transaction addNewTransaction(String transactionName, Party party) {
+		return addNewTransaction(transactionRepository, transactionName, party);
 	}
 
 	protected Transaction addNewTransaction(String transactionName) {
-		return addNewTransaction(transactionRepository, transactionName, user);
+		return addNewTransaction(transactionRepository, transactionName, party);
 	}
 	
 	
@@ -77,6 +79,14 @@ public abstract class AbstractRepositoryTest {
 	
 	protected User addNewUser() {
 		return addNewUser("name");
+	}
+	
+	protected Party addNewParty() {
+		return addNewParty("Party");
+	}
+	
+	protected Party addNewParty(String name) {
+		return addNewParty(name, addNewFinanceInformation());
 	}
 	
 	protected Party addNewParty(FinanceInformation financeInformation) {

@@ -3,8 +3,8 @@ package com.mysticalducks.rest.finance.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.mysticalducks.rest.finance.model.Party;
 import com.mysticalducks.rest.finance.model.Transaction;
-import com.mysticalducks.rest.finance.model.User;
 import com.mysticalducks.rest.finance.repository.ITransactionInformations;
 
 public interface ITransactionService {
@@ -15,18 +15,18 @@ public interface ITransactionService {
 
 	void deleteById(int id);
 
-	List<ITransactionInformations> findAllByUser(User user);
+	List<ITransactionInformations> findAllByParty(Party party);
 	
-	List<Transaction> findAllByUserId(int userId);
+	List<Transaction> findAllByPartyId(int partyId);
 
-	Transaction save(String name, double amount, String note, int categoryId, int userId);
+	Transaction save(String name, double amount, String note, int categoryId, int partyId);
 	
 	Transaction replace(Transaction newTransaction);
 	
-	double totalAmount(int userId);
+	double totalAmount(int partyId);
 	
-	double totalAmountByDate(int userId, LocalDateTime startDate, LocalDateTime endDate);
+	double totalAmountByDate(int partyId, LocalDateTime startDate, LocalDateTime endDate);
 		
-	double totalAmountByCurrentMonth(int userId);
+	double totalAmountByCurrentMonth(int partyId);
 	
 }

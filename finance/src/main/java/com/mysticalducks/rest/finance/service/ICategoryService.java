@@ -3,7 +3,7 @@ package com.mysticalducks.rest.finance.service;
 import java.util.List;
 
 import com.mysticalducks.rest.finance.model.Category;
-import com.mysticalducks.rest.finance.model.User;
+import com.mysticalducks.rest.finance.model.Party;
 
 public interface ICategoryService {
 	
@@ -11,6 +11,6 @@ public interface ICategoryService {
 	
 	Category findById(int id);
 	
-	List<Category> findAllByUserId(User user);
+	List<Category> findAllByPartyId(Party party);
 
 }

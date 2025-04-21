@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 
 import com.mysticalducks.rest.finance.exception.CategoryNotFoundException;
 import com.mysticalducks.rest.finance.exception.DataNotFoundException;
-import com.mysticalducks.rest.finance.exception.UserNotFoundException;
+import com.mysticalducks.rest.finance.exception.PartyNotFoundException;
 import com.mysticalducks.rest.finance.model.Category;
+import com.mysticalducks.rest.finance.model.Party;
 import com.mysticalducks.rest.finance.model.Transaction;
-import com.mysticalducks.rest.finance.model.User;
 import com.mysticalducks.rest.finance.repository.ITransactionInformations;
 import com.mysticalducks.rest.finance.repository.TransactionRepository;
 
@@ -26,7 +26,7 @@ public class TransactionService implements ITransactionService {
 	private TransactionRepository transactionRepository;
 
 	@Autowired
-	private UserService userService;
+	private PartyService partyService;
 	
 	@Autowired
 	private CategoryService categoryService;
@@ -41,38 +41,41 @@ public class TransactionService implements ITransactionService {
 		return transactionRepository.findById(id).orElseThrow(() -> new DataNotFoundException(id));
 	}
 	
-	public List<ITransactionInformations> findAllByUser(User user) {
+	public List<ITransactionInformations> findAllByParty(Party party) {
 			return (List<ITransactionInformations>) transactionRepository
-					.getInformations(user);
+					.getInformations(party);
 	}
 
-	public List<Transaction> getAllTransactionsByUserId(int userId) {
-	    User user = userService.findById(userId);
-	    if (user == null) {
-	        throw new UserNotFoundException("User not found with id " + userId);
+	public List<Transaction> getAllTransactionsByPartyId(int partyId) {
+	    Party party = partyService.findById(partyId);
+	    if (party == null) {
+	        throw new PartyNotFoundException("Party not found with id " + partyId);
 	    }
-	    return transactionRepository.findAllByUserId(user);
+	    return transactionRepository.findAllByPartyId(party);
 	}
 	
-	public List<Transaction> findAllByUserId(int userId) {
-		User user = userService.findById(userId);
+	public List<Transaction> findAllByPartyId(int partyId) {
+	    Party party = partyService.findById(partyId);
+	    if (party == null) {
+	        throw new PartyNotFoundException("Party not found with id " + partyId);
+	    }
 		List<Transaction> transactions = (List<Transaction>) transactionRepository
-				.findAllByUserId(user);
+				.findAllByPartyId(party);
 		return transactions;
 	}
 
-	public Transaction save(String name, double amount, String note, int categoryId, int userId) {
+	public Transaction save(String name, double amount, String note, int categoryId, int partyId) {
 		
-		User user = userService.findById(userId);
+		Party party = partyService.findById(partyId);
 		Category category = categoryService.findById(categoryId);
 		
-		if(user == null) 
-		  throw new UserNotFoundException("User not found with id " + userId);
+		if(party == null) 
+		  throw new PartyNotFoundException("Party not found with id " + partyId);
 		 
 		if(category == null) 
-			  throw new CategoryNotFoundException("User not found with id " + userId);
+			  throw new CategoryNotFoundException("Category not found with id " + categoryId);
 		 
-		return transactionRepository.save(new Transaction(name, amount, note, category, user));
+		return transactionRepository.save(new Transaction(name, amount, note, category, party));
 
 	}
 
@@ -83,7 +86,7 @@ public class TransactionService implements ITransactionService {
 			transaction.setName(newTransaction.getName());
 			transaction.setNote(newTransaction.getNote());
 			transaction.setCreatedAt(newTransaction.getCreatedAt());
-			transaction.setUser(newTransaction.getUser());
+			transaction.setParty(newTransaction.getParty());
 			return transactionRepository.save(transaction);
 		}).orElseGet(() -> {
 			return transactionRepository.save(newTransaction);
@@ -95,36 +98,35 @@ public class TransactionService implements ITransactionService {
 	}
 
 
-	public double totalAmount(int userId) {
-		User user = userService.findById(userId);
+	public double totalAmount(int partyId) {
+	    Party party = partyService.findById(partyId);
+
+	    if (party == null) 
+	        throw new PartyNotFoundException("Party not found with id " + partyId);
 		
-		if(user == null) 
-			  throw new UserNotFoundException("User not found with id " + userId);
-		
-		return getTotalAmount(transactionRepository.findAllByUserId(user));
+		return getTotalAmount(transactionRepository.findAllByPartyId(party));
 	}
 
-	public double totalAmountByDate(int userId, LocalDateTime startDate, LocalDateTime endDate) {
-		User user = userService.findById(userId);
+	public double totalAmountByDate(int partyId, LocalDateTime startDate, LocalDateTime endDate) {
+	    Party party = partyService.findById(partyId);
+
+	    if (party == null) 
+	        throw new PartyNotFoundException("Party not found with id " + partyId);
 		
-		if(user == null) 
-			  throw new UserNotFoundException("User not found with id " + userId);
-			 
-		
-		return getTotalAmount(transactionRepository.getByUserPeriod(user, startDate, endDate));
+		return getTotalAmount(transactionRepository.getByPartyPeriod(party, startDate, endDate));
 	}
 	
-	public double totalAmountByCurrentMonth(int userId) {
-		User user = userService.findById(userId);
-		
-		if(user == null) 
-			  throw new UserNotFoundException("User not found with id " + userId);
+	public double totalAmountByCurrentMonth(int partyId) {
+	    Party party = partyService.findById(partyId);
+
+	    if (party == null) 
+	        throw new PartyNotFoundException("Party not found with id " + partyId);
 			 
 		ZoneId zoneId = ZoneId.of ( "UTC" );
 		LocalDateTime today = LocalDateTime.now ( zoneId );
 		LocalDateTime firstOfCurrentMonth = today.with ( ChronoField.DAY_OF_MONTH , 1 );
 		
-		return getTotalAmount(transactionRepository.getByUserPeriod(user, firstOfCurrentMonth, today));
+		return getTotalAmount(transactionRepository.getByPartyPeriod(party, firstOfCurrentMonth, today));
 	}
 
 	private double getTotalAmount(List<Transaction> transactions) {

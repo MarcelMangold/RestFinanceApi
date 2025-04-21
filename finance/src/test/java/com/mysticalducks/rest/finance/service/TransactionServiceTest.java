@@ -26,11 +26,12 @@ import org.mockito.quality.Strictness;
 
 import com.mysticalducks.rest.finance.exception.CategoryNotFoundException;
 import com.mysticalducks.rest.finance.exception.DataNotFoundException;
-import com.mysticalducks.rest.finance.exception.UserNotFoundException;
+import com.mysticalducks.rest.finance.exception.PartyNotFoundException;
 import com.mysticalducks.rest.finance.model.Category;
+import com.mysticalducks.rest.finance.model.FinanceInformation;
 import com.mysticalducks.rest.finance.model.Icon;
+import com.mysticalducks.rest.finance.model.Party;
 import com.mysticalducks.rest.finance.model.Transaction;
-import com.mysticalducks.rest.finance.model.User;
 import com.mysticalducks.rest.finance.repository.TransactionRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -44,13 +45,13 @@ public class TransactionServiceTest {
 	TransactionRepository transactionRepository;
 	
 	@Mock
-	UserService userService;
+	PartyService partyService;
 
 	@Mock
 	CategoryService categoryService;
 	
 	Transaction transaction;
-	User user;
+	Party party;
 	Icon icon;
 	Category category;
 	LocalDateTime startDate;
@@ -58,9 +59,9 @@ public class TransactionServiceTest {
 
 	@BeforeEach
 	void setUp() {
-		this.user = new User("User","email", "password", 0);
-		this.category = new Category("Category", user, new Icon("Icon"));
-		this.transaction = new Transaction("transaction", -200.0, "note", category, user);
+		this.party = new Party("Party", new FinanceInformation());
+		this.category = new Category("Category", party, new Icon("Icon"));
+		this.transaction = new Transaction("transaction", -200.0, "note", category, party);
 		this.startDate = LocalDateTime.now();
 		this.endDate = LocalDateTime.now();
 	}
@@ -69,7 +70,7 @@ public class TransactionServiceTest {
 	void findAll() {
 		List<Transaction> transactions = new ArrayList<>();
 		transactions.add(transaction);
-		transactions.add(new Transaction("transaction", -200.0, "note", category, user));
+		transactions.add(new Transaction("transaction", -200.0, "note", category, party));
 
 		when(transactionRepository.findAll()).thenReturn(transactions);
 
@@ -84,15 +85,15 @@ public class TransactionServiceTest {
 	void getAllTransactionsByUserId() {
 	    List<Transaction> transactions = new ArrayList<>();
 	    transactions.add(transaction);
-	    transactions.add(new Transaction("transaction2", 300.0, "note2", category, user));
+	    transactions.add(new Transaction("transaction2", 300.0, "note2", category, party));
 
-	    when(userService.findById(user.getId())).thenReturn(user);
-	    when(transactionRepository.findAllByUserId(user)).thenReturn(transactions);
+	    when(partyService.findById(party.getId())).thenReturn(party);
+	    when(transactionRepository.findAllByPartyId(party)).thenReturn(transactions);
 
-	    List<Transaction> foundTransactions = service.getAllTransactionsByUserId(user.getId());
+	    List<Transaction> foundTransactions = service.getAllTransactionsByPartyId(party.getId());
 
-	    verify(userService, times(1)).findById(user.getId());
-	    verify(transactionRepository, times(1)).findAllByUserId(user);
+	    verify(partyService, times(1)).findById(party.getId());
+	    verify(transactionRepository, times(1)).findAllByPartyId(party);
 
 	    assertThat(foundTransactions).hasSize(2);
 	    assertEquals(foundTransactions.get(0), transaction);
@@ -101,17 +102,17 @@ public class TransactionServiceTest {
 	
 	
 	@Test
-	void getAllTransactionsByUserId_userNotFound() {
+	void getAllTransactionsByPartyId_partyNotFound() {
 	    int invalidUserId = -1;
 
-	    when(userService.findById(invalidUserId)).thenReturn(null);
+	    when(partyService.findById(invalidUserId)).thenReturn(null);
 
-	    UserNotFoundException exception = assertThrows(UserNotFoundException.class, 
-	        () -> service.getAllTransactionsByUserId(invalidUserId));
+	    PartyNotFoundException exception = assertThrows(PartyNotFoundException.class, 
+	        () -> service.getAllTransactionsByPartyId(invalidUserId));
 
-	    assertEquals("User not found with id " + invalidUserId, exception.getMessage());
-	    verify(userService, times(1)).findById(invalidUserId);
-	    verify(transactionRepository, times(0)).findAllByUserId(any());
+	    assertEquals("Party not found with id " + invalidUserId, exception.getMessage());
+	    verify(partyService, times(1)).findById(invalidUserId);
+	    verify(transactionRepository, times(0)).findAllByPartyId(any());
 	}
 
 	@Test
@@ -158,16 +159,16 @@ public class TransactionServiceTest {
 	@Test
 	void findAllByUserId() {
 		List<Transaction> transactions = new ArrayList<>();
-		Transaction newTransaction = new Transaction("transaction", -200.0, "note", category, user);
+		Transaction newTransaction = new Transaction("transaction", -200.0, "note", category, party);
 		transactions.add(transaction);
 		transactions.add(newTransaction);
 
-		when(transactionRepository.findAllByUserId(user)).thenReturn(transactions);
-		when(userService.findById(user.getId())).thenReturn(user);
+		when(transactionRepository.findAllByPartyId(party)).thenReturn(transactions);
+		when(partyService.findById(party.getId())).thenReturn(party);
 
-		List<Transaction> foundTransactions = service.findAllByUserId(user.getId());
+		List<Transaction> foundTransactions = service.findAllByPartyId(party.getId());
 
-		verify(transactionRepository).findAllByUserId(user);
+		verify(transactionRepository).findAllByPartyId(party);
 
 		assertThat(foundTransactions).hasSize(2);
 		assertEquals(foundTransactions.get(0), transaction);
@@ -179,10 +180,10 @@ public class TransactionServiceTest {
 	void save() {
 		when(transactionRepository.save(any(Transaction.class))).thenReturn(transaction);
 
-		when(userService.findById(user.getId())).thenReturn(user);
+		when(partyService.findById(party.getId())).thenReturn(party);
 		when(categoryService.findById(category.getId())).thenReturn(category);
 		
-		Transaction savedTransaction = service.save("newTransaction", -200.0, "note", category.getId(), user.getId());
+		Transaction savedTransaction = service.save("newTransaction", -200.0, "note", category.getId(), party.getId());
 
 		verify(transactionRepository).save(any(Transaction.class));
 
@@ -190,11 +191,11 @@ public class TransactionServiceTest {
 	}
 	
 	@Test
-	void save_userIsNull() {
-		assertThrows(UserNotFoundException.class, () -> {
-			when(userService.findById(user.getId())).thenReturn(null);
+	void save_partyIsNull() {
+		assertThrows(PartyNotFoundException.class, () -> {
+			when(partyService.findById(party.getId())).thenReturn(null);
 
-			service.save("newTransaction", -200.0, "note", category.getId(), user.getId());
+			service.save("newTransaction", -200.0, "note", category.getId(), party.getId());
 			}
 		);
 	}
@@ -203,10 +204,10 @@ public class TransactionServiceTest {
 	@Test
 	void save_categorieIsNull() {
 		assertThrows(CategoryNotFoundException.class, () -> {
-			when(userService.findById(user.getId())).thenReturn(user);
+			when(partyService.findById(party.getId())).thenReturn(party);
 			when(categoryService.findById(category.getId())).thenReturn(null);
 			
-			service.save("newTransaction", -200.0, "note", category.getId(), user.getId());
+			service.save("newTransaction", -200.0, "note", category.getId(), party.getId());
 			}
 		);
 	}
@@ -228,7 +229,7 @@ public class TransactionServiceTest {
 	void replaceNew() {
 		when(transactionRepository.save(any(Transaction.class))).thenReturn(transaction);
 
-		Transaction newTransaction = new Transaction("newTransaction", -200.0, "note", category, user);
+		Transaction newTransaction = new Transaction("newTransaction", -200.0, "note", category, party);
 		newTransaction.setId(1);
 		Transaction replacedTransaction = service.replace(newTransaction);
 
@@ -249,53 +250,42 @@ public class TransactionServiceTest {
 	void totalAmount() {
 		List<Transaction> transactions = new ArrayList<>();
 		transactions.add(transaction);
-		transactions.add(new Transaction("transaction", 250.0, "note", category, user));
+		transactions.add(new Transaction("transaction", 250.0, "note", category, party));
 
-		when(transactionRepository.findAllByUserId(user)).thenReturn(transactions);
-		when(userService.findById(user.getId())).thenReturn(user);
+		when(transactionRepository.findAllByPartyId(party)).thenReturn(transactions);
+		when(partyService.findById(party.getId())).thenReturn(party);
 		
-		double amount = service.totalAmount(user.getId());
-		verify(transactionRepository).findAllByUserId(user);
+		double amount = service.totalAmount(party.getId());
+		verify(transactionRepository).findAllByPartyId(party);
 
 		assertEquals(getAmount(transactions), amount);
 
 	}
 	
-	@Test
-	void totalAmount_userIsNull() {
-		assertThrows(UserNotFoundException.class, () -> {
-			when(userService.findById(user.getId())).thenReturn(null);
-
-			service.totalAmount(0);
-			}
-		);
-	}
-
-
 
 	@Test
 	void totalAmountByDate() {
 		List<Transaction> transactions = new ArrayList<>();
 		transactions.add(transaction);
-		transactions.add(new Transaction("transaction", 250.0, "note", category, user));
+		transactions.add(new Transaction("transaction", 250.0, "note", category, party));
 
-		when(transactionRepository.getByUserPeriod(user, startDate, endDate))
+		when(transactionRepository.getByPartyPeriod(party, startDate, endDate))
 				.thenReturn(transactions);
-		when(userService.findById(user.getId())).thenReturn(user);
+		when(partyService.findById(party.getId())).thenReturn(party);
 
-		double amount = service.totalAmountByDate(user.getId(), startDate, endDate);
-		verify(transactionRepository).getByUserPeriod(user, startDate, endDate);
+		double amount = service.totalAmountByDate(party.getId(), startDate, endDate);
+		verify(transactionRepository).getByPartyPeriod(party, startDate, endDate);
 
 		assertEquals(getAmount(transactions), amount);
 
 	}
 	
 	@Test
-	void totalAmountByDate_userIsNull() {
-		assertThrows(UserNotFoundException.class, () -> {
-			when(userService.findById(user.getId())).thenReturn(null);
+	void totalAmountByDate_partyIsNull() {
+		assertThrows(PartyNotFoundException.class, () -> {
+			when(partyService.findById(party.getId())).thenReturn(null);
 
-			service.totalAmountByDate(user.getId(), startDate, endDate);;
+			service.totalAmountByDate(party.getId(), startDate, endDate);;
 			}
 		);
 	}
@@ -305,25 +295,25 @@ public class TransactionServiceTest {
 	void totalAmountByCurrentMonth() {
 		List<Transaction> transactions = new ArrayList<>();
 		transactions.add(transaction);
-		transactions.add(new Transaction("transaction", 250.0, "note", category, user));
+		transactions.add(new Transaction("transaction", 250.0, "note", category, party));
 
-		when(transactionRepository.getByUserPeriod(eq(user), any(LocalDateTime.class),  any(LocalDateTime.class)))
+		when(transactionRepository.getByPartyPeriod(eq(party), any(LocalDateTime.class),  any(LocalDateTime.class)))
 				.thenReturn(transactions);
-		when(userService.findById(user.getId())).thenReturn(user);
+		when(partyService.findById(party.getId())).thenReturn(party);
 
-		double amount = service.totalAmountByCurrentMonth(user.getId());
-		verify(transactionRepository).getByUserPeriod(eq(user), any(LocalDateTime.class),  any(LocalDateTime.class));
+		double amount = service.totalAmountByCurrentMonth(party.getId());
+		verify(transactionRepository).getByPartyPeriod(eq(party), any(LocalDateTime.class),  any(LocalDateTime.class));
 
 		assertEquals(getAmount(transactions), amount);
 
 	}
 	
 	@Test
-	void totalAmountByCurrentMonth_userIsNull() {
-		assertThrows(UserNotFoundException.class, () -> {
-			when(userService.findById(user.getId())).thenReturn(null);
+	void totalAmountByCurrentMonth_partyIsNull() {
+		assertThrows(PartyNotFoundException.class, () -> {
+			when(partyService.findById(party.getId())).thenReturn(null);
 
-			service.totalAmountByCurrentMonth(user.getId());
+			service.totalAmountByCurrentMonth(party.getId());
 			}
 		);
 	}

@@ -25,9 +25,9 @@ public class Category {
 	private String name;
 	
 	@ManyToOne
-	@JoinColumn(name = "user_id", referencedColumnName="id")
-	@Schema(description = "The user of the category")
-	private User user;
+	@JoinColumn(name = "party_id", referencedColumnName="id")
+	@Schema(description = "The party of the category")
+	private Party party;
 	
 	
 	@ManyToOne
@@ -37,20 +37,19 @@ public class Category {
 	
 	public Category() {}
 	
-	public Category(String name, User user, Icon icon) {
+	public Category(String name, Party party, Icon icon) {
 		this.name = name;
-		this.user = user;
+		this.party = party;
 		this.icon = icon;
 	}
+	 
+	public Party getParty() {
+		return party;
+	}
 	
-	public User getUser() {
-		return user;
+	public void setParty(Party party) {
+		this.party = party;
 	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
 	public void setName(String name) {
 		this.name = name;
 	}

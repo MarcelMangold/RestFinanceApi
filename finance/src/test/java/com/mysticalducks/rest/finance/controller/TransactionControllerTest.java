@@ -33,7 +33,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.mysticalducks.rest.finance.exception.CategoryNotFoundException;
-import com.mysticalducks.rest.finance.exception.PartyNotFoundException;
 import com.mysticalducks.rest.finance.exception.UserNotFoundException;
 import com.mysticalducks.rest.finance.model.Transaction;
 import com.mysticalducks.rest.finance.service.TransactionService;
@@ -60,7 +59,7 @@ public class TransactionControllerTest extends AbstractControllerTest {
 				.andExpect(jsonPath("name").value("transaction"))
 				.andExpect(jsonPath("id").value(0))
 				.andExpect(jsonPath("amount").value(transaction.getAmount()))
-				.andExpect(jsonPath("user.id").value(transaction.getUser().getId()))
+				.andExpect(jsonPath("party.id").value(transaction.getParty().getId()))
 				.andExpect(jsonPath("category.id").value(transaction.getCategory().getId()))
 				.andExpect(jsonPath("note").value(transaction.getNote()));
 
@@ -72,7 +71,7 @@ public class TransactionControllerTest extends AbstractControllerTest {
 	    List<Transaction> transactions = new ArrayList<>();
 	    transactions.add(transaction);
 
-	    given(transactionService.getAllTransactionsByUserId(user.getId())).willReturn(transactions);
+	    given(transactionService.getAllTransactionsByPartyId(party.getId())).willReturn(transactions);
 
 	    mvc.perform(get("/transactions/" + user.getId())
 	            .contentType(MediaType.APPLICATION_JSON))
@@ -80,21 +79,20 @@ public class TransactionControllerTest extends AbstractControllerTest {
 	            .andExpect(jsonPath("$.length()").value(1))
 	            .andExpect(jsonPath("$[0].name").value(transaction.getName()));
 
-	    verify(transactionService, times(1)).getAllTransactionsByUserId(user.getId());
+	    verify(transactionService, times(1)).getAllTransactionsByPartyId(party.getId());
 	}
 
 	
 	
 	@Test
 	public void newTranscation() throws Exception {
-		given(this.transactionService.save(transaction.getName(), transaction.getAmount(), transaction.getNote(), transaction.getCategory().getId(), transaction.getUser().getId())).willReturn(transaction);
+		given(this.transactionService.save(transaction.getName(), transaction.getAmount(), transaction.getNote(), transaction.getCategory().getId(), transaction.getParty().getId())).willReturn(transaction);
 		this.mvc.perform(post("/transaction")
 				.queryParam("name", "transaction")
 				.queryParam("amount", "250.0")
 				.queryParam("note", "note")
 				.queryParam("categoryId", "0")
-				.queryParam("userId", "0")
-				.queryParam("chatId", "0")
+				.queryParam("partyId", "0")
 				.secure(false)
 				.contentType(MediaType.APPLICATION_JSON)
 			    .accept(MediaType.APPLICATION_JSON))
@@ -103,42 +101,22 @@ public class TransactionControllerTest extends AbstractControllerTest {
 			    .andExpect(jsonPath("amount").value(transaction.getAmount()))
 			    .andExpect(jsonPath("note").value(transaction.getNote()))
 			    .andExpect(jsonPath("id").value(transaction.getId()))
-			    .andExpect(jsonPath("user.id").value(transaction.getUser().getId()))
+			    .andExpect(jsonPath("party.id").value(transaction.getParty().getId()))
 				.andExpect(jsonPath("category.id").value(transaction.getCategory().getId()));
 
 		this.mvc.perform(post("/category/").secure(false)).andExpect(status().isNotFound());
 	}
 	
 	@Test
-	public void newTransaction_userNotFoundException() throws Exception {
-		doThrow(new UserNotFoundException("User not found with id " + -1)).when(transactionService).save(anyString(), anyDouble(), anyString(), anyInt(), anyInt());
+	public void newTransaction_partyNotFoundException() throws Exception {
+		doThrow(new UserNotFoundException("Party not found with id " + -1)).when(transactionService).save(anyString(), anyDouble(), anyString(), anyInt(), anyInt());
 		
 		this.mvc.perform(post("/transaction")
 				.queryParam("name", "transaction")
 				.queryParam("amount", "250.0")
 				.queryParam("note", "note")
 				.queryParam("categoryId", "0")
-				.queryParam("userId", "-1")
-				.queryParam("chatId", "0")
-				.secure(false)
-				.contentType(MediaType.APPLICATION_JSON)
-			    .accept(MediaType.APPLICATION_JSON))
-			    .andExpect(status().isNotFound());
-
-		verify(transactionService, times(1)).save(anyString(), anyDouble(), anyString(), anyInt(), anyInt());
-	}
-	
-	@Test
-	public void newTransaction_chatNotFoundException() throws Exception {
-		doThrow(new PartyNotFoundException("Chat not found with id " + -1)).when(transactionService).save(anyString(), anyDouble(), anyString(), anyInt(), anyInt());
-		
-		this.mvc.perform(post("/transaction")
-				.queryParam("name", "transaction")
-				.queryParam("amount", "250.0")
-				.queryParam("note", "note")
-				.queryParam("categoryId", "0")
-				.queryParam("userId", "0")
-				.queryParam("chatId", "-1")
+				.queryParam("partyId", "-1")
 				.secure(false)
 				.contentType(MediaType.APPLICATION_JSON)
 			    .accept(MediaType.APPLICATION_JSON))
@@ -156,8 +134,7 @@ public class TransactionControllerTest extends AbstractControllerTest {
 				.queryParam("amount", "250.0")
 				.queryParam("note", "note")
 				.queryParam("categoryId", "-1")
-				.queryParam("userId", "0")
-				.queryParam("chatId", "0")
+				.queryParam("partyId", "0")
 				.secure(false)
 				.contentType(MediaType.APPLICATION_JSON)
 			    .accept(MediaType.APPLICATION_JSON))
@@ -180,7 +157,7 @@ public class TransactionControllerTest extends AbstractControllerTest {
 	@Test
 	public void replaceCategory() throws Exception {
 		when(transactionService.replace(any(Transaction.class))).thenReturn(transaction);
-		String categoryJson = "{\"id\":0,\"name\":\"transaction\",\"amount\":250.0,\"note\":\"note\",\"category\":{\"id\":0,\"name\":\"category\",\"user\":{\"id\":0,\"name\":\"Hans\",\"telegramUserId\":0,\"password\":\"password\",\"email\":\"email\",\"language\":0},\"icon\":{\"id\":0,\"name\":\"Icon\"}},\"user\":{\"id\":0,\"name\":\"Hans\",\"telegramUserId\":0,\"password\":\"password\",\"email\":\"email\",\"language\":0},\"createdAt\":null}";;
+		String categoryJson = "{\"id\":0,\"name\":\"transaction\",\"amount\":250.0,\"note\":\"note\",\"category\":{\"id\":0,\"name\":\"category\",\"party\":{\"id\":0,\"name\":\"party\"},\"icon\":{\"id\":0,\"name\":\"Icon\"}},\"party\":{\"id\":0,\"name\":\"party\"},\"createdAt\":null}";;
 		
 		mvc.perform(put("/transaction")
 		.content(categoryJson)

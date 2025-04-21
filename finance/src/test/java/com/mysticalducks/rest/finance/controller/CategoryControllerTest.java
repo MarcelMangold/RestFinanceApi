@@ -31,7 +31,7 @@ import com.mysticalducks.rest.finance.exception.IconNotFoundException;
 import com.mysticalducks.rest.finance.exception.UserNotFoundException;
 import com.mysticalducks.rest.finance.model.Category;
 import com.mysticalducks.rest.finance.model.Icon;
-import com.mysticalducks.rest.finance.model.User;
+import com.mysticalducks.rest.finance.model.Party;
 import com.mysticalducks.rest.finance.service.CategoryService;
 
 @WebMvcTest(value = CategoryController.class, excludeAutoConfiguration = { SecurityAutoConfiguration.class })
@@ -50,11 +50,11 @@ public class CategoryControllerTest extends AbstractControllerTest {
 
 	@Test
 	public void findCategory() throws Exception {
-		given(this.categoryService.findById(0)).willReturn(new Category("categorie", new User(), new Icon("icon")));
+		given(this.categoryService.findById(0)).willReturn(new Category("categorie", new Party(), new Icon("icon")));
 		this.mvc.perform(get("/category/0").secure(false)).andExpect(status().isOk())
 				.andExpect(content().contentType("application/json")).andExpect(jsonPath("id").value(0))
 				.andExpect(jsonPath("name").value("categorie"))
-				.andExpect(jsonPath("user.id").value(0))
+				.andExpect(jsonPath("party.id").value(0))
 				.andExpect(jsonPath("icon.id").value(0));
 
 		this.mvc.perform(get("/category").secure(false)).andExpect(status().isMethodNotAllowed());
@@ -65,7 +65,7 @@ public class CategoryControllerTest extends AbstractControllerTest {
 	
 	@Test
 	public void newCategory() throws Exception {
-		given(this.categoryService.save(category.getUser().getId(), category.getName(), category.getIcon().getId())).willReturn(category);
+		given(this.categoryService.save(category.getParty().getId(), category.getName(), category.getIcon().getId())).willReturn(category);
 		this.mvc.perform(post("/category")
 				.queryParam("userId", "0")
 				.queryParam("name", "category")
@@ -76,7 +76,7 @@ public class CategoryControllerTest extends AbstractControllerTest {
 			    .andExpect(status().isOk())
 			    .andExpect(jsonPath("name").value(category.getName()))
 			    .andExpect(jsonPath("id").value(category.getId()))
-			    .andExpect(jsonPath("user.id").value(category.getUser().getId()))
+			    .andExpect(jsonPath("party.id").value(category.getParty().getId()))
 				.andExpect(jsonPath("icon.id").value(category.getIcon().getId()));
 
 		this.mvc.perform(post("/category").secure(false)).andExpect(status().isBadRequest());
@@ -126,7 +126,7 @@ public class CategoryControllerTest extends AbstractControllerTest {
 	@Test
 	public void replaceCategory() throws Exception {
 		when(categoryService.replace(any(Category.class))).thenReturn(category);
-		String categoryJson = "{\"id\":0,\"name\":\"category\",\"user\":{\"id\":0,\"name\":\"Hans\",\"telegramUserId\":0,\"password\":\"password\",\"email\":\"email\",\"language\":0},\"icon\":{\"id\":0,\"name\":\"Icon\"}}";
+		String categoryJson = "{\"id\":0,\"name\":\"category\",\"party\":{\"id\":0,\"name\":\"party\"},\"icon\":{\"id\":0,\"name\":\"Icon\"}}";
 		
 		mvc.perform(put("/category")
 		.content(categoryJson)

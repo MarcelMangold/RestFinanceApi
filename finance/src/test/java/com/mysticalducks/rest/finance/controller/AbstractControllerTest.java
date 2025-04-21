@@ -12,9 +12,10 @@ public class AbstractControllerTest {
 	
 	protected User user = new User("Hans", "email",  "password", 0);
 	protected Icon icon = new Icon("Icon");
-	protected Category category = new Category("category", user, icon);
-	protected Transaction transaction = new Transaction("transaction", 250.0, "note", category, user);
 	protected FinanceInformation financeInformation = new FinanceInformation();
+	protected Party party = new Party(0, "party", financeInformation);
+	protected Category category = new Category("category", party, icon);
+	protected Transaction transaction = new Transaction("transaction", 250.0, "note", category, party);
 	protected Party party1 = new Party(1, "party1", financeInformation);
 	protected Party party2 = new Party(2, "party2", financeInformation);
 	protected PartyMember partyMember1 = new PartyMember(user, party1, 1);

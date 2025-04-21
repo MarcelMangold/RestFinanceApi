@@ -25,8 +25,9 @@ import com.mysticalducks.rest.finance.exception.CategoryNotFoundException;
 import com.mysticalducks.rest.finance.exception.IconNotFoundException;
 import com.mysticalducks.rest.finance.exception.UserNotFoundException;
 import com.mysticalducks.rest.finance.model.Category;
+import com.mysticalducks.rest.finance.model.FinanceInformation;
 import com.mysticalducks.rest.finance.model.Icon;
-import com.mysticalducks.rest.finance.model.User;
+import com.mysticalducks.rest.finance.model.Party;
 import com.mysticalducks.rest.finance.repository.CategoryRepository;
 import com.mysticalducks.rest.finance.repository.UserRepository;
 
@@ -44,20 +45,20 @@ public class CategoryServiceTest {
 	CategoryRepository categoryRepository;
 	
 	@Mock
-	UserService userService;
+	PartyService partyService;
 	
 	@Mock
 	IconService iconService;
 
 	Category category;
-	User user;
+	Party party;
 	Icon icon;
 
 	@BeforeEach
 	void setUp() {
 		this.icon = new Icon("Icon");
-		this.user = new User("User", "email", "password", 0);
-		this.category = new Category("Category", user , icon);
+		this.party = new Party("Party", new FinanceInformation());
+		this.category = new Category("Category", party , icon);
 	}
 
 	@Test
@@ -88,10 +89,10 @@ public class CategoryServiceTest {
 	void save() {
 		when(categoryRepository.save(any(Category.class))).thenReturn(category);
 		
-		when(userService.findById(user.getId())).thenReturn(user);
+		when(partyService.findById(party.getId())).thenReturn(party);
 		when(iconService.findById(icon.getId())).thenReturn(icon);
 		
-		Category savedCategory = service.save(user.getId(), "User", icon.getId());
+		Category savedCategory = service.save(party.getId(), "User", icon.getId());
 
 		verify(categoryRepository).save(any(Category.class));
 
@@ -102,9 +103,9 @@ public class CategoryServiceTest {
 	@Test
 	void save_userIsNull() {
 		assertThrows(UserNotFoundException.class, () -> {
-			when(userService.findById(user.getId())).thenReturn(null);
+			when(partyService.findById(party.getId())).thenReturn(null);
 
-			service.save(user.getId(), "User", icon.getId());
+			service.save(party.getId(), "Party", icon.getId());
 			}
 		);
 	}
@@ -112,10 +113,10 @@ public class CategoryServiceTest {
 	@Test
 	void save_iconIsNull() {
 		assertThrows(IconNotFoundException.class, () -> {
-			when(userService.findById(user.getId())).thenReturn(user);
+			when(partyService.findById(party.getId())).thenReturn(party);
 			when(iconService.findById(icon.getId())).thenReturn(null);
 			
-			service.save(user.getId(), "User", icon.getId());
+			service.save(party.getId(), "Party", icon.getId());
 			}
 		);
 	}
@@ -152,7 +153,7 @@ public class CategoryServiceTest {
 		when(categoryRepository.findById(1)).thenReturn(Optional.of(category));
 		when(categoryRepository.save(any(Category.class))).thenReturn(category);
 		
-		Category newCategory = new Category("NewCategorie", user, icon);
+		Category newCategory = new Category("NewCategorie", party, icon);
 		newCategory.setID(1);
 		Category replacedCategory = service.replace(newCategory);
 

@@ -13,8 +13,9 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.mysticalducks.rest.finance.model.Category;
+import com.mysticalducks.rest.finance.model.FinanceInformation;
 import com.mysticalducks.rest.finance.model.Icon;
-import com.mysticalducks.rest.finance.model.User;
+import com.mysticalducks.rest.finance.model.Party;
 
 @ExtendWith(SpringExtension.class)
 @ExtendWith(SpringExtension.class)
@@ -24,24 +25,26 @@ public class CategoryRepositoryTest extends AbstractRepositoryTest{
 	
 	@BeforeEach
 	void setUp() {
-		this.user = new User("User", "email", "password", 0);
+		this.financeInformation = new FinanceInformation();
+		this.party = new Party("Party", financeInformation);
 		this.icon = new Icon("Icon");
-		this.category = new Category("Category", user, icon);
+		this.category = new Category("Category", party, icon);
 		
-		userRepository.save(user);
+		financeInformationRepository.save(financeInformation);
+		partyRepository.save(party);
     	iconRepository.save(icon);
     	categoryRepository.save(category);
 	}
 
     @Test
-    public void findAllCategoriesByUserIdTest() throws Exception {
-    	User newUser = new User("User", "email", "password", 0);
-    	userRepository.save(newUser);
-    	addNewCategory("newUserCategory1", newUser);
-    	addNewCategory("newUserCategory2", newUser);
-    	Category userCategory1 = addNewCategory("UserCategory1", user);
+    public void findAllCategoriesByPartyIdTest() throws Exception {
+		Party newParty = addNewParty("newParty");
+		partyRepository.save(newParty);
+    	addNewCategory("newUserCategory1", newParty);
+    	addNewCategory("newUserCategory2", newParty);
+    	Category userCategory1 = addNewCategory("UserCategory1", party);
     	
-        List<Category> queryResult = (List<Category>) categoryRepository.findAllCategoriesByUserId(user);
+        List<Category> queryResult = (List<Category>) categoryRepository.findAllCategoriesByPartyId(party);
 
         assertFalse(queryResult.isEmpty());
         assertEquals(2, queryResult.size());

@@ -10,7 +10,7 @@ import com.mysticalducks.rest.finance.exception.IconNotFoundException;
 import com.mysticalducks.rest.finance.exception.UserNotFoundException;
 import com.mysticalducks.rest.finance.model.Category;
 import com.mysticalducks.rest.finance.model.Icon;
-import com.mysticalducks.rest.finance.model.User;
+import com.mysticalducks.rest.finance.model.Party;
 import com.mysticalducks.rest.finance.repository.CategoryRepository;
 
 @Service
@@ -20,7 +20,7 @@ public class CategoryService implements ICategoryService {
 	private CategoryRepository categoryRepository;
 	
 	@Autowired
-	private UserService userService;
+	private PartyService partyService;
 	
 	@Autowired
 	private IconService iconService;
@@ -36,21 +36,21 @@ public class CategoryService implements ICategoryService {
 		
 	}
 
-	public List<Category> findAllByUserId(User user) {
-		return (List<Category>) categoryRepository.findAllCategoriesByUserId(user);
+	public List<Category> findAllByPartyId(Party party) {
+		return (List<Category>) categoryRepository.findAllCategoriesByPartyId(party);
 	}
 
-	public Category save(Integer userId, String name, Integer iconId) throws UserNotFoundException, IconNotFoundException {
-		User user = userService.findById(userId);
+	public Category save(Integer partyId, String name, Integer iconId) throws UserNotFoundException, IconNotFoundException {
+		Party party = partyService.findById(partyId);
 		Icon icon = iconService.findById(iconId);
 		 
-		 if(user == null) 
-			  throw new UserNotFoundException("User not found with id " + userId);
+		 if(party == null) 
+			  throw new UserNotFoundException("Party not found with id " + partyId);
 		 
 		 if(icon == null)
 			 throw new IconNotFoundException("Icon not found with id " + iconId);
 		
-		return categoryRepository.save(new Category(name, user, icon));
+		return categoryRepository.save(new Category(name, party, icon));
 	}
 	
 	public Category replace(Category newCategory) {
@@ -59,7 +59,7 @@ public class CategoryService implements ICategoryService {
 				.map(category -> {
 					category.setName(newCategory.getName());
 					category.setIcon(newCategory.getIcon());
-					category.setUser(newCategory.getUser());
+					category.setParty(newCategory.getParty());
 					return categoryRepository.save(category);
 				})
 				.orElseGet(() -> {
