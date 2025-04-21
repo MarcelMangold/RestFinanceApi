@@ -36,7 +36,7 @@ public class PartyMemberController extends AbstractController {
 //    
     @GetMapping("/partyMembers/{userId}")
     @ResponseBody
-    public ResponseEntity<List<PartyMember>> findPartyMember(@RequestParam int userId) {
+    public ResponseEntity<List<PartyMember>> findPartyMember(@PathVariable int userId) {
     	checkIfParameterIsEmpty(userId);
         return new ResponseEntity<>(partyMemberService.findByUser(userId), HttpStatus.OK);
     }
