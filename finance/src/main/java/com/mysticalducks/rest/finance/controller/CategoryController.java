@@ -33,8 +33,8 @@ public class CategoryController {
 	@PostMapping("/category")
 	@ResponseStatus(HttpStatus.CREATED)
 	@ResponseBody
-	ResponseEntity<Category> newCategory(@RequestParam int userId, @RequestParam String name, @RequestParam int iconId) {
-		return new ResponseEntity<Category>(categoryService.save(userId, name, iconId), HttpStatus.OK);
+	ResponseEntity<Category> newCategory(@RequestParam int partyId, @RequestParam String name, @RequestParam int iconId) {
+		return new ResponseEntity<Category>(categoryService.save(partyId, name, iconId), HttpStatus.OK);
 	}
 
 	@PutMapping("/category")

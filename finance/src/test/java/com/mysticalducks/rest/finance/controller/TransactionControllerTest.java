@@ -33,7 +33,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.mysticalducks.rest.finance.exception.CategoryNotFoundException;
-import com.mysticalducks.rest.finance.exception.UserNotFoundException;
+import com.mysticalducks.rest.finance.exception.PartyNotFoundException;
 import com.mysticalducks.rest.finance.model.Transaction;
 import com.mysticalducks.rest.finance.service.TransactionService;
 
@@ -67,13 +67,13 @@ public class TransactionControllerTest extends AbstractControllerTest {
 	}
 	
 	@Test
-	public void getAllTransactionsByUserId() throws Exception {
+	public void getAllTransactionsByPartyId() throws Exception {
 	    List<Transaction> transactions = new ArrayList<>();
 	    transactions.add(transaction);
 
 	    given(transactionService.getAllTransactionsByPartyId(party.getId())).willReturn(transactions);
 
-	    mvc.perform(get("/transactions/" + user.getId())
+	    mvc.perform(get("/transactions/" + party.getId())
 	            .contentType(MediaType.APPLICATION_JSON))
 	            .andExpect(status().isOk())
 	            .andExpect(jsonPath("$.length()").value(1))
@@ -109,7 +109,7 @@ public class TransactionControllerTest extends AbstractControllerTest {
 	
 	@Test
 	public void newTransaction_partyNotFoundException() throws Exception {
-		doThrow(new UserNotFoundException("Party not found with id " + -1)).when(transactionService).save(anyString(), anyDouble(), anyString(), anyInt(), anyInt());
+		doThrow(new PartyNotFoundException("Party not found with id " + -1)).when(transactionService).save(anyString(), anyDouble(), anyString(), anyInt(), anyInt());
 		
 		this.mvc.perform(post("/transaction")
 				.queryParam("name", "transaction")

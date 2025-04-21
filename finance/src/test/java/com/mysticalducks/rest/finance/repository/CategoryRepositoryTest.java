@@ -40,16 +40,16 @@ public class CategoryRepositoryTest extends AbstractRepositoryTest{
     public void findAllCategoriesByPartyIdTest() throws Exception {
 		Party newParty = addNewParty("newParty");
 		partyRepository.save(newParty);
-    	addNewCategory("newUserCategory1", newParty);
-    	addNewCategory("newUserCategory2", newParty);
-    	Category userCategory1 = addNewCategory("UserCategory1", party);
+    	addNewCategory("newPartyCategory1", newParty);
+    	addNewCategory("newPartyCategory2", newParty);
+    	Category partyCategory1 = addNewCategory("PartyCategory1", party);
     	
         List<Category> queryResult = (List<Category>) categoryRepository.findAllCategoriesByPartyId(party);
 
         assertFalse(queryResult.isEmpty());
         assertEquals(2, queryResult.size());
         assertEquals(category, queryResult.get(0));
-        assertEquals(userCategory1, queryResult.get(1));
+        assertEquals(partyCategory1, queryResult.get(1));
     }
 
     

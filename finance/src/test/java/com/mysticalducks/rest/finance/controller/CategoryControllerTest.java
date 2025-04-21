@@ -28,7 +28,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.mysticalducks.rest.finance.exception.IconNotFoundException;
-import com.mysticalducks.rest.finance.exception.UserNotFoundException;
+import com.mysticalducks.rest.finance.exception.PartyNotFoundException;
 import com.mysticalducks.rest.finance.model.Category;
 import com.mysticalducks.rest.finance.model.Icon;
 import com.mysticalducks.rest.finance.model.Party;
@@ -67,7 +67,7 @@ public class CategoryControllerTest extends AbstractControllerTest {
 	public void newCategory() throws Exception {
 		given(this.categoryService.save(category.getParty().getId(), category.getName(), category.getIcon().getId())).willReturn(category);
 		this.mvc.perform(post("/category")
-				.queryParam("userId", "0")
+				.queryParam("partyId", "0")
 				.queryParam("name", "category")
 				.queryParam("iconId", "0")
 				.secure(false)
@@ -83,11 +83,11 @@ public class CategoryControllerTest extends AbstractControllerTest {
 	}
 	
 	@Test
-	public void newCategory_userNotFoundException() throws Exception {
-		doThrow(new UserNotFoundException("User not found with id " + -1)).when(categoryService).save(anyInt(), anyString(), anyInt());
+	public void newCategory_partyNotFoundException() throws Exception {
+		doThrow(new PartyNotFoundException("Party not found with id " + -1)).when(categoryService).save(anyInt(), anyString(), anyInt());
 		
 		this.mvc.perform(post("/category/")
-				.queryParam("userId", "-1")
+				.queryParam("partyId", "-1")
 				.queryParam("name", "category")
 				.queryParam("iconId", "0")
 				.secure(false)
@@ -102,7 +102,7 @@ public class CategoryControllerTest extends AbstractControllerTest {
 		doThrow(new IconNotFoundException("Icon not found with id " + -1)).when(categoryService).save(anyInt(), anyString(), anyInt());
 		
 		this.mvc.perform(post("/category/")
-				.queryParam("userId", "0")
+				.queryParam("partyId", "0")
 				.queryParam("name", "category")
 				.queryParam("iconId", "-1")
 				.secure(false)

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.mysticalducks.rest.finance.exception.CategoryNotFoundException;
 import com.mysticalducks.rest.finance.exception.IconNotFoundException;
+import com.mysticalducks.rest.finance.exception.PartyNotFoundException;
 import com.mysticalducks.rest.finance.exception.UserNotFoundException;
 import com.mysticalducks.rest.finance.model.Category;
 import com.mysticalducks.rest.finance.model.Icon;
@@ -45,7 +46,7 @@ public class CategoryService implements ICategoryService {
 		Icon icon = iconService.findById(iconId);
 		 
 		 if(party == null) 
-			  throw new UserNotFoundException("Party not found with id " + partyId);
+			  throw new PartyNotFoundException("Party not found with id " + partyId);
 		 
 		 if(icon == null)
 			 throw new IconNotFoundException("Icon not found with id " + iconId);

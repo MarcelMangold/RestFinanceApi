@@ -12,7 +12,7 @@ public interface ICategory {
 	
 	Optional<Transaction> findTransaction(int id);
 	
-	List<ITransactionInformations> findAllTransactionsByUserId(int userId);
+	List<ITransactionInformations> findAllTransactionsByPartyId(int partyId);
 	
 	List<Transaction> findAllTransactionsByChatId(int chatId);
 

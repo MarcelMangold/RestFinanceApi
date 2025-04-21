@@ -48,16 +48,16 @@ public class TransactionRepositoryTest extends AbstractRepositoryTest {
 	public void findAllByPartyId() throws Exception {
 		Party newParty = addNewParty("newParty");
 		partyRepository.save(newParty);
-		Transaction transactionUser = addNewTransaction("TransactionUser", party);
-		addNewTransaction("TransactionNewUser", newParty);
-		addNewTransaction("TransactionNewUser", newParty);
+		Transaction transactionParty = addNewTransaction("TransactionParty", party);
+		addNewTransaction("TransactionNewParty", newParty);
+		addNewTransaction("TransactionNewParty", newParty);
 
 		List<Transaction> queryResult = (List<Transaction>) transactionRepository.findAllByPartyId(party);
 
 		assertFalse(queryResult.isEmpty());
 		assertEquals(2, queryResult.size());
 		assertEquals(transaction, queryResult.get(0));
-		assertEquals(transactionUser, queryResult.get(1));
+		assertEquals(transactionParty, queryResult.get(1));
 	}
 	
 	
@@ -98,18 +98,18 @@ public class TransactionRepositoryTest extends AbstractRepositoryTest {
 		equalPeriodStartTime.setCreatedAt( Instant.parse("2020-01-01T00:00:00.000Z").atZone(ZoneId.systemDefault()).toLocalDateTime());
 		Transaction inPeriod = addNewTransaction("inPeriod", party);
 		inPeriod.setCreatedAt( Instant.parse("2020-01-05T00:00:00.000Z").atZone(ZoneId.systemDefault()).toLocalDateTime());
-		Transaction inPeriodWithOtherUser = addNewTransaction("inPeriodWithOtherUser", newParty);
-		inPeriodWithOtherUser.setCreatedAt( Instant.parse("2020-01-05T00:00:00.000Z").atZone(ZoneId.systemDefault()).toLocalDateTime());
+		Transaction inPeriodWithOtherParty = addNewTransaction("inPeriodWithOtherParty", newParty);
+		inPeriodWithOtherParty.setCreatedAt( Instant.parse("2020-01-05T00:00:00.000Z").atZone(ZoneId.systemDefault()).toLocalDateTime());
 		Transaction inPeriodWithOtherChat = addNewTransaction("inPeriodWithOtherChat", party);
 		inPeriodWithOtherChat.setCreatedAt( Instant.parse("2020-01-05T00:00:00.000Z").atZone(ZoneId.systemDefault()).toLocalDateTime());
-		Transaction inPeriodWithOtherUserAndChat = addNewTransaction("inPeriodWithOtherUserAndChat", newParty);
-		inPeriodWithOtherUserAndChat.setCreatedAt( Instant.parse("2020-01-05T00:00:00.000Z").atZone(ZoneId.systemDefault()).toLocalDateTime());
+		Transaction inPeriodWithOtherPartyAndChat = addNewTransaction("inPeriodWithOtherPartyAndChat", newParty);
+		inPeriodWithOtherPartyAndChat.setCreatedAt( Instant.parse("2020-01-05T00:00:00.000Z").atZone(ZoneId.systemDefault()).toLocalDateTime());
 		
 		transactionRepository.save(inPeriod);
 		transactionRepository.save(equalPeriodStartTime);
-		transactionRepository.save(inPeriodWithOtherUser);
+		transactionRepository.save(inPeriodWithOtherParty);
 		transactionRepository.save(inPeriodWithOtherChat);
-		transactionRepository.save(inPeriodWithOtherUserAndChat);
+		transactionRepository.save(inPeriodWithOtherPartyAndChat);
 
 		List<Transaction> queryResultInPeriod = (List<Transaction>) transactionRepository.getByPartyPeriod(party, startDate, endDate);
 			
@@ -118,10 +118,10 @@ public class TransactionRepositoryTest extends AbstractRepositoryTest {
 		assertEquals(inPeriod, queryResultInPeriod.get(1));
 		
 		
-		List<Transaction> queryResultOtherUser = (List<Transaction>) transactionRepository.getByPartyPeriod(newParty, startDate, endDate);
+		List<Transaction> queryResultOtherParty = (List<Transaction>) transactionRepository.getByPartyPeriod(newParty, startDate, endDate);
 		
-		assertEquals(2, queryResultOtherUser.size());
-		assertEquals(inPeriodWithOtherUser, queryResultOtherUser.get(0));
+		assertEquals(2, queryResultOtherParty.size());
+		assertEquals(inPeriodWithOtherParty, queryResultOtherParty.get(0));
 		
 	}
 	

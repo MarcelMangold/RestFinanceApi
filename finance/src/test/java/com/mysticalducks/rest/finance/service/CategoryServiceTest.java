@@ -23,13 +23,12 @@ import org.mockito.quality.Strictness;
 
 import com.mysticalducks.rest.finance.exception.CategoryNotFoundException;
 import com.mysticalducks.rest.finance.exception.IconNotFoundException;
-import com.mysticalducks.rest.finance.exception.UserNotFoundException;
+import com.mysticalducks.rest.finance.exception.PartyNotFoundException;
 import com.mysticalducks.rest.finance.model.Category;
 import com.mysticalducks.rest.finance.model.FinanceInformation;
 import com.mysticalducks.rest.finance.model.Icon;
 import com.mysticalducks.rest.finance.model.Party;
 import com.mysticalducks.rest.finance.repository.CategoryRepository;
-import com.mysticalducks.rest.finance.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -37,9 +36,6 @@ public class CategoryServiceTest {
 	
 	@InjectMocks
 	CategoryService service;
-
-	@Mock
-	UserRepository userRepository;
 
 	@Mock
 	CategoryRepository categoryRepository;
@@ -92,7 +88,7 @@ public class CategoryServiceTest {
 		when(partyService.findById(party.getId())).thenReturn(party);
 		when(iconService.findById(icon.getId())).thenReturn(icon);
 		
-		Category savedCategory = service.save(party.getId(), "User", icon.getId());
+		Category savedCategory = service.save(party.getId(), "Category", icon.getId());
 
 		verify(categoryRepository).save(any(Category.class));
 
@@ -101,8 +97,8 @@ public class CategoryServiceTest {
 
 	
 	@Test
-	void save_userIsNull() {
-		assertThrows(UserNotFoundException.class, () -> {
+	void save_partyIsNull() {
+		assertThrows(PartyNotFoundException.class, () -> {
 			when(partyService.findById(party.getId())).thenReturn(null);
 
 			service.save(party.getId(), "Party", icon.getId());

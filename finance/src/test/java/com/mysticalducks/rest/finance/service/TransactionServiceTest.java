@@ -82,7 +82,7 @@ public class TransactionServiceTest {
 	}
 	
 	@Test
-	void getAllTransactionsByUserId() {
+	void getAllTransactionsByPartyId() {
 	    List<Transaction> transactions = new ArrayList<>();
 	    transactions.add(transaction);
 	    transactions.add(new Transaction("transaction2", 300.0, "note2", category, party));
@@ -103,15 +103,15 @@ public class TransactionServiceTest {
 	
 	@Test
 	void getAllTransactionsByPartyId_partyNotFound() {
-	    int invalidUserId = -1;
+	    int invalidPartyId = -1;
 
-	    when(partyService.findById(invalidUserId)).thenReturn(null);
+	    when(partyService.findById(invalidPartyId)).thenReturn(null);
 
 	    PartyNotFoundException exception = assertThrows(PartyNotFoundException.class, 
-	        () -> service.getAllTransactionsByPartyId(invalidUserId));
+	        () -> service.getAllTransactionsByPartyId(invalidPartyId));
 
-	    assertEquals("Party not found with id " + invalidUserId, exception.getMessage());
-	    verify(partyService, times(1)).findById(invalidUserId);
+	    assertEquals("Party not found with id " + invalidPartyId, exception.getMessage());
+	    verify(partyService, times(1)).findById(invalidPartyId);
 	    verify(transactionRepository, times(0)).findAllByPartyId(any());
 	}
 
@@ -133,31 +133,8 @@ public class TransactionServiceTest {
 	}
 
 	
-//	@Test 
-//	void findAllByUser() { 
-//		List<ITransactionInformations> transactions = new ArrayList<>(); 
-//		transactions.add(new ITransactionInformations());
-//		transactions.add( new Transaction("transaction", 200.0, false, "note",
-//		category, user, chat));
-//		  
-//		when(transactionRepository.getTransactionInformations(user)).thenReturn(
-//		transactions);
-//		  
-//		Transaction foundTransaction = service.findById(1);
-//		
-//		assertThat(foundTransaction).isNotNull();
-//		  
-//		verify(transactionRepository).findById(1);
-//		  
-//		DataNotFoundException thrown = assertThrows(DataNotFoundException.class, ()
-//		  -> service.findById(2), "No data found for the id 2");
-//		  
-//		assertTrue(thrown.getMessage().contains("2"));
-//	  }
-
-	
 	@Test
-	void findAllByUserId() {
+	void findAllByPartyId() {
 		List<Transaction> transactions = new ArrayList<>();
 		Transaction newTransaction = new Transaction("transaction", -200.0, "note", category, party);
 		transactions.add(transaction);
