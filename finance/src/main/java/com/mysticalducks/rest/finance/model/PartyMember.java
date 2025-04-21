@@ -1,5 +1,7 @@
 package com.mysticalducks.rest.finance.model;
 
+import java.util.Objects;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -35,6 +37,13 @@ public class PartyMember {
         this.id = new PartyMemberId(user.getId(), party.getId());
         this.user = user;
         this.party = party;
+    }
+    
+    public PartyMember(User user, Party party, Integer chatId) {
+    	this.id = new PartyMemberId(user.getId(), party.getId());
+        this.user = user;
+        this.party = party;
+        this.chatId = chatId;
     }
 
     
@@ -81,5 +90,18 @@ public class PartyMember {
 
     public void setParty(Party party) {
         this.party = party;
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PartyMember that = (PartyMember) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

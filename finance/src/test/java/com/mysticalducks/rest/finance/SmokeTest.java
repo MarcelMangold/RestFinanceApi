@@ -10,6 +10,7 @@ import com.mysticalducks.rest.finance.controller.CategoryController;
 import com.mysticalducks.rest.finance.controller.FinanceInformationController;
 import com.mysticalducks.rest.finance.controller.IconController;
 import com.mysticalducks.rest.finance.controller.PartyController;
+import com.mysticalducks.rest.finance.controller.PartyMemberController;
 import com.mysticalducks.rest.finance.controller.TransactionController;
 import com.mysticalducks.rest.finance.controller.UserController;
 
@@ -33,6 +34,9 @@ public class SmokeTest {
 	
 	@Autowired
 	private PartyController partyController;
+	
+	@Autowired
+	private PartyMemberController partyMemberController;
 
 	@Test
 	public void contextLoads() throws Exception {
@@ -42,6 +46,7 @@ public class SmokeTest {
 		assertThat(iconController).isNotNull();
 		assertThat(financeController).isNotNull();
 		assertThat(partyController).isNotNull();
+		assertThat(partyMemberController).isNotNull();
 		
 	}
 

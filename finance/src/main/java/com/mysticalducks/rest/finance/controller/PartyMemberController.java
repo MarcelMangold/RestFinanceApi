@@ -27,13 +27,15 @@ public class PartyMemberController extends AbstractController {
     @Autowired
     private PartyMemberService partyMemberService;
 
-//    @GetMapping("/partyMember/{partyId}")
-//    @ResponseBody
-//    public PartyMember findPartyMember(@PathVariable int partyId, @PathVariable String memberName) {
-//        PartyMemberId id = new PartyMemberId(partyId, memberName);
-//        return partyMemberService.findById(id);
-//    }
-//    
+    @GetMapping("/partyMember/{partyId}/{userId}")
+    @ResponseBody
+    public PartyMember findPartyMember(@PathVariable int userId, @PathVariable int partyId) {
+    	checkIfParameterIsEmpty(userId);
+    	checkIfParameterIsEmpty(partyId);
+        PartyMemberId id = new PartyMemberId(partyId, userId);
+        return partyMemberService.findById(id);
+    }
+    
     @GetMapping("/partyMembers/{userId}")
     @ResponseBody
     public ResponseEntity<List<PartyMember>> findPartyMember(@PathVariable int userId) {
@@ -50,10 +52,10 @@ public class PartyMemberController extends AbstractController {
     @PostMapping(value = "/partyMember", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public PartyMember createPartyMember(@RequestParam int partyId, @RequestParam int userId) {
+    public PartyMember createPartyMember(@RequestParam int userId, @RequestParam int partyId) {
         checkIfParameterIsEmpty(partyId);
         checkIfParameterIsEmpty(userId);
-        return partyMemberService.save(partyId, userId);
+        return partyMemberService.save(userId, partyId);
     }
 
     @PutMapping(value = "/partyMember", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -61,15 +63,6 @@ public class PartyMemberController extends AbstractController {
     @ResponseBody
     public PartyMember updatePartyMember(@RequestBody PartyMember partyMember) {
         return partyMemberService.save(partyMember);
-    }
-
-    @DeleteMapping("/partyMember/{partyId}/{userId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletePartyMemberById(@PathVariable int partyId, @PathVariable int userId) {
-    	checkIfParameterIsEmpty(userId);
-    	checkIfParameterIsEmpty(partyId);
-        PartyMemberId id = new PartyMemberId(partyId, userId);
-        partyMemberService.deleteById(id);
     }
 
     @DeleteMapping(value = "/partyMember", produces = MediaType.APPLICATION_JSON_VALUE)
