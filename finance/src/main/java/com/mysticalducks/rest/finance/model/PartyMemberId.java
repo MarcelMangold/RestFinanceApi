@@ -9,13 +9,15 @@ import jakarta.persistence.Embeddable;
 public class PartyMemberId implements Serializable {
 
     private static final long serialVersionUID = -4041338921768348111L;
+    
+    
 	private Integer userId;
     private Integer partyId;
 
     public PartyMemberId() {}
 
     public PartyMemberId(Integer userId, Integer partyId) {
-        this.userId = userId;
+		this.userId = userId;
         this.partyId = partyId;
     }
 

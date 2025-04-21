@@ -3,7 +3,9 @@ package com.mysticalducks.rest.finance.repository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.mysticalducks.rest.finance.model.Category;
+import com.mysticalducks.rest.finance.model.FinanceInformation;
 import com.mysticalducks.rest.finance.model.Icon;
+import com.mysticalducks.rest.finance.model.Party;
 import com.mysticalducks.rest.finance.model.Transaction;
 import com.mysticalducks.rest.finance.model.User;
 
@@ -20,6 +22,11 @@ public abstract class AbstractRepositoryTest {
 
 	@Autowired
 	protected TransactionRepository transactionRepository;
+	
+	@Autowired
+	protected FinanceInformationRepository financeInformationRepository;
+	
+	@Autowired PartyRepository partyRepository;
 
 	protected User user;
 	protected Icon icon;
@@ -58,6 +65,36 @@ public abstract class AbstractRepositoryTest {
 
 	protected Transaction addNewTransaction(String transactionName) {
 		return addNewTransaction(transactionRepository, transactionName, user);
+	}
+	
+	
+	protected User addNewUser(String name) {
+		User user = new User(name, "email","password", 0);
+		userRepository.save(user);
+		
+		return user;
+	}
+	
+	protected User addNewUser() {
+		return addNewUser("name");
+	}
+	
+	protected Party addNewParty(FinanceInformation financeInformation) {
+		return addNewParty("Party", financeInformation);
+	}
+	
+	
+	protected Party addNewParty(String partyName, FinanceInformation financeInformation) {
+		var party = new Party("Party", financeInformation);
+		partyRepository.save(party);
+		
+		return party;
+	}
+	
+	protected FinanceInformation addNewFinanceInformation() {
+		FinanceInformation financeInformation = new FinanceInformation(500.0);
+		financeInformationRepository.save(financeInformation);
+		return financeInformation;
 	}
 
 }

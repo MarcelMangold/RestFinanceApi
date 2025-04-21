@@ -6,10 +6,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 public enum ApiError {
 	DATA_NOT_FOUND(1, "Data not found"),
     USER_NOT_FOUND(2, "User not found"),
-    CHAT_NOT_FOUND(3, "Chat not found"),
-    ICON_NOT_FOUND(4, "Icon not found"),
-    CATEGORY_NOT_FOUND(5, "Category not found"),
-    TRANSACTION_NOT_FOUND(5, "Transaction not found");
+    ICON_NOT_FOUND(3, "Icon not found"),
+    CATEGORY_NOT_FOUND(4, "Category not found"),
+    TRANSACTION_NOT_FOUND(5, "Transaction not found"),
+	PARTY_NOT_FUND(6, "Transaction not found"),
+	PARTY_MEMBER_NOT_FOUND(7, "Party member not found"),
+	FINANCE_INFORMATION_NOT_FOUND(8, "Finance information not found");
 
     private int code;
     private String message;

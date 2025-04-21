@@ -41,6 +41,18 @@ CREATE TABLE party (
 );
 
 
+-- Drop and create party table
+DROP TABLE IF EXISTS party_member;
+
+CREATE TABLE party_member (
+	user_id int4 NOT NULL,
+	party_id int4 NOT NULL,
+	chat_id int4 NULL,
+   	CONSTRAINT pk_party_member PRIMARY KEY (user_id, party_id),
+	CONSTRAINT fk_party_member_party_id FOREIGN KEY (party_id) REFERENCES party(id),
+	CONSTRAINT fk_party_member_user_id FOREIGN KEY (user_id) REFERENCES user_management(id)
+);
+
 -- Drop and create category table
 DROP TABLE IF EXISTS category;
 

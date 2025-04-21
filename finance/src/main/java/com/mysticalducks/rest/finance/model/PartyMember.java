@@ -29,12 +29,26 @@ public class PartyMember {
     private Party party;
 
     public PartyMember() {}
-
-    public PartyMember(PartyMemberId id, Integer chatId, User user, Party party) {
-        this.id = id;
-        this.chatId = chatId;
+    
+    
+    public PartyMember(User user, Party party) {
+        this.id = new PartyMemberId(user.getId(), party.getId());
         this.user = user;
         this.party = party;
+    }
+
+    
+    public PartyMember(PartyMemberId id, User user, Party party) {
+        this.id = id;
+        this.user = user;
+        this.party = party;
+    }
+
+    public PartyMember(PartyMemberId id, User user, Party party, Integer chatId) {
+        this.id = id;
+        this.user = user;
+        this.party = party;
+        this.chatId = chatId;
     }
 
     public PartyMemberId getId() {

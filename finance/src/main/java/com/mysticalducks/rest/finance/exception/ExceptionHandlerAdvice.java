@@ -72,14 +72,14 @@ public class ExceptionHandlerAdvice extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(PartyNotFoundException.class)
 	public ResponseEntity<?> handlePartyNotFoundException(PartyNotFoundException ex) {
-		ApiErrorResponse response = new ApiErrorResponse(HttpStatus.NOT_FOUND, ApiError.CHAT_NOT_FOUND);
+		ApiErrorResponse response = new ApiErrorResponse(HttpStatus.NOT_FOUND, ApiError.PARTY_NOT_FUND);
 		
 		return new ResponseEntity<>(response, response.getStatus());
 	}
 	
 	@ExceptionHandler(FinanceInformationNotFoundException.class)
 	public ResponseEntity<?> handleFinanceInformationNotFoundException(FinanceInformationNotFoundException ex) {
-		ApiErrorResponse response = new ApiErrorResponse(HttpStatus.NOT_FOUND, ApiError.CHAT_NOT_FOUND);
+		ApiErrorResponse response = new ApiErrorResponse(HttpStatus.NOT_FOUND, ApiError.FINANCE_INFORMATION_NOT_FOUND);
 		
 		return new ResponseEntity<>(response, response.getStatus());
 	}
@@ -88,6 +88,13 @@ public class ExceptionHandlerAdvice extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(TransactionNotFoundException.class)
 	public ResponseEntity<?> handleTransactionNotFoundException(TransactionNotFoundException ex) {
 		ApiErrorResponse response = new ApiErrorResponse(HttpStatus.NOT_FOUND, ApiError.TRANSACTION_NOT_FOUND);
+		
+		return new ResponseEntity<>(response, response.getStatus());
+	}
+	
+	@ExceptionHandler(PartyMemberNotFoundException.class)
+	public ResponseEntity<?> handlePartyMemberNotFoundException(PartyMemberNotFoundException ex) {
+		ApiErrorResponse response = new ApiErrorResponse(HttpStatus.NOT_FOUND, ApiError.PARTY_MEMBER_NOT_FOUND);
 		
 		return new ResponseEntity<>(response, response.getStatus());
 	}
