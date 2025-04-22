@@ -62,6 +62,23 @@ public class PartyControllerTest {
             .andExpect(jsonPath("$[0].name").value("Party 1"))
             .andExpect(jsonPath("$[1].name").value("Party 2"));
     }
+    
+    @Test
+    public void findPartiesByUser() throws Exception {
+        Party party1 = new Party(1, "Party 1", null);
+        Party party2 = new Party(2, "Party 2", null);
+        List<Party> parties = List.of(party1, party2);
+
+        when(partyService.findAllByUser(1)).thenReturn(parties);
+
+        mvc.perform(get("/parties/1").secure(false))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$[0].id").value(1))
+            .andExpect(jsonPath("$[0].name").value("Party 1"))
+            .andExpect(jsonPath("$[1].id").value(2))
+            .andExpect(jsonPath("$[1].name").value("Party 2"));
+    }
 
     @Test
     public void newParty() throws Exception {

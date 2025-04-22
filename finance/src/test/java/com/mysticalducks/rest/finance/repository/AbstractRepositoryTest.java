@@ -6,6 +6,7 @@ import com.mysticalducks.rest.finance.model.Category;
 import com.mysticalducks.rest.finance.model.FinanceInformation;
 import com.mysticalducks.rest.finance.model.Icon;
 import com.mysticalducks.rest.finance.model.Party;
+import com.mysticalducks.rest.finance.model.PartyMember;
 import com.mysticalducks.rest.finance.model.Transaction;
 import com.mysticalducks.rest.finance.model.User;
 
@@ -26,7 +27,11 @@ public abstract class AbstractRepositoryTest {
 	@Autowired
 	protected FinanceInformationRepository financeInformationRepository;
 	
-	@Autowired PartyRepository partyRepository;
+	@Autowired 
+	protected PartyRepository partyRepository;
+	
+	@Autowired
+	protected PartyMemberRepository partyMemberRepository;
 
 	protected User user;
 	protected Party party;
@@ -93,12 +98,18 @@ public abstract class AbstractRepositoryTest {
 		return addNewParty("Party", financeInformation);
 	}
 	
-	
 	protected Party addNewParty(String partyName, FinanceInformation financeInformation) {
 		var party = new Party("Party", financeInformation);
 		partyRepository.save(party);
 		
 		return party;
+	}
+	
+	protected PartyMember addNewPartyMember(User user, Party party) {
+		var partyMember = new PartyMember(user, party);
+		partyMemberRepository.save(partyMember);
+		
+		return partyMember;
 	}
 	
 	protected FinanceInformation addNewFinanceInformation() {

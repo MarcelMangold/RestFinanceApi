@@ -4,9 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -17,8 +19,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.mysticalducks.rest.finance.exception.PartyNotFoundException;
+import com.mysticalducks.rest.finance.exception.UserNotFoundException;
 import com.mysticalducks.rest.finance.model.FinanceInformation;
 import com.mysticalducks.rest.finance.model.Party;
+import com.mysticalducks.rest.finance.model.User;
 import com.mysticalducks.rest.finance.repository.PartyRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,6 +36,9 @@ public class PartyServiceTest {
     
     @Mock
     private FinanceInformationService financeInformationService;
+    
+    @Mock
+    private UserService userService;
     
     Party party;
     
@@ -99,5 +106,42 @@ public class PartyServiceTest {
 		
 		verify(partyRepository).findAll();
 	}
+	
+	@Test
+	void findAllByUser() {
+	    User user = new User();
+
+	    Party party1 = new Party(1, "Party 1", new FinanceInformation());
+	    Party party2 = new Party(2, "Party 2", new FinanceInformation());
+
+	    List<Party> parties = List.of(party1, party2);
+
+	    when(userService.findById(1)).thenReturn(user);
+	    when(partyRepository.findAllPartiesByUser(user)).thenReturn(parties);
+
+	    Iterable<Party> result = partyService.findAllByUser(1);
+
+	    assertThat(result).isNotNull();
+	    assertThat(result).hasSize(2);
+	    assertThat(result).contains(party1, party2);
+
+	    verify(userService).findById(1);
+	    verify(partyRepository).findAllPartiesByUser(user);
+	}
+	
+	@Test
+	void findAllByUser_userNotFound() {
+	    int userId = 1;
+	    when(userService.findById(userId)).thenReturn(null);
+
+	    UserNotFoundException thrown = assertThrows(UserNotFoundException.class, 
+	        () -> partyService.findAllByUser(userId));
+
+	    assertThat(thrown.getMessage()).contains(String.valueOf(userId));
+
+	    verify(userService).findById(userId);
+	    verify(partyRepository, never()).findAllPartiesByUser(any());
+	}
+
 
 }

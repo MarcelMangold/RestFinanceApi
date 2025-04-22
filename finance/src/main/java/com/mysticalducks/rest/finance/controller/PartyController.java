@@ -34,6 +34,13 @@ public class PartyController extends AbstractController {
     public Iterable<Party> findParties() {
         return partyService.findAll();
     }
+    
+    @GetMapping("/parties/{userId}")
+    @ResponseBody
+    public Iterable<Party> findPartiesByUser(@PathVariable int userId) {
+    	checkIfParameterIsEmpty(userId);
+        return partyService.findAllByUser(userId);
+    }
 
 
     @PutMapping(value = "/party", produces = MediaType.APPLICATION_JSON_VALUE)
