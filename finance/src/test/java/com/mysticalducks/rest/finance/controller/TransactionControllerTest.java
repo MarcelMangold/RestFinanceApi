@@ -50,6 +50,33 @@ public class TransactionControllerTest extends AbstractControllerTest {
 	@MockitoBean
 	private TransactionService transactionService;
 	
+	
+	@Test
+	public void findTransaction_fullJsonValidation() throws Exception {
+
+	    given(this.transactionService.findById(0)).willReturn(transaction);
+
+	    String expectedJson = """
+	        {
+	            "id": 0,
+	            "name": "transaction",
+	            "amount": 250.0,
+	            "note": "note",
+	            "latitude": 47.3667,
+	            "longitude": 8.55,
+	            "category": {
+	                "id": 0
+	            },
+	            "party": {
+	                "id": 0
+	            }
+	        }
+	    """;
+
+	    this.mvc.perform(get("/transaction/0").secure(false))
+	        .andExpect(status().isOk())
+	        .andExpect(content().json(expectedJson));
+	}
 
 	@Test
 	public void findTransaction() throws Exception {

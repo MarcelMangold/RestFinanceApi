@@ -27,6 +27,10 @@ public class Transaction {
 	
 	private String note;
 	
+	private Double latitude;
+	
+	private Double longitude;
+	
 	@ManyToOne
 	@JoinColumn(name = "category_id", referencedColumnName="id")
 	private Category category;
@@ -46,6 +50,16 @@ public class Transaction {
 		this.name = name;
 		this.amount = amount;
 		this.note = note;
+		this.category = category;
+		this.party = party;
+	}
+	
+	public Transaction(String name, double amount, String note, Double latitude, Double longitude, Category category, Party party) {
+		this.name = name;
+		this.amount = amount;
+		this.note = note;
+		this.latitude = latitude;
+		this.longitude = longitude;
 		this.category = category;
 		this.party = party;
 	}
@@ -72,6 +86,22 @@ public class Transaction {
 
 	public void setNote(String note) {
 		this.note = note;
+	}
+	
+	public Double getLatitude() {
+		return latitude;
+	}
+	
+	public void setLatitude(Double latitude) {
+		this.latitude = latitude;
+	}
+	
+	public Double getLongitude() {
+		return longitude;
+	}
+	
+	public void setLongitude(Double longitude) {
+		this.longitude = longitude;
 	}
 
 	public Category getCategory() {

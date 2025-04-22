@@ -77,6 +77,8 @@ CREATE TABLE transaction (
     note VARCHAR(250) NULL,
     category_id INT NOT NULL,
     party_id INT NOT NULL,
+    latitude DOUBLE NULL,
+    longitude DOUBLE NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     CONSTRAINT pk_transaction_id PRIMARY KEY (id),
     CONSTRAINT fk_category_id FOREIGN KEY (category_id) REFERENCES category(id),
