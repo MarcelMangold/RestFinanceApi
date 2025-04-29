@@ -1,5 +1,15 @@
 # RestFinanceApi
 
+## Architecture
+The Finance-API is used by an Angular app and Telegram bot. Both applications writes and read data via the rest api.
+The rest api is a Spring Boot application that provides endpoints for add, manipulate or remove data.
+
+![architecture](docs/architecture.png)
+
+## Database
+In the following database diagram describes the structure of the database tables:
+
+![databasediagram](docs/databasediagram.png)
 
 ## Start docker db and initialize database with database structure and testdata:
 ```
