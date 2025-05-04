@@ -39,6 +39,12 @@ public class PartyService implements IParty {
 	public Party findById(int id) {
 		return partyRepository.findById(id).orElseThrow(() -> new PartyNotFoundException(id));
 	}
+	
+	public Party findPartyByUserChatIdAndUserId(int chatId, int userId) {
+	    return partyRepository.findPartyByUserChatIdAndUserId(chatId, userId)
+	            .orElseThrow(() -> new PartyNotFoundException("No party found for user with chat ID: " + chatId + " and user ID: " + userId));
+	}
+
 
 	public Party save(String name, int financeId) {
 		var financenInformation = financeInformationService.findById(financeId);

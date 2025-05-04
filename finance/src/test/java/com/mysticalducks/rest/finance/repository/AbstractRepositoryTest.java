@@ -106,7 +106,7 @@ public abstract class AbstractRepositoryTest {
 	}
 	
 	protected PartyMember addNewPartyMember(User user, Party party) {
-		var partyMember = new PartyMember(user, party);
+		var partyMember = new PartyMember(user, party, 1);
 		partyMemberRepository.save(partyMember);
 		
 		return partyMember;

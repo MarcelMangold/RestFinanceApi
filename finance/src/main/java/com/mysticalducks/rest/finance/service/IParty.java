@@ -8,6 +8,8 @@ public interface IParty{
 	
 	Party findById(int id);
 	
+	Party findPartyByUserChatIdAndUserId(int chatId, int userId);
+	
 	Party save(String name, int financeInformationId);
 	
 	Party save(Party party);

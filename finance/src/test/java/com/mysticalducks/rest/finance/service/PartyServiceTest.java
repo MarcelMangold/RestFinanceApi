@@ -69,6 +69,33 @@ public class PartyServiceTest {
 
 		assertTrue(thrown.getMessage().contains("2"));
 	}
+    
+    
+    @Test
+    void findPartyByUserChatIdAndUserId() {
+        Party party = new Party(1, "Test Party", new FinanceInformation());
+        when(partyRepository.findPartyByUserChatIdAndUserId(12345, 1)).thenReturn(Optional.of(party));
+
+        Party result = partyService.findPartyByUserChatIdAndUserId(12345, 1);
+
+        assertThat(result).isNotNull();
+        assertThat(result.getName()).isEqualTo("Test Party");
+
+        verify(partyRepository).findPartyByUserChatIdAndUserId(12345, 1);
+    }
+
+    
+    @Test
+    void findPartyByUserChatIdAndUserId_notFound() {
+        when(partyRepository.findPartyByUserChatIdAndUserId(12345, 1)).thenReturn(Optional.empty());
+
+        PartyNotFoundException thrown = assertThrows(PartyNotFoundException.class, 
+            () -> partyService.findPartyByUserChatIdAndUserId(12345, 1));
+
+        assertThat(thrown.getMessage()).contains("No party found for user with chat ID: 12345 and user ID: 1");
+
+        verify(partyRepository).findPartyByUserChatIdAndUserId(12345, 1);
+    }
 	
 	@Test
 	void save() {

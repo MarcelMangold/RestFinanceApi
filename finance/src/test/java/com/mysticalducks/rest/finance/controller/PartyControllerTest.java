@@ -22,6 +22,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mysticalducks.rest.finance.exception.PartyNotFoundException;
 import com.mysticalducks.rest.finance.model.FinanceInformation;
 import com.mysticalducks.rest.finance.model.Party;
 import com.mysticalducks.rest.finance.service.PartyService;
@@ -79,6 +80,29 @@ public class PartyControllerTest {
             .andExpect(jsonPath("$[1].id").value(2))
             .andExpect(jsonPath("$[1].name").value("Party 2"));
     }
+    
+    @Test
+    public void findPartyByUserChatIdAndUserId() throws Exception {
+        Party party = new Party(1, "Test Party", null);
+        when(partyService.findPartyByUserChatIdAndUserId(12345, 1)).thenReturn(party);
+
+        mvc.perform(get("/party/user/chat/12345/user/1").secure(false))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("id").value(1))
+            .andExpect(jsonPath("name").value("Test Party"));
+    }
+
+    
+    @Test
+    public void findPartyByUserChatIdAndUserId_notFound() throws Exception {
+        when(partyService.findPartyByUserChatIdAndUserId(12345, 1))
+            .thenThrow(new PartyNotFoundException("No party found for user with chat ID: 12345 and user ID: 1"));
+
+        mvc.perform(get("/party/user/chat/12345/user/1").secure(false))
+            .andExpect(status().isNotFound());
+    }
+
 
     @Test
     public void newParty() throws Exception {

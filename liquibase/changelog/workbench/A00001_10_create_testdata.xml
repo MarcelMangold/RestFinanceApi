@@ -34,7 +34,6 @@
     <changeSet id="A00001_10_create_testdata-2" author="mangold" context="workbench">
         <!-- testdata for user_management -->
         <insert tableName="user_management">
-            <column name="id" valueNumeric="1"/>
             <column name="name" value="Nathanael"/>
             <column name="email" value="nathanael@example.com"/>
             <column name="password" value="password123"/>
@@ -42,7 +41,6 @@
             <column name="language" valueNumeric="1"/>
         </insert>
         <insert tableName="user_management">
-            <column name="id" valueNumeric="2"/>
             <column name="name" value="Jane Doe"/>
             <column name="email" value="jane.doe@example.com"/>
             <column name="password" value="securepass"/>
