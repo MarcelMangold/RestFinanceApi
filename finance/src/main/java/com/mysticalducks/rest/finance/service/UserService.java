@@ -41,5 +41,11 @@ public class UserService implements IUserService {
 		userRepository.delete(user);
 	}
 
+	public User findByTelegramUserId(int telegramUserId) {
+	    return userRepository.findByTelegramUserId(telegramUserId)
+	            .orElseThrow(() -> new UserNotFoundException("No user found with Telegram ID: " + telegramUserId));
+	}
+
+
 
 }

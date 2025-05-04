@@ -101,5 +101,26 @@ public class UserServiceTest {
 		
 		assertThat(foundUsers).hasSize(1);
 	}
+	
+	@Test
+	void findByTelegramUserId() {
+	    when(userRepository.findByTelegramUserId(12345)).thenReturn(Optional.of(user));
+
+	    User foundUser = service.findByTelegramUserId(12345);
+
+	    assertThat(foundUser).isNotNull();
+	    assertThat(foundUser).isEqualTo(user);
+
+	    verify(userRepository).findByTelegramUserId(12345);
+
+	    when(userRepository.findByTelegramUserId(99999)).thenReturn(Optional.empty());
+
+	    UserNotFoundException thrown = assertThrows(UserNotFoundException.class, 
+	        () -> service.findByTelegramUserId(99999),
+	        "Expected UserNotFoundException for Telegram ID 99999");
+
+	    assertThat(thrown.getMessage()).contains("No user found with Telegram ID: 99999");
+	}
+
 
 }

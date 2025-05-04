@@ -98,6 +98,15 @@ public class ExceptionHandlerAdvice extends ResponseEntityExceptionHandler {
 		
 		return new ResponseEntity<>(response, response.getStatus());
 	}
+	
+	@ExceptionHandler(org.springframework.transaction.CannotCreateTransactionException.class)
+	public ResponseEntity<?> handleDatabaseConnectionException(
+	        org.springframework.transaction.CannotCreateTransactionException ex, WebRequest request) {
+	    ApiErrorResponse response = new ApiErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ApiError.DATABASE_IS_NOT_AVAILABLE);
+	    return new ResponseEntity<>(response, response.getStatus());
+	}
+	
+	
 
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid( MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {

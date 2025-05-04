@@ -36,6 +36,13 @@ public class UserController extends AbstractController {
 		return userService.findById(id);
 	}
 	
+	@GetMapping("/user/telegram/{telegramId}")
+	@ResponseBody
+	public User findUserByTelegramId(@PathVariable int telegramId) {
+	    return userService.findByTelegramUserId(telegramId);
+	}
+
+	
 	@PostMapping(value="/user", produces=MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.CREATED)
 	@ResponseBody

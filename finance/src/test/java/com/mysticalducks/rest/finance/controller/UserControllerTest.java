@@ -22,6 +22,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mysticalducks.rest.finance.exception.UserNotFoundException;
 import com.mysticalducks.rest.finance.model.User;
 import com.mysticalducks.rest.finance.service.UserService;
 
@@ -68,6 +69,24 @@ public class UserControllerTest {
 		
 		this.mvc.perform(get("/user/-1").secure(false)).andExpect(status().isOk());
 
+	}
+	
+	@Test
+	public void getUserByTelegramId() throws Exception {
+	    User user = new User(1, 12345, "John Doe", "john.doe@example.com", "password", 1);
+	    given(this.userService.findByTelegramUserId(12345)).willReturn(user);
+
+	    this.mvc.perform(get("/user/telegram/12345").secure(false))
+	        .andExpect(status().isOk())
+	        .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+	        .andExpect(jsonPath("id").value(1))
+	        .andExpect(jsonPath("telegramUserId").value(12345))
+	        .andExpect(jsonPath("name").value("John Doe"));
+
+	    given(this.userService.findByTelegramUserId(99999)).willThrow(new UserNotFoundException("No user found with Telegram ID: 99999"));
+
+	    this.mvc.perform(get("/user/telegram/99999").secure(false))
+	        .andExpect(status().isNotFound());
 	}
 	
 	

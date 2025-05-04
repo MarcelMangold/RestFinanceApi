@@ -11,7 +11,8 @@ public enum ApiError {
     TRANSACTION_NOT_FOUND(5, "Transaction not found"),
 	PARTY_NOT_FUND(6, "Transaction not found"),
 	PARTY_MEMBER_NOT_FOUND(7, "Party member not found"),
-	FINANCE_INFORMATION_NOT_FOUND(8, "Finance information not found");
+	FINANCE_INFORMATION_NOT_FOUND(8, "Finance information not found"),
+	DATABASE_IS_NOT_AVAILABLE(9, "Database is not available");
 
     private int code;
     private String message;

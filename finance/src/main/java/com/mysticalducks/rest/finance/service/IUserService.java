@@ -13,4 +13,6 @@ public interface IUserService {
 	void deleteById(int id);
 
 	void delete(User user);
+	
+	User findByTelegramUserId(int telegramUserId);
 }
