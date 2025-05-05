@@ -54,11 +54,11 @@ public class Party {
         this.name = name;
     }
 
-    public FinanceInformation getfinanceInformation() {
+    public FinanceInformation getFinanceInformation() {
         return financeInformation;
     }
 
-    public void setfinanceInformation(FinanceInformation financeInformation) {
+    public void setFinanceInformation(FinanceInformation financeInformation) {
         this.financeInformation = financeInformation;
     }
 }

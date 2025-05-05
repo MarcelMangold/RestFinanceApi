@@ -22,6 +22,7 @@ import com.mysticalducks.rest.finance.exception.PartyNotFoundException;
 import com.mysticalducks.rest.finance.exception.UserNotFoundException;
 import com.mysticalducks.rest.finance.model.FinanceInformation;
 import com.mysticalducks.rest.finance.model.Party;
+import com.mysticalducks.rest.finance.model.PartyMember;
 import com.mysticalducks.rest.finance.model.User;
 import com.mysticalducks.rest.finance.repository.PartyRepository;
 
@@ -35,16 +36,25 @@ public class PartyServiceTest {
     private PartyService partyService;
     
     @Mock
+    private PartyMemberService partyMemberService;
+        
+    @Mock
     private FinanceInformationService financeInformationService;
     
     @Mock
     private UserService userService;
     
-    Party party;
+    private User user;
+    private FinanceInformation financeInformation;
+    private Party party;
+    
     
     @BeforeEach
     void setUp() {
+    	this.user = new User(1, "test", "email", "password", 0);
 		this.party = new Party(1, "test", new FinanceInformation());
+        this.financeInformation = new FinanceInformation(100.0);
+        this.party = new Party("Test Party", financeInformation);
 	}
     
     @Test
@@ -115,10 +125,28 @@ public class PartyServiceTest {
 
 	    assertThat(savedparty).isNotNull();
 	    assertThat(savedparty.getName()).isEqualTo("test");
-	    assertThat(savedparty.getfinanceInformation()).isEqualTo(finaceInformation);
+	    assertThat(savedparty.getFinanceInformation()).isEqualTo(finaceInformation);
 
 	    verify(partyRepository).save(any(Party.class));
 	}
+	
+    @Test
+    void createPartyWithFinanceAndMeber() {
+        when(financeInformationService.save(any(FinanceInformation.class))).thenReturn(financeInformation);
+        when(userService.findById(1)).thenReturn(user);
+        when(partyRepository.save(any(Party.class))).thenReturn(party);
+
+        Party createdParty = partyService.createPartyWithFinanceAndMember(1, 12345, "Test Party", 100.0);
+
+        assertThat(createdParty).isNotNull();
+        assertThat(createdParty.getName()).isEqualTo("Test Party");
+        assertThat(createdParty.getFinanceInformation().getBudget()).isEqualTo(100.0);
+
+        verify(financeInformationService).save(any(FinanceInformation.class));
+        verify(userService).findById(1);
+        verify(partyRepository).save(any(Party.class));
+        verify(partyMemberService).save(any(PartyMember.class));
+    }
 	
 	@Test
 	void delete() {

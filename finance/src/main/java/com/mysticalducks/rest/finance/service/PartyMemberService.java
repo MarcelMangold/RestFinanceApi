@@ -19,9 +19,6 @@ public class PartyMemberService implements IPartyMemberService {
     @Autowired
     private UserService userService;
     
-    @Autowired
-    private PartyService partyService;
-
 
     public Iterable<PartyMember> findAll() {
         return partyMemberRepository.findAll();
@@ -40,17 +37,6 @@ public class PartyMemberService implements IPartyMemberService {
         return partyMemberRepository.save(partyMember);
     }
     
-    public PartyMember save(int userId, int partyId) {
-    	return save(userId, partyId, null);
-    }
-    
-    public PartyMember save(int userId, int partyId, Integer chatId) {
-    	var user = userService.findById(userId);
-    	var party = partyService.findById(partyId);
-		PartyMember partyMember = new PartyMember(user, party);
-        return partyMemberRepository.save(partyMember);
-    }
-
     public void deleteById(PartyMemberId id) {
         partyMemberRepository.deleteById(id);
     }

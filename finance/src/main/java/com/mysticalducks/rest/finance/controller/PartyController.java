@@ -48,6 +48,17 @@ public class PartyController extends AbstractController {
         return partyService.findPartyByUserChatIdAndUserId(chatId, userId);
     }
 
+    @PostMapping(value = "/createPartyWithFinanceAndMember", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public Party createPartyWithFinanceAndMember(
+            @RequestParam int userId,
+            @RequestParam int chatId,
+            @RequestParam String name,
+            @RequestParam double budget) {
+        return partyService.createPartyWithFinanceAndMember(userId, chatId, name, budget);
+    }
+
 
 
     @PutMapping(value = "/party", produces = MediaType.APPLICATION_JSON_VALUE)

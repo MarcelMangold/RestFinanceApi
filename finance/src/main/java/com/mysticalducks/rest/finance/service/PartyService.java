@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 
 import com.mysticalducks.rest.finance.exception.PartyNotFoundException;
 import com.mysticalducks.rest.finance.exception.UserNotFoundException;
+import com.mysticalducks.rest.finance.model.FinanceInformation;
 import com.mysticalducks.rest.finance.model.Party;
+import com.mysticalducks.rest.finance.model.PartyMember;
 import com.mysticalducks.rest.finance.model.User;
 import com.mysticalducks.rest.finance.repository.PartyRepository;
 
@@ -15,11 +17,15 @@ public class PartyService implements IParty {
 	@Autowired
 	private PartyRepository partyRepository;
 	
-	@Autowired
-	private FinanceInformationService financeInformationService;
-	
-	@Autowired
-	private UserService userService;
+    @Autowired
+    private FinanceInformationService financeInformationService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private PartyMemberService partyMemberService;
+
 
 	public Iterable<Party> findAll() {
 		return partyRepository.findAll();
@@ -50,6 +56,20 @@ public class PartyService implements IParty {
 		var financenInformation = financeInformationService.findById(financeId);
 		return partyRepository.save(new Party(name, financenInformation));
 	}
+	
+    public Party createPartyWithFinanceAndMember(int userId, int chatId, String name, double budget) {
+        FinanceInformation financeInformation = new FinanceInformation(budget);
+        financeInformation = financeInformationService.save(financeInformation);
+
+        Party party = new Party(name, financeInformation);
+        party = partyRepository.save(party);
+
+        User user = userService.findById(userId);
+        PartyMember partyMember = new PartyMember(user, party, chatId);
+        partyMemberService.save(partyMember);
+
+        return party;
+    }
 
 	public Party save(Party party) {
 		return partyRepository.save(party);

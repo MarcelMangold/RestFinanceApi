@@ -5,7 +5,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -99,20 +98,6 @@ class PartyMemberControllerTest extends AbstractControllerTest {
         verify(partyMemberService, times(1)).findByUser(0);
     }
 
-    @Test
-    void testCreatePartyMember() throws Exception {
-        when(partyMemberService.save(0,1)).thenReturn(partyMember1);
-
-        mvc.perform(post("/partyMember")
-                        .param("partyId", "1")
-                        .param("userId", "0"))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id.partyId").value(1))
-                .andExpect(jsonPath("$.id.userId").value(0));
-
-        verify(partyMemberService, times(1)).save(0,1);
-    }
-    
     @Test
     void testUpdatePartyMember() throws Exception {
 

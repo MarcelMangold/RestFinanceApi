@@ -8,11 +8,9 @@
     <changeSet id="A00001_10_create_testdata-0" author="mangold" context="workbench">
         <!-- testdata for finance_information -->
         <insert tableName="finance_information">
-            <column name="id" valueNumeric="1"/>
             <column name="budget" valueNumeric="2000.00"/>
         </insert>
         <insert tableName="finance_information">
-            <column name="id" valueNumeric="2"/>
             <column name="budget" valueNumeric="5000.00"/>
         </insert>
     </changeSet>
@@ -20,12 +18,10 @@
     <changeSet id="A00001_10_create_testdata-1" author="mangold" context="workbench">
         <!-- testdata for party -->
         <insert tableName="party">
-            <column name="id" valueNumeric="1"/>
             <column name="name" value="Gruppe 1"/>
             <column name="finance_information_id" valueNumeric="1"/>
         </insert>
         <insert tableName="party">
-            <column name="id" valueNumeric="2"/>
             <column name="name" value="Gruppe 2"/>
             <column name="finance_information_id" valueNumeric="2"/>
         </insert>
@@ -74,7 +70,6 @@
     <changeSet id="A00001_10_create_testdata-4" author="mangold" context="workbench">
         <!-- testdata for transaction -->
         <insert tableName="transaction">
-            <column name="id" valueNumeric="1"/>
             <column name="name" value="Wocheneinkauf"/>
             <column name="amount" valueNumeric="150.75"/>
             <column name="note" value="Lebensmittel für die Woche"/>
@@ -85,7 +80,6 @@
             <column name="longitude" valueNumeric="13.4050"/>
         </insert>
         <insert tableName="transaction">
-            <column name="id" valueNumeric="2"/>
             <column name="name" value="Restaurantbesuch"/>
             <column name="amount" valueNumeric="45.30"/>
             <column name="note" value="Abendessen mit Freunden"/>
@@ -96,7 +90,6 @@
             <column name="longitude" valueNumeric="11.5820"/>
         </insert>
         <insert tableName="transaction">
-            <column name="id" valueNumeric="3"/>
             <column name="name" value="Buchkauf"/>
             <column name="amount" valueNumeric="22.99"/>
             <column name="note" value="Neuer Roman"/>
@@ -107,7 +100,6 @@
             <column name="longitude" valueNumeric="8.6821"/>
         </insert>
         <insert tableName="transaction">
-            <column name="id" valueNumeric="4"/>
             <column name="name" value="Tanken"/>
             <column name="amount" valueNumeric="60.00"/>
             <column name="note" value="Tankstelle"/>
@@ -118,7 +110,6 @@
             <column name="longitude" valueNumeric="10.4515"/>
         </insert>
         <insert tableName="transaction">
-            <column name="id" valueNumeric="5"/>
             <column name="name" value="Kinokarten"/>
             <column name="amount" valueNumeric="28.00"/>
             <column name="note" value="Kinoabend"/>
@@ -129,7 +120,6 @@
             <column name="longitude" valueNumeric="9.9937"/>
         </insert>
         <insert tableName="transaction">
-            <column name="id" valueNumeric="6"/>
             <column name="name" value="Kaffee"/>
             <column name="amount" valueNumeric="3.50"/>
             <column name="note" value="Morgenkaffee"/>
@@ -140,7 +130,6 @@
             <column name="longitude" valueNumeric="13.7373"/>
         </insert>
         <insert tableName="transaction">
-            <column name="id" valueNumeric="7"/>
             <column name="name" value="Apotheke"/>
             <column name="amount" valueNumeric="18.20"/>
             <column name="note" value="Medikamente"/>
@@ -151,7 +140,6 @@
             <column name="longitude" valueNumeric="8.4660"/>
         </insert>
         <insert tableName="transaction">
-            <column name="id" valueNumeric="8"/>
             <column name="name" value="Online-Shopping"/>
             <column name="amount" valueNumeric="89.99"/>
             <column name="note" value="Kleidung"/>
@@ -162,7 +150,6 @@
             <column name="longitude" valueNumeric="9.7320"/>
         </insert>
         <insert tableName="transaction">
-            <column name="id" valueNumeric="9"/>
             <column name="name" value="Abo"/>
             <column name="amount" valueNumeric="12.99"/>
             <column name="note" value="Musik-Streaming"/>
@@ -173,7 +160,6 @@
             <column name="longitude" valueNumeric="6.9603"/>
         </insert>
         <insert tableName="transaction">
-            <column name="id" valueNumeric="10"/>
             <column name="name" value="Fitnessstudio"/>
             <column name="amount" valueNumeric="35.00"/>
             <column name="note" value="Monatsbeitrag"/>
