@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.mysticalducks.rest.finance.model.Transaction;
 import com.mysticalducks.rest.finance.service.TransactionService;
@@ -41,6 +42,7 @@ public class TransactionController{
 	}
 
 	@PostMapping("/transaction")
+    @ResponseStatus(HttpStatus.CREATED)
 	@ResponseBody
 	Transaction newTransaction(@RequestParam String name, @RequestParam Double amount, @RequestParam String note, @RequestParam int categoryId, @RequestParam int partyId, @RequestParam(required = false) Double latitude, @RequestParam(required = false) Double longitude) {
 		return transactionService.save(name, amount, note, latitude, longitude, categoryId, partyId);

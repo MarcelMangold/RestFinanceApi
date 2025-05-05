@@ -132,7 +132,7 @@ public class TransactionControllerTest extends AbstractControllerTest {
 	            .secure(false)
 	            .contentType(MediaType.APPLICATION_JSON)
 	            .accept(MediaType.APPLICATION_JSON))
-	        .andExpect(status().isOk())
+	        .andExpect(status().isCreated())
 	        .andExpect(jsonPath("latitude").value(transaction.getLatitude()))
 	        .andExpect(jsonPath("longitude").value(transaction.getLongitude()));
 
@@ -160,7 +160,7 @@ public class TransactionControllerTest extends AbstractControllerTest {
 				.secure(false)
 				.contentType(MediaType.APPLICATION_JSON)
 			    .accept(MediaType.APPLICATION_JSON))
-			    .andExpect(status().isOk())
+			    .andExpect(status().isCreated())
 			    .andExpect(jsonPath("name").value(transaction.getName()))
 			    .andExpect(jsonPath("amount").value(transaction.getAmount()))
 			    .andExpect(jsonPath("note").value(transaction.getNote()))
