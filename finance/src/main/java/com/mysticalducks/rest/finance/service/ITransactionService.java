@@ -19,7 +19,7 @@ public interface ITransactionService {
 	
 	List<Transaction> findAllByPartyId(int partyId);
 
-	Transaction save(String name, double amount, String note, int categoryId, int partyId);
+	Transaction save(String name, double amount, String note,  Double latitude, Double longitude, int categoryId, int partyId);
 	
 	Transaction replace(Transaction newTransaction);
 	

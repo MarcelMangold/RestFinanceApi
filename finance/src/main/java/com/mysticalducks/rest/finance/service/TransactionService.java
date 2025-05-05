@@ -64,7 +64,7 @@ public class TransactionService implements ITransactionService {
 		return transactions;
 	}
 
-	public Transaction save(String name, double amount, String note, int categoryId, int partyId) {
+	public Transaction save(String name, double amount, String note,  Double latitude, Double longitude, int categoryId, int partyId) {
 		
 		Party party = partyService.findById(partyId);
 		Category category = categoryService.findById(categoryId);
@@ -75,7 +75,7 @@ public class TransactionService implements ITransactionService {
 		if(category == null) 
 			  throw new CategoryNotFoundException("Category not found with id " + categoryId);
 		 
-		return transactionRepository.save(new Transaction(name, amount, note, category, party));
+		return transactionRepository.save(new Transaction(name, amount, note, latitude, longitude, category, party));
 
 	}
 

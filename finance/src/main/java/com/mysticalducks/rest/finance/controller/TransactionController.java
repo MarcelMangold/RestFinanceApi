@@ -42,8 +42,8 @@ public class TransactionController{
 
 	@PostMapping("/transaction")
 	@ResponseBody
-	Transaction newTransaction(@RequestParam String name, @RequestParam Double amount, @RequestParam String note, @RequestParam int categoryId, @RequestParam int partyId) {
-		return transactionService.save(name, amount, note, categoryId, partyId);
+	Transaction newTransaction(@RequestParam String name, @RequestParam Double amount, @RequestParam String note, @RequestParam int categoryId, @RequestParam int partyId, @RequestParam(required = false) Double latitude, @RequestParam(required = false) Double longitude) {
+		return transactionService.save(name, amount, note, latitude, longitude, categoryId, partyId);
 	}
 	
 	@PutMapping("/transaction")

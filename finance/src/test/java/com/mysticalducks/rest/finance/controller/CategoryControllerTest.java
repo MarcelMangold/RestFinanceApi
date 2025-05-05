@@ -17,6 +17,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
@@ -62,6 +64,17 @@ public class CategoryControllerTest extends AbstractControllerTest {
 		this.mvc.perform(get("/category/-1").secure(false)).andExpect(status().isOk());
 	}
 	
+    @Test
+    public void getCategoriesByPartyIdTest() throws Exception {
+        List<Category> categories = List.of(new Category("Category1", party1, icon));
+
+        when(categoryService.findAllByPartyId(1)).thenReturn(categories);
+
+        mvc.perform(get("/categories/party/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].name").value("Category1"));
+    }
 	
 	@Test
 	public void newCategory() throws Exception {

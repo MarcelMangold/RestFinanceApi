@@ -109,11 +109,48 @@ public class TransactionControllerTest extends AbstractControllerTest {
 	    verify(transactionService, times(1)).getAllTransactionsByPartyId(party.getId());
 	}
 
+	@Test
+	public void newTransaction_withLatitudeAndLongitude() throws Exception {
+	    given(this.transactionService.save(
+	        transaction.getName(), 
+	        transaction.getAmount(), 
+	        transaction.getNote(), 
+	        transaction.getLatitude(), 
+	        transaction.getLongitude(),
+	        transaction.getCategory().getId(), 
+	        transaction.getParty().getId()))
+	    .willReturn(transaction);
+
+	    this.mvc.perform(post("/transaction")
+	            .queryParam("name", "transaction")
+	            .queryParam("amount", "250.0")
+	            .queryParam("note", "note")
+	            .queryParam("categoryId", "0")
+	            .queryParam("partyId", "0")
+	            .queryParam("latitude", "47.3667")
+	            .queryParam("longitude", "8.55")
+	            .secure(false)
+	            .contentType(MediaType.APPLICATION_JSON)
+	            .accept(MediaType.APPLICATION_JSON))
+	        .andExpect(status().isOk())
+	        .andExpect(jsonPath("latitude").value(transaction.getLatitude()))
+	        .andExpect(jsonPath("longitude").value(transaction.getLongitude()));
+
+	    verify(transactionService, times(1)).save(
+	        "transaction", 
+	        250.0, 
+	        "note", 
+	        47.3667, 
+	        8.55, 
+	        0, 
+	        0);
+	}
+
 	
 	
 	@Test
 	public void newTranscation() throws Exception {
-		given(this.transactionService.save(transaction.getName(), transaction.getAmount(), transaction.getNote(), transaction.getCategory().getId(), transaction.getParty().getId())).willReturn(transaction);
+		given(this.transactionService.save(transaction.getName(), transaction.getAmount(), transaction.getNote(), null, null, transaction.getCategory().getId(), transaction.getParty().getId())).willReturn(transaction);
 		this.mvc.perform(post("/transaction")
 				.queryParam("name", "transaction")
 				.queryParam("amount", "250.0")
@@ -136,7 +173,7 @@ public class TransactionControllerTest extends AbstractControllerTest {
 	
 	@Test
 	public void newTransaction_partyNotFoundException() throws Exception {
-		doThrow(new PartyNotFoundException("Party not found with id " + -1)).when(transactionService).save(anyString(), anyDouble(), anyString(), anyInt(), anyInt());
+		doThrow(new PartyNotFoundException("Party not found with id " + -1)).when(transactionService).save(anyString(), anyDouble(), anyString(), anyDouble(), anyDouble(), anyInt(), anyInt());
 		
 		this.mvc.perform(post("/transaction")
 				.queryParam("name", "transaction")
@@ -144,17 +181,19 @@ public class TransactionControllerTest extends AbstractControllerTest {
 				.queryParam("note", "note")
 				.queryParam("categoryId", "0")
 				.queryParam("partyId", "-1")
+	            .queryParam("latitude", "47.3667")
+	            .queryParam("longitude", "8.55")
 				.secure(false)
 				.contentType(MediaType.APPLICATION_JSON)
 			    .accept(MediaType.APPLICATION_JSON))
 			    .andExpect(status().isNotFound());
 
-		verify(transactionService, times(1)).save(anyString(), anyDouble(), anyString(), anyInt(), anyInt());
+		verify(transactionService, times(1)).save(anyString(), anyDouble(), anyString(), anyDouble(), anyDouble(), anyInt(), anyInt());
 	}
 	
 	@Test
 	public void newTransaction_categoryNotFoundException() throws Exception {
-		doThrow(new CategoryNotFoundException("Category not found with id " + -1)).when(transactionService).save(anyString(), anyDouble(), anyString(), anyInt(), anyInt());
+		doThrow(new CategoryNotFoundException("Category not found with id " + -1)).when(transactionService).save(anyString(), anyDouble(), anyString(), anyDouble(), anyDouble(),  anyInt(), anyInt());
 		
 		this.mvc.perform(post("/transaction")
 				.queryParam("name", "transaction")
@@ -162,12 +201,14 @@ public class TransactionControllerTest extends AbstractControllerTest {
 				.queryParam("note", "note")
 				.queryParam("categoryId", "-1")
 				.queryParam("partyId", "0")
+	            .queryParam("latitude", "47.3667")
+	            .queryParam("longitude", "8.55")
 				.secure(false)
 				.contentType(MediaType.APPLICATION_JSON)
 			    .accept(MediaType.APPLICATION_JSON))
 			    .andExpect(status().isNotFound());
 
-		verify(transactionService, times(1)).save(anyString(), anyDouble(), anyString(), anyInt(), anyInt());
+		verify(transactionService, times(1)).save(anyString(), anyDouble(), anyString(), anyDouble(), anyDouble(), anyInt(), anyInt());
 	}
 	
 	@Test

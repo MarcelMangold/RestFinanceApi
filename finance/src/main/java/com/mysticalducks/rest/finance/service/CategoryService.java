@@ -36,9 +36,13 @@ public class CategoryService implements ICategoryService {
 		return categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
 		
 	}
-
-	public List<Category> findAllByPartyId(Party party) {
-		return (List<Category>) categoryRepository.findAllCategoriesByPartyId(party);
+	
+	public List<Category> findAllByPartyId(int partyId) {
+		Party party = partyService.findById(partyId);
+		if (party == null) {
+			throw new PartyNotFoundException("Party not found with id " + partyId);
+		}
+		return categoryRepository.findAllCategoriesByPartyId(party);
 	}
 
 	public Category save(Integer partyId, String name, Integer iconId) throws UserNotFoundException, IconNotFoundException {

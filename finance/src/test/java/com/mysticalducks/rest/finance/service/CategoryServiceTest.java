@@ -63,7 +63,34 @@ public class CategoryServiceTest {
 
 		verify(categoryRepository).deleteById(5);
 	}
+	
+	
+    @Test
+    public void findAllByPartyIdTest() {
+        Party party = new Party();
+        party.setId(1);
+        List<Category> categories = List.of(new Category("Category1", party, new Icon("Icon1")));
 
+        when(partyService.findById(1)).thenReturn(party);
+        when(categoryRepository.findAllCategoriesByPartyId(party)).thenReturn(categories);
+  
+        List<Category> result = service.findAllByPartyId(1);
+
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0).getName()).isEqualTo("Category1");
+    }
+    
+    
+    @Test
+    void findAllByPartyId_partyNotFoundException() {
+        when(partyService.findById(1)).thenReturn(null);
+
+        PartyNotFoundException thrown = assertThrows(PartyNotFoundException.class, 
+            () -> service.findAllByPartyId(1));
+
+        assertThat(thrown.getMessage()).isEqualTo("Party not found with id 1");
+    }
+    
 	@Test
 	void findById() {
 		when(categoryRepository.findById(1)).thenReturn(Optional.of(category));

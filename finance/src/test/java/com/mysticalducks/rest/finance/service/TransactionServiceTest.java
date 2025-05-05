@@ -61,7 +61,7 @@ public class TransactionServiceTest {
 	void setUp() {
 		this.party = new Party("Party", new FinanceInformation());
 		this.category = new Category("Category", party, new Icon("Icon"));
-		this.transaction = new Transaction("transaction", -200.0, "note", category, party);
+		this.transaction = new Transaction("transaction", -200.0, "note", 47.3667, 8.55, category, party);
 		this.startDate = LocalDateTime.now();
 		this.endDate = LocalDateTime.now();
 	}
@@ -160,7 +160,7 @@ public class TransactionServiceTest {
 		when(partyService.findById(party.getId())).thenReturn(party);
 		when(categoryService.findById(category.getId())).thenReturn(category);
 		
-		Transaction savedTransaction = service.save("newTransaction", -200.0, "note", category.getId(), party.getId());
+		Transaction savedTransaction = service.save("newTransaction", -200.0, "note", null, null, category.getId(), party.getId());
 
 		verify(transactionRepository).save(any(Transaction.class));
 
@@ -168,11 +168,34 @@ public class TransactionServiceTest {
 	}
 	
 	@Test
+	void save_withLatitudeAndLongitude() {
+	    when(transactionRepository.save(any(Transaction.class))).thenReturn(transaction);
+	    when(partyService.findById(party.getId())).thenReturn(party);
+	    when(categoryService.findById(category.getId())).thenReturn(category);
+
+	    Transaction savedTransaction = service.save(
+	        "newTransaction", 
+	        -200.0, 
+	        "note", 
+	        47.3667, 
+	        8.55, 
+	        category.getId(), 
+	        party.getId());
+
+	    verify(transactionRepository).save(any(Transaction.class));
+
+	    assertThat(savedTransaction).isNotNull();
+	    assertThat(savedTransaction.getLatitude()).isEqualTo(47.3667);
+	    assertThat(savedTransaction.getLongitude()).isEqualTo(8.55);
+	}
+
+	
+	@Test
 	void save_partyIsNull() {
 		assertThrows(PartyNotFoundException.class, () -> {
 			when(partyService.findById(party.getId())).thenReturn(null);
 
-			service.save("newTransaction", -200.0, "note", category.getId(), party.getId());
+			service.save("newTransaction", -200.0, "note", null, null, category.getId(), party.getId());
 			}
 		);
 	}
@@ -184,7 +207,7 @@ public class TransactionServiceTest {
 			when(partyService.findById(party.getId())).thenReturn(party);
 			when(categoryService.findById(category.getId())).thenReturn(null);
 			
-			service.save("newTransaction", -200.0, "note", category.getId(), party.getId());
+			service.save("newTransaction", -200.0, "note", null, null, category.getId(), party.getId());
 			}
 		);
 	}
